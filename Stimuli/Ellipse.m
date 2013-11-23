@@ -1,11 +1,13 @@
-classdef Rectangle < Stimulus
+classdef Ellipse < Stimulus
     
     properties
-        position = [0, 0]   % [x, y]
-        size = [100, 100]   % [width, height]
-        orientation = 0     % degrees
+        position = [0, 0]
+        radiusX = 100;
+        radiusY = 100;
+        orientation = 0
         color = [1 1 1]
         opacity = 1
+        numSides = 51
     end
     
     properties (Access = private)
@@ -18,11 +20,15 @@ classdef Rectangle < Stimulus
         function init(obj, canvas)
             init@Stimulus(obj, canvas);
             
-            vertices = [-1  1  0  1 ...
-                        -1 -1  0  1 ...
-                         1  1  0  1 ...
-                         1 -1  0  1];
-                     
+            angles = (0:obj.numSides)/obj.numSides * 2 * pi;
+            vertices = zeros(1, (obj.numSides + 1) * 4);
+            vertices(1:4:end) = cos(angles);
+            vertices(2:4:end) = sin(angles);
+            vertices(4:4:end) = 1;
+            
+            center = [0 0 0 1];
+            vertices = [center vertices];
+                    
             obj.vbo = VertexBufferObject(canvas, GL.ARRAY_BUFFER, single(vertices), GL.STATIC_DRAW);
             
             obj.vao = VertexArrayObject(canvas);
@@ -34,7 +40,7 @@ classdef Rectangle < Stimulus
             modelView.push();
             modelView.translate(obj.position(1), obj.position(2), 0);
             modelView.rotate(obj.orientation, 0, 0, 1);
-            modelView.scale(obj.size(1) / 2, obj.size(2) / 2, 1);
+            modelView.scale(obj.radiusX, obj.radiusY, 1);
             
             c = obj.color;
             if length(c) == 1
@@ -43,7 +49,7 @@ classdef Rectangle < Stimulus
                 c = [c, obj.opacity];
             end
             
-            obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c);
+            obj.canvas.drawArray(obj.vao, GL.TRIANGLE_FAN, 0, obj.numSides+2, c);
             
             modelView.pop();
         end
@@ -51,3 +57,4 @@ classdef Rectangle < Stimulus
     end
     
 end
+
