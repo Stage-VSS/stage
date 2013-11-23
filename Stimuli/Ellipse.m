@@ -7,7 +7,10 @@ classdef Ellipse < Stimulus
         orientation = 0
         color = [1 1 1]
         opacity = 1
-        numSides = 51
+    end
+    
+    properties (SetAccess = private)
+        numSides
     end
     
     properties (Access = private)
@@ -16,6 +19,13 @@ classdef Ellipse < Stimulus
     end
     
     methods
+        
+        function obj = Ellipse(numSides)
+            if nargin < 1
+                numSides = 51;
+            end
+            obj.numSides = numSides;
+        end
         
         function init(obj, canvas)
             init@Stimulus(obj, canvas);
