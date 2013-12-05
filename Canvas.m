@@ -8,7 +8,8 @@ classdef Canvas < handle
     end
     
     properties (Access = private)
-        defaultProgram
+        standardPrograms
+        currentProgram
         
         projectionUniform
         modelViewUniform
@@ -24,15 +25,8 @@ classdef Canvas < handle
             obj.projection.orthographic(0, window.size(1), 0, window.size(2));
             obj.modelView = MatrixStack();
             
-            vertShader = ShaderObject(obj, GL.VERTEX_SHADER, 'Shaders/PositionOnly.vert');
-            vertShader.compile();
+            obj.standardPrograms = StandardPrograms(obj);
             
-            fragShader = ShaderObject(obj, GL.FRAGMENT_SHADER, 'Shaders/UniformColor.frag');
-            fragShader.compile();
-            
-            obj.defaultProgram = ProgramObject.createAndLink(obj, [vertShader, fragShader]);
-            
-            obj.resetProgram();
             obj.resetBlend();
         end
         
@@ -55,32 +49,24 @@ classdef Canvas < handle
             glClear(GL.COLOR_BUFFER_BIT);
         end
         
-        function setProgram(obj, program)
+        function setProgram(obj, programName)
             obj.makeCurrent();
-                        
-            projectionUni = program.getUniformLocation('projectionMatrix');
-            if projectionUni == -1
-                error('Program does not contain a projectionMatrix uniform');
-            end
-                       
-            modelViewUni = program.getUniformLocation('modelViewMatrix');
-            if modelViewUni == -1
-                error('Program does not contain a modelViewMatrix uniform');
+            
+            switch programName
+                case 'PositionOnly'
+                    program = obj.standardPrograms.positionOnlyProgram;
+                case 'SingleTexture'
+                    program = obj.standardPrograms.singleTextureProgram;
+                otherwise
+                    error('Unknown program name');
             end
             
-            colorUni = program.getUniformLocation('color');
-            if colorUni == -1
-                error('Program does not contain a color uniform');
-            end
+            obj.projectionUniform = program.getUniformLocation('projectionMatrix');
+            obj.modelViewUniform = program.getUniformLocation('modelViewMatrix');
+            obj.colorUniform = program.getUniformLocation('color0');
             
-            obj.projectionUniform = projectionUni;
-            obj.modelViewUniform = modelViewUni;
-            obj.colorUniform = colorUni;
             glUseProgram(program.handle);
-        end
-        
-        function resetProgram(obj)
-            obj.setProgram(obj.defaultProgram);
+            obj.currentProgram = program;
         end
         
         function enableBlend(obj, src, dest)            
@@ -98,19 +84,35 @@ classdef Canvas < handle
             obj.enableBlend(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
         end
         
-        function prepareToDraw(obj, color)
+        function drawArray(obj, array, mode, first, count, color, texture, mask)
             obj.makeCurrent();
-            glUniformMatrix4fv(obj.projectionUniform, 1, GL.FALSE, obj.projection.top());
-            glUniformMatrix4fv(obj.modelViewUniform, 1, GL.FALSE, obj.modelView.top());
-            glUniform4fv(obj.colorUniform, 1, color);
-        end
-        
-        function drawArray(obj, array, mode, first, count, color)
-            obj.prepareToDraw(color);
+            
+            if nargin < 7
+                obj.setProgram('PositionOnly');
+            else
+                obj.setProgram('SingleTexture');
+                
+                glActiveTexture(GL.TEXTURE0);
+                glBindTexture(texture.target, texture.handle);
+                
+                if nargin >= 8
+                    glActiveTexture(GL.TEXTURE1);
+                    glBindTexture(mask.texture.target, mask.texture.handle);
+                end
+            end
+            
+            prog = obj.currentProgram;
+            prog.setUniformMatrix(obj.projectionUniform, obj.projection.top());
+            prog.setUniformMatrix(obj.modelViewUniform, obj.modelView.top());
+            prog.setUniformfv(obj.colorUniform, color);
             
             glBindVertexArray(array.handle);
             glDrawArrays(mode, first, count);
             glBindVertexArray(0);
+            
+            if nargin > 6
+                glBindTexture(texture.target, 0);
+            end
         end
         
     end

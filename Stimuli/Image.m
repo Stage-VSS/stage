@@ -1,20 +1,16 @@
-classdef Grating < Stimulus
+classdef Image < Stimulus
     
     properties
         position = [0, 0]
         size = [100, 100]
         orientation = 0
-        color = 1
+        color = [1 1 1]
         opacity = 1
-        contrast = 1
-        phase = 0           % degrees
-        spatialFreq = 1/100 % cycles/pixels
     end
     
     properties (Access = private)
-        type
+        filename
         mask
-        resolution
         vbo
         vao
         texture
@@ -22,26 +18,13 @@ classdef Grating < Stimulus
     
     methods
         
-        function obj = Grating(type, mask, resolution)
-            if nargin < 1
-                type = 'sine';
-            end
-            
+        function obj = Image(filename, mask)
             if nargin < 2
                 mask = [];
             end
             
-            if nargin < 3
-                resolution = 512;
-            end
-            
-            if ~strcmp(type, 'sine') && ~strcmp(type, 'square')
-                error('Unknown type');
-            end
-            
-            obj.type = type;
+            obj.filename = filename;
             obj.mask = mask;
-            obj.resolution = resolution;
         end
         
         function init(obj, canvas)
@@ -63,33 +46,23 @@ classdef Grating < Stimulus
             obj.vao.setAttribute(obj.vbo, 0, 4, GL.FLOAT, GL.FALSE, 6*4, 0);
             obj.vao.setAttribute(obj.vbo, 1, 2, GL.FLOAT, GL.FALSE, 6*4, 4*4);
             
-            image = zeros(1, obj.resolution, 4, 'uint8');
-            
-            switch obj.type
-                case 'sine'
-                    width = obj.size(1);
-                    step = width / obj.resolution;
-                    pedestal = 0.5;
-                    wave = sin(2 * pi * obj.spatialFreq * (0:step:width-step) + (obj.phase / 180 * pi)) * 0.5 * obj.contrast + pedestal;
-                    wave = wave * 255;
-                    image(:, :, 1:3) = [wave; wave; wave]';
-                    image(:, :, 4) = 255;
-                case 'square'
-                    width = obj.size(1);
-                    step = width / obj.resolution;
-                    pedestal = 0.5;
-                    wave = sin(2 * pi * obj.spatialFreq * (0:step:width-step) + (obj.phase / 180 * pi)) * 0.5 * obj.contrast + pedestal;
-                    wave(wave > 0.5) = 1;
-                    wave(wave <= 0.5) = 0;
-                    wave = wave * 255;
-                    image(:, :, 1:3) = [wave; wave; wave]';
-                    image(:, :, 4) = 255;
+            [image, ~, alpha] = imread(obj.filename);
+            if ~isa(image, 'uint8')
+                error('Unsupported image bitdepth');
             end
             
-            % TODO: Anything gained by making this a 1D texture?
+            if size(image, 3) == 1
+                image(:, :, 2) = image(:, :, 1);
+                image(:, :, 3) = image(:, :, 1);
+            end
+            
+            if isempty(alpha)
+                image(:, :, 4) = 255;
+            else
+                image(:, :, 4) = alpha;
+            end
+            
             obj.texture = TextureObject(canvas, 2);
-            obj.texture.setWrapModeS(GL.REPEAT);
-            obj.texture.setWrapModeT(GL.REPEAT);
             obj.texture.setImage(image);
         end
         
@@ -119,4 +92,3 @@ classdef Grating < Stimulus
     end
     
 end
-

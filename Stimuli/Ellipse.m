@@ -2,8 +2,8 @@ classdef Ellipse < Stimulus
     
     properties
         position = [0, 0]
-        radiusX = 100;
-        radiusY = 100;
+        radiusX = 100
+        radiusY = 100
         orientation = 0
         color = [1 1 1]
         opacity = 1
@@ -31,15 +31,15 @@ classdef Ellipse < Stimulus
             init@Stimulus(obj, canvas);
             
             angles = (0:obj.numSides)/obj.numSides * 2 * pi;
-            vertices = zeros(1, (obj.numSides + 1) * 4);
-            vertices(1:4:end) = cos(angles);
-            vertices(2:4:end) = sin(angles);
-            vertices(4:4:end) = 1;
+            vertexData = zeros(1, (obj.numSides + 1) * 4);
+            vertexData(1:4:end) = cos(angles);
+            vertexData(2:4:end) = sin(angles);
+            vertexData(4:4:end) = 1;
             
             center = [0 0 0 1];
-            vertices = [center vertices];
+            vertexData = [center vertexData];
                     
-            obj.vbo = VertexBufferObject(canvas, GL.ARRAY_BUFFER, single(vertices), GL.STATIC_DRAW);
+            obj.vbo = VertexBufferObject(canvas, GL.ARRAY_BUFFER, single(vertexData), GL.STATIC_DRAW);
             
             obj.vao = VertexArrayObject(canvas);
             obj.vao.setAttribute(obj.vbo, 0, 4, GL.FLOAT, GL.FALSE, 0, 0);

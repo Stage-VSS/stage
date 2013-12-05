@@ -42,6 +42,23 @@ classdef ProgramObject < handle
             l = glGetUniformLocation(obj.handle, name);            
         end
         
+        function setUniformMatrix(obj, location, matrix)
+            obj.canvas.makeCurrent();
+            % TODO: Finish.
+            glUniformMatrix4fv(location, 1, GL.FALSE, matrix);
+        end
+        
+        function setUniform1i(obj, location, value)
+            obj.canvas.makeCurrent();
+            glUniform1i(location, value);
+        end
+        
+        function setUniformfv(obj, location, vector)
+            obj.canvas.makeCurrent();
+            % TODO: Finish.
+            glUniform4fv(location, 1, vector);
+        end
+        
     end
     
     methods (Static)
