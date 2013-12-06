@@ -34,17 +34,18 @@ classdef Image < Stimulus
                 obj.mask.init(canvas);
             end
             
-            % Each vertex position is followed by a texture coordinate.
-            vertexData = [-1  1  0  1,  0  1 ...
-                          -1 -1  0  1,  0  0 ...
-                           1  1  0  1,  1  1 ...
-                           1 -1  0  1,  1  0];
+            % Each vertex position is followed by a texture coordinate and a mask coordinate.
+            vertexData = [-1  1  0  1,  0  1,  0  1 ...
+                          -1 -1  0  1,  0  0,  0  0 ...
+                           1  1  0  1,  1  1,  1  1 ...
+                           1 -1  0  1,  1  0,  1  0];
             
             obj.vbo = VertexBufferObject(canvas, GL.ARRAY_BUFFER, single(vertexData), GL.STATIC_DRAW);
             
             obj.vao = VertexArrayObject(canvas);
-            obj.vao.setAttribute(obj.vbo, 0, 4, GL.FLOAT, GL.FALSE, 6*4, 0);
-            obj.vao.setAttribute(obj.vbo, 1, 2, GL.FLOAT, GL.FALSE, 6*4, 4*4);
+            obj.vao.setAttribute(obj.vbo, 0, 4, GL.FLOAT, GL.FALSE, 8*4, 0);
+            obj.vao.setAttribute(obj.vbo, 1, 2, GL.FLOAT, GL.FALSE, 8*4, 4*4);
+            obj.vao.setAttribute(obj.vbo, 2, 2, GL.FLOAT, GL.FALSE, 8*4, 6*4);
             
             [image, ~, alpha] = imread(obj.filename);
             if ~isa(image, 'uint8')

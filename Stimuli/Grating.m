@@ -18,30 +18,31 @@ classdef Grating < Stimulus
         vbo
         vao
         texture
+        needToUpdateVertexBuffer
+        needToUpdateTexture
     end
     
     methods
         
-        function obj = Grating(type, mask, resolution)
+        function obj = Grating(type, resolution)
             if nargin < 1
                 type = 'sine';
             end
             
             if nargin < 2
-                mask = [];
-            end
-            
-            if nargin < 3
                 resolution = 512;
             end
             
-            if ~strcmp(type, 'sine') && ~strcmp(type, 'square')
+            if ~any(strcmp(type, {'sine', 'square', 'sawtooth'}))
                 error('Unknown type');
             end
             
             obj.type = type;
-            obj.mask = mask;
             obj.resolution = resolution;
+        end
+        
+        function setMask(obj, mask)
+            obj.mask = mask;
         end
         
         function init(obj, canvas)
@@ -51,49 +52,36 @@ classdef Grating < Stimulus
                 obj.mask.init(canvas);
             end
             
-            % Each vertex position is followed by a texture coordinate.
-            vertexData = [-1  1  0  1,  0  1 ...
-                          -1 -1  0  1,  0  0 ...
-                           1  1  0  1,  1  1 ...
-                           1 -1  0  1,  1  0];
+            % Each vertex position is followed by a texture coordinate and a mask coordinate.
+            vertexData = [-1  1  0  1,  0  1,  0  1 ...
+                          -1 -1  0  1,  0  0,  0  0 ...
+                           1  1  0  1,  1  1,  1  1 ...
+                           1 -1  0  1,  1  0,  1  0];
             
-            obj.vbo = VertexBufferObject(canvas, GL.ARRAY_BUFFER, single(vertexData), GL.STATIC_DRAW);
+            obj.vbo = VertexBufferObject(canvas, GL.ARRAY_BUFFER, single(vertexData), GL.DYNAMIC_DRAW);
             
             obj.vao = VertexArrayObject(canvas);
-            obj.vao.setAttribute(obj.vbo, 0, 4, GL.FLOAT, GL.FALSE, 6*4, 0);
-            obj.vao.setAttribute(obj.vbo, 1, 2, GL.FLOAT, GL.FALSE, 6*4, 4*4);
-            
-            image = zeros(1, obj.resolution, 4, 'uint8');
-            
-            switch obj.type
-                case 'sine'
-                    width = obj.size(1);
-                    step = width / obj.resolution;
-                    pedestal = 0.5;
-                    wave = sin(2 * pi * obj.spatialFreq * (0:step:width-step) + (obj.phase / 180 * pi)) * 0.5 * obj.contrast + pedestal;
-                    wave = wave * 255;
-                    image(:, :, 1:3) = [wave; wave; wave]';
-                    image(:, :, 4) = 255;
-                case 'square'
-                    width = obj.size(1);
-                    step = width / obj.resolution;
-                    pedestal = 0.5;
-                    wave = sin(2 * pi * obj.spatialFreq * (0:step:width-step) + (obj.phase / 180 * pi)) * 0.5 * obj.contrast + pedestal;
-                    wave(wave > 0.5) = 1;
-                    wave(wave <= 0.5) = 0;
-                    wave = wave * 255;
-                    image(:, :, 1:3) = [wave; wave; wave]';
-                    image(:, :, 4) = 255;
-            end
-            
+            obj.vao.setAttribute(obj.vbo, 0, 4, GL.FLOAT, GL.FALSE, 8*4, 0);
+            obj.vao.setAttribute(obj.vbo, 1, 2, GL.FLOAT, GL.FALSE, 8*4, 4*4);
+            obj.vao.setAttribute(obj.vbo, 2, 2, GL.FLOAT, GL.FALSE, 8*4, 6*4);
+                        
             % TODO: Anything gained by making this a 1D texture?
             obj.texture = TextureObject(canvas, 2);
             obj.texture.setWrapModeS(GL.REPEAT);
-            obj.texture.setWrapModeT(GL.REPEAT);
-            obj.texture.setImage(image);
+            
+            obj.updateVertexBuffer();
+            obj.updateTexture();
         end
         
         function draw(obj)
+            if obj.needToUpdateVertexBuffer
+                obj.updateVertexBuffer();
+            end
+            
+            if obj.needToUpdateTexture
+                obj.updateTexture();
+            end
+            
             modelView = obj.canvas.modelView;
             modelView.push();
             modelView.translate(obj.position(1), obj.position(2), 0);
@@ -116,7 +104,67 @@ classdef Grating < Stimulus
             modelView.pop();
         end
         
+        function set.size(obj, size)
+            obj.size = size;
+            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
+        end
+        
+        function set.phase(obj, phase)
+            obj.phase = phase;
+            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
+        end
+        
+        function set.spatialFreq(obj, freq)
+            obj.spatialFreq = freq;
+            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
+        end
+        
+        function set.contrast(obj, contrast)
+            obj.contrast = contrast;
+            obj.needToUpdateTexture = true; %#ok<MCSUP>
+        end
+        
+    end
+    
+    methods (Access = private)
+        
+        function updateVertexBuffer(obj)
+            nCycles = obj.size(1) * obj.spatialFreq;
+            phaseShift = obj.phase / 360;
+            
+            vertexData = [-1  1  0  1,  0+phaseShift        1,  0  1 ...
+                          -1 -1  0  1,  0+phaseShift        0,  0  0 ...
+                           1  1  0  1,  nCycles+phaseShift  1,  1  1 ...
+                           1 -1  0  1,  nCycles+phaseShift  0,  1  0];
+                       
+            obj.vbo.uploadData(single(vertexData));
+            
+            obj.needToUpdateVertexBuffer = false;
+        end
+        
+        function updateTexture(obj)
+            switch obj.type
+                case 'sine'
+                    wave = sin(linspace(0, 2*pi, obj.resolution));
+                case 'square'
+                    wave = sin(linspace(0, 2*pi, obj.resolution));
+                    wave(wave >= 0) = 1;
+                    wave(wave < 0) = -1;
+                case 'sawtooth'
+                    wave = linspace(-1, 1, obj.resolution);
+            end
+            
+            wave = wave * obj.contrast;
+            wave = (wave + 1) / 2 * 255;
+            
+            image = ones(1, obj.resolution, 4, 'uint8') * 255;
+            image(:, :, 1:3) = [wave; wave; wave]';
+            
+            obj.texture.setImage(image);
+            
+            obj.needToUpdateTexture = false;
+        end
+        
     end
     
 end
-

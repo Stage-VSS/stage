@@ -39,12 +39,12 @@ presentation.addStimulus(ellip);
 
 presentation.addController(ellip, 'orientation', @(s)-s.time*120);
 %
-% mask = Mask2D('gaussian');
-% img = Image('Test/checkerboard.jpg', mask);
-% %img.size = [100, 300];
-% img.position = [200, 200];
-% %img.opacity = 0.5;
-% presentation.addStimulus(img);
+mask = Mask2D('gaussian');
+img = Image('Test/checkerboard.jpg', mask);
+img.size = [200, 200];
+img.position = [500, 200];
+%img.opacity = 0.5;
+presentation.addStimulus(img);
 % % 
 % presentation.addController(img, 'size', @(s)[s.time*100 s.time*100]);
 % presentation.addController(img, 'orientation', @(s)s.time*60);
@@ -59,16 +59,31 @@ presentation.addController(ellip, 'orientation', @(s)-s.time*120);
 
 mask = Mask2D('circle');
 grat = Grating('square');
+grat.setMask(mask);
 grat.position = [200, 300];
 grat.size = [200, 200];
 grat.spatialFreq = 1/100;
-grat.contrast = 1;
+grat.contrast = 0.5;
 grat.phase = 180;
-%grat
 presentation.addStimulus(grat);
 
+%presentation.addController(grat, 'spatialFreq', @(s)1/(100/s.time));
+%presentation.addController(grat, 'phase', @(s)s.time*360);
+%presentation.addController(grat, 'contrast', @(s)s.time*1/5);
 %presentation.addController(grat, 'size', @(s)[s.time*100 s.time*100]);
 %presentation.addController(grat, 'orientation', @(s)s.time*50);
+
+% mask = Mask2D('circle');
+% grat2 = Grating('square');
+% grat2.setMask(mask);
+% grat2.position = [200, 300];
+% grat2.size = [200, 200];
+% grat2.spatialFreq = 1/100;
+% grat2.contrast = 0.5;
+% grat2.phase = 180;
+% grat2.orientation = 90;
+% grat2.opacity = 0.5;
+% presentation.addStimulus(grat2);
 
 %% PLAY!
 presentation.play();
