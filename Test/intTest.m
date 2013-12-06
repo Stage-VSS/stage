@@ -40,7 +40,8 @@ presentation.addStimulus(ellip);
 presentation.addController(ellip, 'orientation', @(s)-s.time*120);
 %
 mask = Mask2D('gaussian');
-img = Image('Test/checkerboard.jpg', mask);
+img = Image('Test/checkerboard.jpg');
+img.setMask(mask);
 img.size = [200, 200];
 img.position = [500, 200];
 %img.opacity = 0.5;

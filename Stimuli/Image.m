@@ -18,12 +18,11 @@ classdef Image < Stimulus
     
     methods
         
-        function obj = Image(filename, mask)
-            if nargin < 2
-                mask = [];
-            end
-            
+        function obj = Image(filename)            
             obj.filename = filename;
+        end
+        
+        function setMask(obj, mask)
             obj.mask = mask;
         end
         
