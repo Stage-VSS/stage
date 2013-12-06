@@ -1,4 +1,4 @@
-classdef Image < Stimulus
+classdef Movie < Stimulus
     
     properties
         position = [0, 0]
@@ -18,7 +18,7 @@ classdef Image < Stimulus
     
     methods
         
-        function obj = Image(filename)            
+        function obj = Movie(filename)            
             obj.filename = filename;
         end
         
@@ -64,7 +64,6 @@ classdef Image < Stimulus
             
             obj.texture = TextureObject(canvas, 2);
             obj.texture.setImage(image);
-            obj.texture.generateMipmap();
         end
         
         function draw(obj)

@@ -47,7 +47,7 @@ img.position = [500, 200];
 %img.opacity = 0.5;
 presentation.addStimulus(img);
 % % 
-% presentation.addController(img, 'size', @(s)[s.time*100 s.time*100]);
+%presentation.addController(img, 'size', @(s)[s.time*100 s.time*100]);
 % presentation.addController(img, 'orientation', @(s)s.time*60);
 % 
 % img2 = Image('Test/rieke.png');
@@ -64,7 +64,7 @@ grat.setMask(mask);
 grat.position = [200, 300];
 grat.size = [200, 200];
 grat.spatialFreq = 1/100;
-grat.contrast = 0.5;
+%grat.contrast = 0.5;
 grat.phase = 180;
 presentation.addStimulus(grat);
 

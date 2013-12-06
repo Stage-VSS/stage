@@ -47,6 +47,7 @@ classdef Mask2D < handle
             
             obj.texture = TextureObject(canvas, 2);
             obj.texture.setImage(mask);
+            obj.texture.generateMipmap();
         end
         
     end

@@ -68,6 +68,7 @@ classdef Grating < Stimulus
             % TODO: Anything gained by making this a 1D texture?
             obj.texture = TextureObject(canvas, 2);
             obj.texture.setWrapModeS(GL.REPEAT);
+            obj.texture.setImage(zeros(1, obj.resolution, 4, 'uint8'));
             
             obj.updateVertexBuffer();
             obj.updateTexture();
@@ -160,7 +161,7 @@ classdef Grating < Stimulus
             image = ones(1, obj.resolution, 4, 'uint8') * 255;
             image(:, :, 1:3) = [wave; wave; wave]';
             
-            obj.texture.setImage(image);
+            obj.texture.setSubImage(image);
             
             obj.needToUpdateTexture = false;
         end
