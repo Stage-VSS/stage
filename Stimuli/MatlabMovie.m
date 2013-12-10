@@ -1,4 +1,4 @@
-classdef Movie < Stimulus
+classdef MatlabMovie < Stimulus
     
     properties
         position = [0, 0]
@@ -14,11 +14,13 @@ classdef Movie < Stimulus
         vbo
         vao
         texture
+        video
+        frameIndex
     end
     
     methods
         
-        function obj = Movie(filename)            
+        function obj = MatlabMovie(filename)            
             obj.filename = filename;
         end
         
@@ -46,27 +48,25 @@ classdef Movie < Stimulus
             obj.vao.setAttribute(obj.vbo, 1, 2, GL.FLOAT, GL.FALSE, 8*4, 4*4);
             obj.vao.setAttribute(obj.vbo, 2, 2, GL.FLOAT, GL.FALSE, 8*4, 6*4);
             
-            [image, ~, alpha] = imread(obj.filename);
-            if ~isa(image, 'uint8')
-                error('Unsupported image bitdepth');
-            end
+            reader = VideoReader(obj.filename);
+            obj.video = reader.read([1 reader.NumberOfFrames]);
             
-            if size(image, 3) == 1
-                image(:, :, 2) = image(:, :, 1);
-                image(:, :, 3) = image(:, :, 1);
-            end
-            
-            if isempty(alpha)
-                image(:, :, 4) = 255;
-            else
-                image(:, :, 4) = alpha;
-            end
+            obj.frameIndex = 1;
             
             obj.texture = TextureObject(canvas, 2);
-            obj.texture.setImage(image);
+            obj.texture.setImage(obj.video(:,:,:,1));
         end
         
         function draw(obj)
+            frame = obj.video(:,:,:,obj.frameIndex);
+            
+            obj.frameIndex = obj.frameIndex + 1;
+            if obj.frameIndex > size(obj.video, 4)
+                obj.frameIndex = 1;
+            end
+            
+            obj.texture.setSubImage(frame);
+            
             modelView = obj.canvas.modelView;
             modelView.push();
             modelView.translate(obj.position(1), obj.position(2), 0);
