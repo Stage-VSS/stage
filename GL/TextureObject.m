@@ -51,11 +51,12 @@ classdef TextureObject < handle
             obj.canvas.makeCurrent();
             glBindTexture(obj.target, obj.handle);
             
+            nPlanes = size(image, 3);
             width = size(image, 2);
             height = size(image, 1);
             
-            data = zeros(4, height, width, 'uint8');
-            for i = 1:4
+            data = zeros(nPlanes, width, height, 'uint8');
+            for i = 1:nPlanes
                 data(i, :, :) = transpose(flipud(image(:, :, i)));
             end
             
@@ -86,11 +87,12 @@ classdef TextureObject < handle
             obj.canvas.makeCurrent();
             glBindTexture(obj.target, obj.handle);
             
+            nPlanes = size(image, 3);
             width = size(image, 2);
             height = size(image, 1);
             
-            data = zeros(4, height, width, 'uint8');
-            for i = 1:4
+            data = zeros(nPlanes, width, height, 'uint8');
+            for i = 1:nPlanes
                 data(i, :, :) = transpose(flipud(image(:, :, i)));
             end
             
@@ -140,6 +142,8 @@ end
 
 function [pixelFormat, pixelDatatype, internalFormat] = getFormatAndType(image)
     switch size(image, 3)
+        case 3
+            pixelFormat = GL.RGB;
         case 4
             pixelFormat = GL.RGBA;
         otherwise
@@ -154,10 +158,11 @@ function [pixelFormat, pixelDatatype, internalFormat] = getFormatAndType(image)
     end
 
     internalFormat = [];
-    if pixelFormat == GL.RGBA
-        if pixelDatatype == GL.UNSIGNED_BYTE
+    switch pixelFormat
+        case GL.RGB
+            internalFormat = GL.RGB8;
+        case GL.RGBA
             internalFormat = GL.RGBA8;
-        end
     end
     
     if isempty(internalFormat)
