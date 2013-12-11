@@ -11,7 +11,9 @@ classdef Image < Stimulus
     end
     
     properties (Access = private)
-        filename
+        matrix
+        minFilter
+        magFilter
         mask
         vbo
         vao
@@ -21,12 +23,26 @@ classdef Image < Stimulus
     
     methods
         
-        function obj = Image(filename)            
-            obj.filename = filename;
+        function obj = Image(matrix)
+            if ~isa(matrix, 'uint8')
+                error('Matrix must be of class uint8');
+            end
+            
+            obj.matrix = matrix;
+            obj.minFilter = GL.LINEAR_MIPMAP_LINEAR;
+            obj.magFilter = GL.LINEAR;
         end
         
         function setMask(obj, mask)
             obj.mask = mask;
+        end
+        
+        function setMinFilter(obj, filter)
+            obj.minFilter = filter;
+        end
+        
+        function setMagFilter(obj, filter)
+            obj.magFilter = filter;
         end
         
         function init(obj, canvas)
@@ -49,25 +65,17 @@ classdef Image < Stimulus
             obj.vao.setAttribute(obj.vbo, 1, 2, GL.FLOAT, GL.FALSE, 8*4, 4*4);
             obj.vao.setAttribute(obj.vbo, 2, 2, GL.FLOAT, GL.FALSE, 8*4, 6*4);
             
-            [image, ~, alpha] = imread(obj.filename);
-            if ~isa(image, 'uint8')
-                error('Unsupported image bitdepth');
-            end
-            
+            image = obj.matrix;
             if size(image, 3) == 1
                 image(:, :, 2) = image(:, :, 1);
                 image(:, :, 3) = image(:, :, 1);
             end
             
-            if isempty(alpha)
-                image(:, :, 4) = 255;
-            else
-                image(:, :, 4) = alpha;
-            end
-            
             obj.texture = TextureObject(canvas, 2);
             obj.texture.setWrapModeS(GL.REPEAT);
             obj.texture.setWrapModeT(GL.REPEAT);
+            obj.texture.setMinFilter(obj.minFilter);
+            obj.texture.setMagFilter(obj.magFilter);
             obj.texture.setImage(image);
             obj.texture.generateMipmap();
             

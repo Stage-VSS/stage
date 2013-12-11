@@ -131,6 +131,20 @@ classdef TextureObject < handle
             glBindTexture(obj.target, 0);
         end
         
+        function setMinFilter(obj, filter)
+            obj.canvas.makeCurrent();
+            glBindTexture(obj.target, obj.handle);
+            glTexParameteri(obj.target, GL.TEXTURE_MIN_FILTER, filter);
+            glBindTexture(obj.target, 0);
+        end
+        
+        function setMagFilter(obj, filter)
+            obj.canvas.makeCurrent();
+            glBindTexture(obj.target, obj.handle);
+            glTexParameteri(obj.target, GL.TEXTURE_MAG_FILTER, filter);
+            glBindTexture(obj.target, 0);
+        end
+        
         function delete(obj)
             obj.canvas.makeCurrent();
             glDeleteTextures(1, obj.handle);

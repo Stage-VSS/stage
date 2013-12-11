@@ -4,7 +4,7 @@ function intTest(canvas)
 % canvas.projection.setIdentity();
 % canvas.projection.orthographic(0, canvas.size(1)*2, 0, canvas.size(2));
 
-presentation = Presentation(canvas, 5);
+presentation = Presentation(canvas, 2);
 
 %% Stimuli
 rect1 = Rectangle();
@@ -39,13 +39,23 @@ presentation.addStimulus(ellip);
 
 presentation.addController(ellip, 'orientation', @(s)-s.time*120);
 %
+%matrix = imread('Test/checkerboard.jpg');
+matrix = uint8(rand(4, 4) * 255);
+
 mask = Mask2D('gaussian');
-img = Image('Test/checkerboard.jpg');
-img.setMask(mask);
+img = Image(matrix);
+%img.setMask(mask);
+img.setMagFilter(GL.NEAREST);
 img.size = [200, 200];
 img.position = [500, 200];
+img.shiftX = 0;
+%img.shiftY = 0.5;
 %img.opacity = 0.5;
 presentation.addStimulus(img);
+
+%presentation.addController(img, 'shiftX', @(s)s.time);
+%presentation.addController(img, 'shiftY', @(s)s.time);
+
 % % 
 %presentation.addController(img, 'size', @(s)[s.time*100 s.time*100]);
 % presentation.addController(img, 'orientation', @(s)s.time*60);
