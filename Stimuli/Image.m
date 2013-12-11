@@ -6,6 +6,8 @@ classdef Image < Stimulus
         orientation = 0
         color = [1 1 1]
         opacity = 1
+        shiftX = 0
+        shiftY = 0
     end
     
     properties (Access = private)
@@ -14,6 +16,7 @@ classdef Image < Stimulus
         vbo
         vao
         texture
+        needToUpdateVertexBuffer
     end
     
     methods
@@ -63,11 +66,19 @@ classdef Image < Stimulus
             end
             
             obj.texture = TextureObject(canvas, 2);
+            obj.texture.setWrapModeS(GL.REPEAT);
+            obj.texture.setWrapModeT(GL.REPEAT);
             obj.texture.setImage(image);
             obj.texture.generateMipmap();
+            
+            obj.updateVertexBuffer();
         end
         
         function draw(obj)
+            if obj.needToUpdateVertexBuffer
+                obj.updateVertexBuffer();
+            end
+            
             modelView = obj.canvas.modelView;
             modelView.push();
             modelView.translate(obj.position(1), obj.position(2), 0);
@@ -88,6 +99,34 @@ classdef Image < Stimulus
             end
             
             modelView.pop();
+        end
+        
+        function set.shiftX(obj, shiftX)
+            obj.shiftX = shiftX;
+            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
+        end
+        
+        function set.shiftY(obj, shiftY)
+            obj.shiftY = shiftY;
+            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
+        end
+        
+    end
+    
+    methods (Access = private)
+        
+        function updateVertexBuffer(obj)
+            x = obj.shiftX;
+            y = obj.shiftY;
+            
+            vertexData = [-1  1  0  1,  0+x  1+y,  0  1 ...
+                          -1 -1  0  1,  0+x  0+y,  0  0 ...
+                           1  1  0  1,  1+x  1+y,  1  1 ...
+                           1 -1  0  1,  1+x  0+y,  1  0];
+                       
+            obj.vbo.uploadData(single(vertexData));
+            
+            obj.needToUpdateVertexBuffer = false;
         end
         
     end
