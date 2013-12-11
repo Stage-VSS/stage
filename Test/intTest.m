@@ -42,7 +42,7 @@ presentation.addController(ellip, 'orientation', @(s)-s.time*120);
 %matrix = imread('Test/checkerboard.jpg');
 matrix = uint8(rand(4, 4) * 255);
 
-mask = Mask2D('gaussian');
+mask = Mask.createGaussianMask();
 img = Image(matrix);
 %img.setMask(mask);
 img.setMagFilter(GL.NEAREST);
@@ -68,7 +68,9 @@ presentation.addStimulus(img);
 % 
 % presentation.addController(img2, 'orientation', @(s)s.time*30);
 
-mask = Mask2D('circle');
+mask = Mask.createCircleMask();
+%[~, ~, alpha] = imread('Test/mask.png');
+%mask = Mask(alpha);
 grat = Grating('square');
 grat.setMask(mask);
 grat.position = [200, 300];
