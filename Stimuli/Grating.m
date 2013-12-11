@@ -12,7 +12,7 @@ classdef Grating < Stimulus
     end
     
     properties (Access = private)
-        type
+        profile
         mask
         resolution
         vbo
@@ -24,20 +24,20 @@ classdef Grating < Stimulus
     
     methods
         
-        function obj = Grating(type, resolution)
+        function obj = Grating(profile, resolution)
             if nargin < 1
-                type = 'sine';
+                profile = 'sine';
             end
             
             if nargin < 2
                 resolution = 512;
             end
             
-            if ~any(strcmp(type, {'sine', 'square', 'sawtooth'}))
-                error('Unknown type');
+            if ~any(strcmp(profile, {'sine', 'square', 'sawtooth'}))
+                error('Unknown profile');
             end
             
-            obj.type = type;
+            obj.profile = profile;
             obj.resolution = resolution;
         end
         
@@ -144,7 +144,7 @@ classdef Grating < Stimulus
         end
         
         function updateTexture(obj)
-            switch obj.type
+            switch obj.profile
                 case 'sine'
                     wave = sin(linspace(0, 2*pi, obj.resolution));
                 case 'square'
