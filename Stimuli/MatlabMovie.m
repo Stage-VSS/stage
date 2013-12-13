@@ -1,29 +1,37 @@
+% A simple movie player stimulus. This stimulus uses Matlab's built-in VideoReader and loads the full movie into
+% memory during initialization. Because of this it is really only suitable for small, short, movies. A streaming movie
+% player stimulus is in progress.
+
 classdef MatlabMovie < Stimulus
     
     properties
-        position = [0, 0]
-        size = [100, 100]
-        orientation = 0
-        color = [1 1 1]
-        opacity = 1
+        position = [0, 0]   % Center position on the canvas [x, y] (pixels)
+        size = [100, 100]   % Size [width, height] (pixels)
+        orientation = 0     % Orientation (degrees)
+        color = [1, 1, 1]   % Color multiplier as single value or [R, G, B] (real number)
+        opacity = 1         % Opacity (0 to 1)
     end
     
     properties (Access = private)
-        filename
-        mask
-        vbo
-        vao
-        texture
-        video
-        frameIndex
+        filename    % Movie filename
+        mask        % Stimulus mask
+        vbo         % Vertex buffer object
+        vao         % Vertex array object
+        texture     % Frame texture
+        video       % Movie data
+        frameIndex  % Current frame index
     end
     
     methods
         
+        % Constructs a movie stimulus using the movie with the specified filename. The filename should contain a
+        % relative or complete file path if the movie is not in the current working directory. All video formats
+        % supported by VideoReader are usable.
         function obj = MatlabMovie(filename)            
             obj.filename = filename;
         end
         
+        % Assigns a mask to the stimulus.
         function setMask(obj, mask)
             obj.mask = mask;
         end

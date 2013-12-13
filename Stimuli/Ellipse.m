@@ -1,25 +1,28 @@
+% A filled ellipse stimulus. The ellipse is in reality a regular polygon with a large number of sides.
+
 classdef Ellipse < Stimulus
     
     properties
-        position = [0, 0]
-        radiusX = 100
-        radiusY = 100
-        orientation = 0
-        color = [1 1 1]
-        opacity = 1
+        position = [0, 0]   % Center position on the canvas [x, y] (pixels)
+        radiusX = 100       % Radius on the x axes (pixels)
+        radiusY = 100       % Radius on the y axes (pixels)
+        orientation = 0     % Orientation (degrees)
+        color = [1, 1, 1]   % Fill color as single intensity value or [R, G, B] (0 to 1)
+        opacity = 1         % Opacity (0 to 1)
     end
     
     properties (SetAccess = private)
-        numSides
+        numSides    % Number of sides of the regular polygon
     end
     
     properties (Access = private)
-        vbo
-        vao
+        vbo     % Vertex buffer object
+        vao     % Vertex array object
     end
     
     methods
         
+        % Constructs an ellipse stimulus with an optionally specified number of sides.
         function obj = Ellipse(numSides)
             if nargin < 1
                 numSides = 51;

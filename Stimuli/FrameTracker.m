@@ -1,15 +1,18 @@
+% A stimulus for monitoring the presentation frame rate with a photodiode. The stimulus will display a rectangle of
+% specified color every even frame and a rectangle of black every odd frame.
+
 classdef FrameTracker < Stimulus
     
     properties
-        position = [25, 25]   % [x, y]
-        size = [50, 50]       % [width, height]
-        color = [1 1 1]
+        position = [25, 25]     % Center position on the canvas [x, y] (pixels)
+        size = [50, 50]         % Size [width, height] (pixels)
+        color = [1, 1, 1]       % Fill color on even frames as a single intensity value or [R, G, B] (0 to 1)
     end
     
     properties (Access = private)
-        vbo
-        vao
-        frame
+        vbo     % Vertex buffer object
+        vao     % Vertex array object
+        frame   % The current frame number starting at 0
     end
     
     methods

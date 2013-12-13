@@ -1,29 +1,33 @@
+% A vertical grating stimulus.
+
 classdef Grating < Stimulus
     
     properties
-        position = [0, 0]
-        size = [100, 100]
-        orientation = 0
-        color = 1
-        opacity = 1
-        contrast = 1
-        phase = 0           % degrees
-        spatialFreq = 1/100 % cycles/pixels
+        position = [0, 0]       % Center position on the canvas [x, y] (pixels)
+        size = [100, 100]       % Size [width, height] (pixels)
+        orientation = 0         % Orientation (degrees)
+        color = [1, 1, 1]       % Peak color as single intensity value or [R, G, B] (0 to 1)
+        opacity = 1             % Opacity (0 to 1)
+        contrast = 1            % Scale factor for color values (-1 to 1, negative values invert the grating)
+        phase = 0               % Phase offset (degrees)
+        spatialFreq = 1/100     % Spatial frequency (cycles/pixels)
     end
     
     properties (Access = private)
-        profile
-        mask
-        resolution
-        vbo
-        vao
-        texture
+        profile                     % Luminance profile wave ('sine', 'square', or 'sawtooth')
+        mask                        % Stimulus mask
+        resolution                  % Texture resolution
+        vbo                         % Vertex buffer object
+        vao                         % Vertex array object
+        texture                     % Grating texture
         needToUpdateVertexBuffer
         needToUpdateTexture
     end
     
     methods
         
+        % Contructs a grating stimulus with an optionally specified luminance profile and texture resolution. The
+        % profile may be 'sine', 'square', or 'sawtooth'.
         function obj = Grating(profile, resolution)
             if nargin < 1
                 profile = 'sine';
@@ -41,6 +45,7 @@ classdef Grating < Stimulus
             obj.resolution = resolution;
         end
         
+        % Assigns a mask to the stimulus.
         function setMask(obj, mask)
             obj.mask = mask;
         end

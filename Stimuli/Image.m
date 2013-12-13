@@ -1,28 +1,36 @@
+% An arbitrary image stimulus.
+
 classdef Image < Stimulus
     
     properties
-        position = [0, 0]
-        size = [100, 100]
-        orientation = 0
-        color = [1 1 1]
-        opacity = 1
-        shiftX = 0
-        shiftY = 0
+        position = [0, 0]   % Center position on the canvas [x, y] (pixels)
+        size = [100, 100]   % Size [width, height] (pixels)
+        orientation = 0     % Orientation (degrees)
+        color = [1, 1, 1]   % Color multiplier as single value or [R, G, B] (real number)
+        opacity = 1         % Opacity (0 to 1)
+        shiftX = 0          % Texture shift (scroll) on the x axes (real number; 0 being no shift, 1 being a complete shift)
+        shiftY = 0          % Texture shift (scroll) on the y axes (real number; 0 being no shift, 1 being a complete shift)
     end
     
     properties (Access = private)
-        matrix
-        minFilter
-        magFilter
-        mask
-        vbo
-        vao
-        texture
+        matrix                      % Original image matrix
+        minFilter                   % Texture minifying function
+        magFilter                   % Texture magnification function
+        mask                        % Stimulus mask
+        vbo                         % Vertex buffer object
+        vao                         % Vertex array object
+        texture                     % Image texture
         needToUpdateVertexBuffer
     end
     
     methods
         
+        % Constructs an image stimulus with the specified image matrix data. The image data must be provided as an 
+        % M-by-N (grayscale), M-by-N-by-3 (truecolor), or M-by-N-by-4 (truecolor with alpha) matrix.
+        %
+        % Typical usage:
+        % imageData = imread('my_cool_image.png');
+        % image = Image(imageData);        
         function obj = Image(matrix)
             if ~isa(matrix, 'uint8')
                 error('Matrix must be of class uint8');
@@ -33,14 +41,17 @@ classdef Image < Stimulus
             obj.magFilter = GL.LINEAR;
         end
         
+        % Assigns a mask to the stimulus.
         function setMask(obj, mask)
             obj.mask = mask;
         end
         
+        % Sets the OpenGL minifying function for the image (GL.NEAREST, GL.LINEAR, GL.NEAREST_MIPMAP_NEAREST, etc).
         function setMinFilter(obj, filter)
             obj.minFilter = filter;
         end
         
+        % Sets the OpenGL magnification function for the image (GL.NEAREST or GL.LINEAR).
         function setMagFilter(obj, filter)
             obj.magFilter = filter;
         end

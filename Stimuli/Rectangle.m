@@ -1,16 +1,18 @@
+% A filled rectangle stimulus.
+
 classdef Rectangle < Stimulus
     
     properties
-        position = [0, 0]   % [x, y]
-        size = [100, 100]   % [width, height]
-        orientation = 0     % degrees
-        color = [1 1 1]
-        opacity = 1
+        position = [0, 0]   % Center position on the canvas [x, y] (pixels)
+        size = [100, 100]   % Size [width, height] (pixels)
+        orientation = 0     % Orientation (degrees)
+        color = [1, 1, 1]   % Fill color as single intensity value or [R, G, B] (0 to 1)
+        opacity = 1         % Opacity (0 to 1)
     end
     
     properties (Access = private)
-        vbo
-        vao
+        vbo     % Vertex buffer object
+        vao     % Vertex array object
     end
     
     methods
