@@ -1,6 +1,7 @@
 classdef Window < handle
     
     properties (SetAccess = private)
+        canvas
         monitor
         size
         handle
@@ -39,6 +40,8 @@ classdef Window < handle
             
             obj.monitor = monitor;            
             glfwSwapInterval(1);
+            
+            obj.canvas = Canvas(obj);
         end
         
         function s = get.size(obj)
@@ -51,7 +54,14 @@ classdef Window < handle
         end
         
         function close(obj)
-            glfwDestroyWindow(obj.handle);
+            delete(obj.canvas);
+            
+            % FIXME: Why is Matlab throwing 'Unexpected unknown exception from MEX file..' here?
+            try
+                glfwDestroyWindow(obj.handle);
+            catch
+                glfwDestroyWindow(obj.handle);
+            end
         end
         
     end

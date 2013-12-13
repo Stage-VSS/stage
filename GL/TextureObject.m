@@ -7,6 +7,7 @@ classdef TextureObject < handle
     
     properties (Access = private)
         canvas
+        canvasBeingDestroyed
     end
     
     methods
@@ -25,7 +26,7 @@ classdef TextureObject < handle
                     error('Unsupported dimensions');
             end
             
-            obj.canvas = canvas;
+            obj.canvas = canvas;            
             canvas.makeCurrent();
             
             tex = glGenTextures(1);
@@ -39,6 +40,8 @@ classdef TextureObject < handle
             glBindTexture(obj.target, 0);
             
             obj.handle = tex;
+            
+            obj.canvasBeingDestroyed = addlistener(canvas, 'ObjectBeingDestroyed', @(e,d)obj.delete());
         end
         
         function setImage(obj, image, level)

@@ -7,6 +7,7 @@ classdef VertexBufferObject < handle
     
     properties (Access = private)
         canvas
+        canvasBeingDestroyed
     end
     
     methods
@@ -23,6 +24,8 @@ classdef VertexBufferObject < handle
             
             obj.target = target;
             obj.handle = vbo;
+            
+            obj.canvasBeingDestroyed = addlistener(canvas, 'ObjectBeingDestroyed', @(e,d)obj.delete());
         end
         
         function uploadData(obj, data, offset)
