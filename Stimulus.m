@@ -1,6 +1,8 @@
+% Abstract class for all visual stimuli.
+
 classdef Stimulus < handle
     
-    properties
+    properties (SetAccess = private)
         canvas
     end
     
@@ -17,4 +19,3 @@ classdef Stimulus < handle
     end
     
 end
-

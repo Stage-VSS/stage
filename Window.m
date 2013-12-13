@@ -3,11 +3,21 @@ classdef Window < handle
     properties (SetAccess = private)
         monitor
         size
-        glfwWindow
+        handle
     end
     
     methods
         
+        % Constructs a window with the optionally provided size. By default the window occupies the fullscreen of the
+        % primary monitor but an optional fullscreen and monitor argument enable windowed mode and/or selection of a
+        % secondary monitor for the window.
+        %
+        % Typical usage:
+        % % Windowed mode
+        % window = Window([640, 480], false);
+        %
+        % % Fullscreen mode on primary monitor
+        % window = Window();
         function obj = Window(size, fullscreen, monitor)
             if nargin < 1
                 size = [640, 480];
@@ -22,9 +32,9 @@ classdef Window < handle
             glfwWindowHint(GLFW.GLFW_RESIZABLE, GL.FALSE);
             
             if fullscreen
-                obj.glfwWindow = glfwCreateWindow(size(1), size(2), 'Stage', monitor.glfwMonitor, []);
+                obj.handle = glfwCreateWindow(size(1), size(2), 'Stage', monitor.handle, []);
             else
-                obj.glfwWindow = glfwCreateWindow(size(1), size(2), 'Stage', [], []);
+                obj.handle = glfwCreateWindow(size(1), size(2), 'Stage', [], []);
             end
             
             obj.monitor = monitor;            
@@ -32,16 +42,16 @@ classdef Window < handle
         end
         
         function s = get.size(obj)
-            [w, h] = glfwGetWindowSize(obj.glfwWindow);
+            [w, h] = glfwGetWindowSize(obj.handle);
             s = [w, h];
         end
         
         function flip(obj)
-            glfwSwapBuffers(obj.glfwWindow);
+            glfwSwapBuffers(obj.handle);
         end
         
         function close(obj)
-            glfwDestroyWindow(obj.glfwWindow);
+            glfwDestroyWindow(obj.handle);
         end
         
     end

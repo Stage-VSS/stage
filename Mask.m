@@ -1,3 +1,5 @@
+% A transparency (alpha) mask.
+
 classdef Mask < handle
     
     properties (SetAccess = private)
@@ -10,6 +12,8 @@ classdef Mask < handle
     
     methods
         
+        % Constructs a mask from an M-by-N-by-1 matrix. A value of 0 is completely transparent. A value of 255 is
+        % completely opaque.
         function obj = Mask(matrix)
             if ~isa(matrix, 'uint8')
                 error('Matrix must be of class uint8')
@@ -34,6 +38,7 @@ classdef Mask < handle
     
     methods (Static)
         
+        % Creates a circular envelope mask.
         function mask = createCircleMask(resolution)
             if nargin < 1
                 resolution = 256;
@@ -45,6 +50,7 @@ classdef Mask < handle
             mask = Mask(circle);
         end
         
+        % Creates a gaussian envelope mask.
         function mask = createGaussianMask(resolution)
             if nargin < 1
                 resolution = 256;

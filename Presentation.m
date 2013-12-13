@@ -1,3 +1,5 @@
+% The core object for presenting stimuli.
+
 classdef Presentation < handle
     
     properties
@@ -12,17 +14,26 @@ classdef Presentation < handle
     
     methods
         
+        % Constructs a presentation on the specified canvas with the given duration.
         function obj = Presentation(canvas, duration)
             obj.canvas = canvas;
             obj.duration = duration;
         end
         
+        % Adds a stimulus to the presentation. Stimuli are layered in the order with which they are added; the first
+        % stimulus added is on the lowest layer (the layer farthest from the viewer) while the last stimulus added is on
+        % the highest layer (the layer closest to the viewer).
         function addStimulus(obj, stimulus)
             obj.stimuli{end + 1} = stimulus;
         end
         
-        function addController(obj, handle, parameterName, funcHandle)
-            obj.controllers{end + 1} = {handle, parameterName, funcHandle};
+        % Adds a controller to the presentation. A controller associates an object's property with a given function. 
+        % With each frame presented, the presentation calls the given function and passes it a struct containing
+        % information about the current state of the presentation (the current number of frames presented, the time
+        % elapsed since the start of the presentation, etc). The presentation assigns the value returned by the function
+        % to the associated property.
+        function addController(obj, handle, propertyName, funcHandle)
+            obj.controllers{end + 1} = {handle, propertyName, funcHandle};
         end
         
         function play(obj)            
@@ -47,10 +58,10 @@ classdef Presentation < handle
                 for i = 1:length(obj.controllers)
                     controller = obj.controllers{i};
                     handle = controller{1};
-                    param = controller{2};
+                    prop = controller{2};
                     func = controller{3};
 
-                    handle.(param) = func(state);
+                    handle.(prop) = func(state);
                 end
 
                 % Draw stimuli.

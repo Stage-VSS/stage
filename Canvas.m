@@ -1,10 +1,10 @@
 classdef Canvas < handle
     
     properties (SetAccess = private)
-        window
-        size
-        projection
-        modelView
+        window      % Window containing the canvas
+        size        % Size of the canvas [width, height] (pixels)
+        projection  % Projection matrix stack
+        modelView   % Model/View matrix stack
     end
     
     properties (Access = private)
@@ -35,7 +35,7 @@ classdef Canvas < handle
         end
         
         function makeCurrent(obj)
-            glfwMakeContextCurrent(obj.window.glfwWindow);
+            glfwMakeContextCurrent(obj.window.handle);
         end
         
         function setClearColor(obj, color)
