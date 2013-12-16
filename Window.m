@@ -64,6 +64,10 @@ classdef Window < handle
             end
         end
         
+        function delete(obj)
+            obj.close();
+        end
+        
     end
     
 end
