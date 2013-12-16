@@ -40,7 +40,13 @@ classdef Canvas < handle
         
         function setClearColor(obj, color)
             obj.makeCurrent();
+            
             c = color;
+            if length(c) == 1
+                c = [c, c, c, 1];
+            elseif length(c) == 3
+                c = [c, 1];
+            end
             glClearColor(c(1), c(2), c(3), c(4));
         end
         

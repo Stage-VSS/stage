@@ -1,0 +1,34 @@
+function noise()
+    % Stage needs to be initialized at least once before opening it's first window.
+    initStage();
+    
+    % Open a window in windowed-mode and grab it's canvas.
+    window = Window([640, 480], false);
+    canvas = window.canvas;
+    
+    % Create a 5 second presentation.
+    duration = 5;
+    presentation = Presentation(canvas, duration);
+    
+    % Grab the canvas size so we can center the stimulus.
+    width = canvas.size(1);
+    height = canvas.size(2);
+    
+    % Create the noise stimulus.
+    noiseMatrix = uint8(rand(200, 200) * 255);
+    noise = Image(noiseMatrix);
+    noise.position = [width/2, height/2];
+    noise.size = [200, 200];
+    
+    % Add the noise stimulus to the presentation.
+    presentation.addStimulus(noise);
+    
+    % Define the noise's x and y texture shift properties as functions of time.
+    presentation.addController(noise, 'shiftX', @(state)state.time * 0.5);
+    presentation.addController(noise, 'shiftY', @(state)state.time * 0.5);
+    
+    % Play the presentation!
+    presentation.play();
+    
+    window.close();
+end
