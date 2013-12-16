@@ -1,7 +1,4 @@
-function gabor()
-    % Stage needs to be initialized at least once before opening it's first window.
-    initStage();
-    
+function gabor()    
     % Open a window in windowed-mode and grab it's canvas.
     window = Window([640, 480], false);
     canvas = window.canvas;

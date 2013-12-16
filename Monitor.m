@@ -14,6 +14,12 @@ classdef Monitor < handle
         % Constructs a monitor for the display with the given display number. The primary display is number 1. Further
         % displays increment from there (2, 3, 4, etc.).
         function obj = Monitor(number)
+            if nargin < 1
+                number = 1;
+            end
+            
+            glfwInit();
+            
             monitors = glfwGetMonitors();
             obj.handle = monitors(number);
         end
