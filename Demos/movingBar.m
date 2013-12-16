@@ -26,5 +26,5 @@ function movingBar()
     % Play the presentation!
     presentation.play();
     
-    window.close();
+    % Window automatically closes when the window object is deleted.
 end
