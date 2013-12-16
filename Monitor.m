@@ -5,6 +5,7 @@ classdef Monitor < handle
     properties (SetAccess = private)
         refreshRate
         resolution
+        name
         handle
     end
     
@@ -25,6 +26,10 @@ classdef Monitor < handle
         function r = get.resolution(obj)
             mode = glfwGetVideoMode(obj.handle);
             r = [mode.width, mode.height];
+        end
+        
+        function n = get.name(obj)
+            n = glfwGetMonitorName(obj.handle);
         end
         
         function setGamma(obj, gamma)
