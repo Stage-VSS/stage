@@ -1,0 +1,6 @@
+[submodule "Externals/matlab-glfw3"]
+	path = Externals/matlab-glfw3
+	url = https://github.com/cafarm/matlab-glfw3
+[submodule "Externals/MOGL"]
+	path = Externals/MOGL
+	url = https://github.com/cafarm/MOGL
