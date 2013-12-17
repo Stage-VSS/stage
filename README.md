@@ -1,4 +1,4 @@
-## Stage
+# Stage
 
 Stage is a MATLAB-based visual stimulus system for vision research.
 
