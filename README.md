@@ -2,6 +2,11 @@
 
 Stage is a MATLAB-based visual stimulus system for vision research.
 
+## Install
+
+1. Run `git clone https://github.com/cafarm/Stage --recursive` in Terminal.app or Git Bash.
+2. Add the Stage folder and it's subfolders to the Matlab path.
+
 ## License
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
