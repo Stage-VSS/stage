@@ -3,7 +3,6 @@
 classdef Presentation < handle
     
     properties
-        canvas
         duration
     end
     
@@ -14,9 +13,8 @@ classdef Presentation < handle
     
     methods
         
-        % Constructs a presentation on the specified canvas with the given duration.
-        function obj = Presentation(canvas, duration)
-            obj.canvas = canvas;
+        % Constructs a presentation with the given duration.
+        function obj = Presentation(duration)
             obj.duration = duration;
         end
         
@@ -36,10 +34,10 @@ classdef Presentation < handle
             obj.controllers{end + 1} = {handle, propertyName, funcHandle};
         end
         
-        function result = play(obj)            
+        function result = play(obj, canvas)            
             % Initialize all stimuli.
             for i = 1:length(obj.stimuli)
-                obj.stimuli{i}.init(obj.canvas);
+                obj.stimuli{i}.init(canvas);
             end            
             
             frameTimer = FrameTimer();
@@ -49,7 +47,7 @@ classdef Presentation < handle
             time = 0;
             start = tic;
             while time < obj.duration
-                obj.canvas.clear();
+                canvas.clear();
                 
                 % Call controllers.
                 state.frame = frame;
@@ -70,7 +68,7 @@ classdef Presentation < handle
                 end
                 
                 % Flip back and front buffers.
-                obj.canvas.window.flip();
+                canvas.window.flip();
                 frameTimer.tick();
                 
                 frame = frame + 1;

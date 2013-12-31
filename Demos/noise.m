@@ -3,10 +3,6 @@ function noise()
     window = Window([640, 480], false);
     canvas = window.canvas;
     
-    % Create a 5 second presentation.
-    duration = 5;
-    presentation = Presentation(canvas, duration);
-    
     % Grab the canvas size so we can center the stimulus.
     width = canvas.size(1);
     height = canvas.size(2);
@@ -17,6 +13,10 @@ function noise()
     noise.position = [width/2, height/2];
     noise.size = [200, 200];
     
+    % Create a 5 second presentation.
+    duration = 5;
+    presentation = Presentation(duration);
+    
     % Add the noise stimulus to the presentation.
     presentation.addStimulus(noise);
     
@@ -24,8 +24,8 @@ function noise()
     presentation.addController(noise, 'shiftX', @(state)state.time * 0.5);
     presentation.addController(noise, 'shiftY', @(state)state.time * 0.5);
     
-    % Play the presentation!
-    presentation.play();
+    % Play the presentation on the canvas!
+    presentation.play(canvas);
     
     % Window automatically closes when the window object is deleted.
 end

@@ -7,10 +7,6 @@ function plaid()
     canvas.setClearColor(0.5);
     canvas.clear();
     
-    % Create a 5 second presentation.
-    duration = 5;
-    presentation = Presentation(canvas, duration);
-    
     % Grab the canvas size so we can center the stimulus.
     width = canvas.size(1);
     height = canvas.size(2);
@@ -34,6 +30,10 @@ function plaid()
     grating1.setMask(mask);
     grating2.setMask(mask);
     
+    % Create a 5 second presentation.
+    duration = 5;
+    presentation = Presentation(duration);
+    
     % Add the grating stimuli to the presentation.
     presentation.addStimulus(grating1);
     presentation.addStimulus(grating2);
@@ -43,8 +43,8 @@ function plaid()
     presentation.addController(grating1, 'phase', @(state)state.time * 360);
     presentation.addController(grating2, 'phase', @(state)state.time * 180);
     
-    % Play the presentation!
-    presentation.play();
+    % Play the presentation on the canvas!
+    presentation.play(canvas);
     
     % Window automatically closes when the window object is deleted.
 end

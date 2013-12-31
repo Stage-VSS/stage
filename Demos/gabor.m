@@ -7,10 +7,6 @@ function gabor()
     canvas.setClearColor(0.5);
     canvas.clear();
     
-    % Create a 5 second presentation.
-    duration = 5;
-    presentation = Presentation(canvas, duration);
-    
     % Grab the canvas size so we can center the stimulus.
     width = canvas.size(1);
     height = canvas.size(2);
@@ -25,14 +21,18 @@ function gabor()
     mask = Mask.createGaussianMask();
     grating.setMask(mask);
     
+    % Create a 5 second presentation.
+    duration = 5;
+    presentation = Presentation(duration);
+    
     % Add the grating stimulus to the presentation.
     presentation.addStimulus(grating);
     
     % Define the grating's phase property as a function of time. The phase will shift 360 degrees per second.
     presentation.addController(grating, 'phase', @(state)state.time * 360);
     
-    % Play the presentation!
-    presentation.play();
+    % Play the presentation on the canvas!
+    presentation.play(canvas);
     
     % Window automatically closes when the window object is deleted.
 end
