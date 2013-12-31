@@ -31,7 +31,7 @@ classdef TcpServer < handle
             close = onCleanup(@()socket.close());            
             
             while true
-                disp(['Awaiting connection on port: ' num2str(obj.port)]);
+                disp(['Awaiting connection on port: ' num2str(socket.getLocalPort())]);
                 client = TcpClient(socket.accept());
                 
                 rhost = client.socket.getInetAddress().getHostName();
