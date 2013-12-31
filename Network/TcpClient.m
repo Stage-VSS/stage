@@ -53,6 +53,7 @@ classdef TcpClient < handle
         % Requests execution of a specified method on the server and retrieves the server's response.
         function response = request(obj, varargin)
             obj.send(varargin{:});
+            disp('sent');
             response = obj.receive();
         end
         
@@ -63,14 +64,9 @@ classdef TcpClient < handle
             temp = [tempname '.mat'];
             save(temp, 'varargin');
             file = java.io.File(temp);
-            bytes = java.nio.file.Files.readAllBytes(file.toPath);
+            
+            stream.writeObject(java.nio.file.Files.readAllBytes(file.toPath));
             delete(temp);
-            varargin = javaArray('java.lang.Byte', length(bytes));
-            for j = 1:length(bytes)
-                varargin(j) = java.lang.Byte(bytes(j));
-            end
-
-            stream.writeObject(varargin);
         end
         
         function result = receive(obj)
@@ -80,8 +76,9 @@ classdef TcpClient < handle
             
             % Deserialize
             temp = [tempname '.mat'];
-            file = java.io.FileOutputStream(temp);
-            file.write(arrayfun(@(x)double(x), result));
+            fid = fopen(temp, 'w');
+            fwrite(fid, typecast(result, 'uint8'));
+            fclose(fid);
             s = load(temp);
             delete(temp);
             
