@@ -53,7 +53,6 @@ classdef TcpClient < handle
         % Requests execution of a specified method on the server and retrieves the server's response.
         function response = request(obj, varargin)
             obj.send(varargin{:});
-            disp('sent');
             response = obj.receive();
         end
         
