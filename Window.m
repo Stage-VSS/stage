@@ -44,6 +44,11 @@ classdef Window < handle
                 obj.handle = glfwCreateWindow(size(1), size(2), 'Stage', [], []);
             end
             
+            if ~obj.handle
+                glfwTerminate();
+                error('Unable to create window. Verify your drivers support OpenGL 3.2+.');
+            end
+            
             obj.monitor = monitor;            
             glfwSwapInterval(1);
             
