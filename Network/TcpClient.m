@@ -1,12 +1,4 @@
-% A TCP-based client requiring Java 7. TcpClient is typically used in conjunction with TcpServer.
-%
-% Typical usage:
-% client = TcpClient();
-% client.connect('localhost', 5678);
-% response = client.request('EVAL', 'b = 3');
-% response = client.request('GET', 'b');
-% disp(response)
-%    'OK'    [3]
+% A TCP-based client requiring Java 7.
 
 classdef TcpClient < handle
     
@@ -51,7 +43,6 @@ classdef TcpClient < handle
             obj.socket.setSoTimeout(t);
         end
         
-        % Requests execution of a specified method on the server and retrieves the server's response.
         function response = request(obj, varargin)
             obj.send(varargin{:});
             response = obj.receive();
