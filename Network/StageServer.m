@@ -2,6 +2,7 @@ classdef StageServer < handle
     
     properties (Access = private)
         tcpServer
+        window
     end
     
     methods
@@ -19,6 +20,8 @@ classdef StageServer < handle
         end
         
         function start(obj)
+            obj.window = Window([640, 480], false);
+            
             disp(['Serving on port: ' num2str(obj.tcpServer.port)]);
             obj.tcpServer.start();
         end
@@ -34,17 +37,14 @@ classdef StageServer < handle
         end
         
         function onEventReceived(obj, src, data) %#ok<INUSL>
-            client = data.client;
-            value = data.value;
-            
             try
-                result = {'OK', obj.process(value)};
+                result = ['OK', obj.process(data.value)];
             catch x
                 result = {'ERROR', x};
             end
             
             disp(result);
-            client.send(result{:});
+            data.client.send(result{:});
         end
         
         function result = process(obj, value)
@@ -52,8 +52,8 @@ classdef StageServer < handle
             
             switch upper(value{1})
                 case 'PLAY'
-                    disp('Playing...');
-                    result{end + 1} = 'It played!';
+                    presentation = value{2};
+                    result{end + 1} = presentation.play(obj.window.canvas);
                 otherwise
                     error('Unknown event');
             end
@@ -62,4 +62,3 @@ classdef StageServer < handle
     end
     
 end
-

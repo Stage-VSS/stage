@@ -28,4 +28,3 @@ classdef StageClient < handle
     end
     
 end
-
