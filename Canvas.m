@@ -10,6 +10,7 @@ classdef Canvas < handle
     properties (Access = private)
         standardPrograms
         currentProgram
+        defaultMask
         
         projectionUniform
         modelViewUniform
@@ -26,6 +27,9 @@ classdef Canvas < handle
             obj.modelView = MatrixStack();
             
             obj.standardPrograms = StandardPrograms(obj);
+            
+            obj.defaultMask = TextureObject(obj, 2);
+            obj.defaultMask.setImage(ones(1, 1, 4, 'uint8') * 255);
             
             obj.resetBlend();
         end
@@ -101,9 +105,11 @@ classdef Canvas < handle
                 glActiveTexture(GL.TEXTURE0);
                 glBindTexture(texture.target, texture.handle);
                 
+                glActiveTexture(GL.TEXTURE1);
                 if nargin >= 8
-                    glActiveTexture(GL.TEXTURE1);
                     glBindTexture(mask.texture.target, mask.texture.handle);
+                else
+                    glBindTexture(obj.defaultMask.target, obj.defaultMask.handle);
                 end
             end
             
