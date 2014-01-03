@@ -46,6 +46,7 @@ classdef TcpClient < handle
             obj.socket.close();
         end
         
+        % Sets receive timeout in milliseconds. Default is infinite.
         function setReceiveTimeout(obj, t)
             obj.socket.setSoTimeout(t);
         end
