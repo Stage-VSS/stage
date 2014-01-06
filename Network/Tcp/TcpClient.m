@@ -43,11 +43,6 @@ classdef TcpClient < handle
             obj.socket.setSoTimeout(t);
         end
         
-        function response = request(obj, varargin)
-            obj.send(varargin{:});
-            response = obj.receive();
-        end
-        
         function send(obj, varargin)
             stream = java.io.ObjectOutputStream(obj.socket.getOutputStream());
             

@@ -9,18 +9,20 @@ classdef StageServer < handle
         
         function obj = StageServer(port)
             if nargin < 1
-                obj.tcpServer = TcpServer();
-            else
-                obj.tcpServer = TcpServer(port);
+                port = 5678;
             end
+            
+            obj.tcpServer = TcpServer(port);
             
             addlistener(obj.tcpServer, 'clientConnected', @obj.onClientConnected);
             addlistener(obj.tcpServer, 'clientDisconnected', @obj.onClientDisconnected);
             addlistener(obj.tcpServer, 'eventReceived', @obj.onEventReceived);
         end
         
-        function start(obj)
-            obj.window = Window([640, 480], false);
+        % Creates a window and starts serving clients. All optional arguments are passed through to the Window 
+        % constructor.
+        function start(obj, varargin)
+            obj.window = Window(varargin{:});
             
             disp(['Serving on port: ' num2str(obj.tcpServer.port)]);
             obj.tcpServer.start();
@@ -38,22 +40,34 @@ classdef StageServer < handle
         
         function onEventReceived(obj, src, data) %#ok<INUSL>
             try
-                result = ['OK', obj.process(data.value)];
+                result = obj.handleEvent(data);
             catch x
-                result = {'ERROR', x};
+                result = {NetEvents.ERROR, x};
             end
             
-            disp(result);
+            if ~iscell(result)
+                result = {result};
+            end
+            
+            disp(result{:});
             data.client.send(result{:});
         end
         
-        function result = process(obj, value)
+        function result = handleEvent(obj, data)
+            value = data.value;
             result = {};
             
-            switch upper(value{1})
-                case 'PLAY'
+            switch value{1}
+                case NetEvents.GET_WINDOW_SIZE
+                    result = obj.window.size;
+                case NetEvents.SET_CANVAS_COLOR
+                    color = value{2};
+                    obj.window.canvas.setClearColor(color);
+                    obj.window.canvas.clear();
+                    obj.window.flip();
+                case NetEvents.PLAY
                     presentation = value{2};
-                    result{end + 1} = presentation.play(obj.window.canvas);
+                    result = presentation.play(obj.window.canvas);
                 otherwise
                     error('Unknown event');
             end
