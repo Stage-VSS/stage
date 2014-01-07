@@ -31,7 +31,8 @@ classdef TcpClient < handle
             end
             
             addr = java.net.InetSocketAddress(host, port);
-            obj.socket.connect(addr);
+            timeout = 10000;             
+            obj.socket.connect(addr, timeout);
         end
         
         function close(obj)
