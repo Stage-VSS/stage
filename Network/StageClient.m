@@ -1,6 +1,6 @@
 classdef StageClient < handle
     
-    properties
+    properties (Access = private)
         tcpClient
     end
     
@@ -24,8 +24,7 @@ classdef StageClient < handle
         
         function s = getWindowSize(obj)
             obj.tcpClient.send(NetEvents.GET_WINDOW_SIZE);
-            response = obj.getResponse();
-            s = response{1};
+            s = obj.getResponse();
         end
         
         function setCanvasColor(obj, color)
@@ -33,22 +32,33 @@ classdef StageClient < handle
             obj.getResponse();
         end
         
-        % Requests that the connected server play the given presentation. This method does not wait for a response and
-        % returns immediately. getResponse must be called manually.
         function play(obj, presentation)
             obj.tcpClient.send(NetEvents.PLAY, presentation);
+            obj.getResponse();
         end
         
-        function r = getResponse(obj, timeOut)
-            if nargin < 2
-                timeOut = 5000;
-            end
-            
-            obj.tcpClient.setReceiveTimeout(timeOut);
+        function i = getPlayInfo(obj)
+            obj.tcpClient.send(NetEvents.GET_PLAY_INFO);
+            i = obj.getResponse();
+        end
+        
+    end
+    
+    methods (Access = private)
+        
+        function r = getResponse(obj)
             r = obj.tcpClient.receive();
             
-            if ~isempty(r) && strcmp(r{1}, NetEvents.ERROR)
+            if strcmp(r{1}, NetEvents.OK)
+                if length(r) > 1
+                    r = r{2:end};
+                else
+                    r = [];
+                end
+            elseif strcmp(r{1}, NetEvents.ERROR)
                 rethrow(r{2});
+            else
+                error('Unknown response code');
             end
         end
         

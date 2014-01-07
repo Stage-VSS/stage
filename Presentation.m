@@ -34,7 +34,7 @@ classdef Presentation < handle
             obj.controllers{end + 1} = {handle, propertyName, funcHandle};
         end
         
-        function result = play(obj, canvas)            
+        function info = play(obj, canvas)            
             % Initialize all stimuli.
             for i = 1:length(obj.stimuli)
                 obj.stimuli{i}.init(canvas);
@@ -76,7 +76,7 @@ classdef Presentation < handle
             end
             
             % TODO: Add more playback information.
-            result.longestFrameDuration = frameTimer.longestFrameDuration;
+            info.longestFrameDuration = frameTimer.longestFrameDuration;
         end
         
     end

@@ -3,6 +3,7 @@ classdef StageServer < handle
     properties (Access = private)
         tcpServer
         window
+        playInfo
     end
     
     methods
@@ -19,8 +20,7 @@ classdef StageServer < handle
             addlistener(obj.tcpServer, 'eventReceived', @obj.onEventReceived);
         end
         
-        % Creates a window and starts serving clients. All optional arguments are passed through to the Window 
-        % constructor.
+        % Creates a window and starts serving clients. All arguments are passed through to the Window constructor.
         function start(obj, varargin)
             obj.window = Window(varargin{:});
             
@@ -32,44 +32,52 @@ classdef StageServer < handle
             rhost = data.client.socket.getInetAddress().getHostName();
             rport = data.client.socket.getPort();
             disp(['Serving connection from ' char(rhost) ':' num2str(rport)]);
+            
+            obj.playInfo = [];
         end
         
         function onClientDisconnected(obj, src, data) %#ok<INUSD>
             disp('Client disconnected');
         end
         
-        function onEventReceived(obj, src, data) %#ok<INUSL>
-            try
-                result = obj.handleEvent(data);
-            catch x
-                result = {NetEvents.ERROR, x};
-            end
-            
-            if ~iscell(result)
-                result = {result};
-            end
-            
-            disp(result{:});
-            data.client.send(result{:});
-        end
-        
-        function result = handleEvent(obj, data)
+        function onEventReceived(obj, src, data) %#ok<INUSL>           
+            client = data.client;
             value = data.value;
-            result = {};
             
             switch value{1}
                 case NetEvents.GET_WINDOW_SIZE
-                    result = obj.window.size;
+                    try
+                        client.send(NetEvents.OK, obj.window.size);
+                    catch x
+                        client.send(NetEvents.ERROR, x);
+                    end
+                    
                 case NetEvents.SET_CANVAS_COLOR
-                    color = value{2};
-                    obj.window.canvas.setClearColor(color);
-                    obj.window.canvas.clear();
-                    obj.window.flip();
+                    try
+                        color = value{2};
+                        obj.window.canvas.setClearColor(color);
+                        obj.window.canvas.clear();
+                        obj.window.flip();
+                        client.send(NetEvents.OK);
+                    catch x
+                        client.send(NetEvents.ERROR, x);
+                    end
+                    
                 case NetEvents.PLAY
-                    presentation = value{2};
-                    result = presentation.play(obj.window.canvas);
+                    client.send(NetEvents.OK);
+                    try
+                        presentation = value{2};
+                        obj.playInfo = presentation.play(obj.window.canvas);
+                    catch x
+                        obj.playInfo = x;
+                    end
+                    
+                case NetEvents.GET_PLAY_INFO
+                    client.send(NetEvents.OK, obj.playInfo);
+                    
                 otherwise
-                    error('Unknown event');
+                    x = MException('Stage:StageServer', 'Unknown event');
+                    client.send(NetEvents.ERROR, x);
             end
         end
         
