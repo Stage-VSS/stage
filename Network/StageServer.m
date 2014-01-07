@@ -1,3 +1,5 @@
+% A single-client server that allows remote access to a Stage Window.
+
 classdef StageServer < handle
     
     properties (Access = private)
@@ -20,9 +22,12 @@ classdef StageServer < handle
             addlistener(obj.tcpServer, 'eventReceived', @obj.onEventReceived);
         end
         
-        % Creates a window and starts serving clients. All arguments are passed through to the Window constructor.
+        % Creates a window and starts serving clients. All arguments are passed through to the Window constructor. This
+        % method will block the current Matlab session until all clients are disconnected and Matlab receives a break
+        % command (Ctrl+C).
         function start(obj, varargin)
             obj.window = Window(varargin{:});
+            close = onCleanup(@()delete(obj.window));
             
             disp(['Serving on port: ' num2str(obj.tcpServer.port)]);
             obj.tcpServer.start();
