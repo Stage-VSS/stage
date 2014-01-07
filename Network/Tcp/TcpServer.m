@@ -1,6 +1,3 @@
-% This server has NO security features and should only be used on a trusted network. Only one client may be connected at
-% a time.
-
 classdef TcpServer < handle
     
     properties (SetAccess = private)
@@ -26,10 +23,19 @@ classdef TcpServer < handle
         % Starts listening for connections and serving clients. This method will block the serving Matlab session.
         function start(obj)
             socket = java.net.ServerSocket(obj.port);
+            socket.setSoTimeout(1000);
             close = onCleanup(@()socket.close());            
             
             while true
-                client = TcpClient(socket.accept());
+                try
+                    client = TcpClient(socket.accept());
+                catch x
+                    if isa(x.ExceptionObject, 'java.net.SocketTimeoutException')
+                        continue;
+                    else
+                        rethrow(x);
+                    end
+                end
                 
                 notify(obj, 'clientConnected', NetEventData(client));
                 obj.serve(client);
