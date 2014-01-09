@@ -38,8 +38,23 @@ classdef Monitor < handle
             n = glfwGetMonitorName(obj.handle);
         end
         
+        % Sets a gamma ramp from the given gamma exponent.
         function setGamma(obj, gamma)
             glfwSetGamma(obj.handle, gamma);
+        end
+        
+        % Sets a gamma ramp from the given red, green, and blue lookup tables. The tables should have length of 256 and
+        % values that range from 0 to 65535.
+        function setGammaRamp(obj, red, green, blue)
+            % To row vector.
+            red = red(:)';
+            green = green(:)';
+            blue = blue(:)';
+            
+            ramp.red = red;
+            ramp.green = green;
+            ramp.blue = blue;
+            glfwSetGammaRamp(obj.handle, ramp);
         end
         
     end
