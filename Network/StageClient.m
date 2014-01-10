@@ -11,6 +11,7 @@ classdef StageClient < handle
         % Constructs a client. If a host and/or port is provided the client will attempt to connect.
         function obj = StageClient(host, port)
             obj.tcpClient = TcpClient();
+            obj.tcpClient.setReceiveTimeout(10000);
             
             if nargin > 1
                 obj.connect(host, port);
@@ -60,7 +61,12 @@ classdef StageClient < handle
     methods (Access = private)
         
         function r = getResponse(obj)
-            r = obj.tcpClient.receive();
+            try
+                r = obj.tcpClient.receive();
+            catch x
+                obj.tcpClient.close();
+                rethrow(x);
+            end
             
             if strcmp(r{1}, NetEvents.OK)
                 if length(r) > 1
