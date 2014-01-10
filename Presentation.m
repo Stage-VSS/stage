@@ -76,7 +76,7 @@ classdef Presentation < handle
             end
             
             % TODO: Add more playback information.
-            info.longestFrameDuration = frameTimer.longestFrameDuration;
+            info.frameDurations = frameTimer.frameDurations;
         end
         
     end

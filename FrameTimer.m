@@ -1,7 +1,7 @@
 classdef FrameTimer < handle
     
     properties (SetAccess = private)
-        longestFrameDuration
+        frameDurations
     end
     
     properties (Access = private)
@@ -10,19 +10,13 @@ classdef FrameTimer < handle
     
     methods
         
-        function obj = FrameTimer()
-            obj.startTime = [];
-            obj.longestFrameDuration = 0;
-        end
-        
         function tick(obj)
             currentTime = glfwGetTime();
             
             if isempty(obj.startTime)
                 obj.startTime = currentTime;
             else
-                duration = currentTime - obj.startTime;
-                obj.longestFrameDuration = max(obj.longestFrameDuration, duration);
+                obj.frameDurations(end + 1) = currentTime - obj.startTime;
                 obj.startTime = currentTime;
             end
         end
