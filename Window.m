@@ -53,11 +53,11 @@ classdef Window < handle
                 error('Unable to create window. Verify your drivers support OpenGL 3.2+.');
             end
             
-            obj.monitor = monitor;            
+            obj.monitor = monitor;
+            obj.canvas = Canvas(obj);
+            
             glfwSwapInterval(1);
             glfwSetInputMode(obj.handle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
-            
-            obj.canvas = Canvas(obj);
         end
         
         function s = get.size(obj)
