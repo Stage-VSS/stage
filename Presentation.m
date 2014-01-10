@@ -45,7 +45,7 @@ classdef Presentation < handle
             frame = 0;
             pattern = 0;
             time = 0;
-            start = tic;
+            start = glfwGetTime();
             while time < obj.duration
                 canvas.clear();
                 
@@ -72,7 +72,7 @@ classdef Presentation < handle
                 frameTimer.tick();
                 
                 frame = frame + 1;
-                time = toc(start);
+                time = glfwGetTime() - start;
             end
             
             % TODO: Add more playback information.
