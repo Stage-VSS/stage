@@ -22,20 +22,27 @@ classdef TcpServer < handle
         
         % Starts listening for connections and serving clients. This method will block the serving Matlab session.
         function start(obj)
-            socket = java.net.ServerSocket(obj.port);
-            socket.setSoTimeout(1000);
-            close = onCleanup(@()socket.close());            
+            socket = [];
             
             while true
+                if isempty(socket) || socket.isClosed
+                    socket = java.net.ServerSocket(obj.port);
+                    socket.setSoTimeout(1000);
+                    close = onCleanup(@()socket.close());
+                end
+                
                 try
                     client = TcpClient(socket.accept());
                 catch x
                     if isa(x.ExceptionObject, 'java.net.SocketTimeoutException')
+                        % Allows Matlab to respond to Ctrl+C at timeout intervals.
                         continue;
                     else
                         rethrow(x);
                     end
                 end
+                
+                socket.close();
                 
                 notify(obj, 'clientConnected', NetEventData(client));
                 obj.serve(client);
