@@ -31,6 +31,10 @@ classdef StageClient < handle
             obj.tcpClient.connect(host, port);
         end
         
+        function close(obj)
+            obj.tcpClient.close();
+        end
+        
         % Gets the remote window size.
         function s = getWindowSize(obj)
             obj.tcpClient.send(NetEvents.GET_WINDOW_SIZE);
@@ -64,7 +68,7 @@ classdef StageClient < handle
             try
                 r = obj.tcpClient.receive();
             catch x
-                obj.tcpClient.close();
+                obj.close();
                 rethrow(x);
             end
             
