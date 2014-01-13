@@ -8,18 +8,6 @@ classdef StageClient < handle
     
     methods
         
-        % Constructs a client. If a host and/or port is provided the client will attempt to connect.
-        function obj = StageClient(host, port)
-            obj.tcpClient = TcpClient();
-            obj.tcpClient.setReceiveTimeout(10000);
-            
-            if nargin > 1
-                obj.connect(host, port);
-            elseif nargin > 0
-                obj.connect(host);
-            end
-        end
-        
         function connect(obj, host, port)
             if nargin < 2
                 host = 'localhost';
@@ -28,35 +16,48 @@ classdef StageClient < handle
                 port = 5678;
             end
             
-            obj.tcpClient.connect(host, port);
+            obj.disconnect();
+            client = TcpClient();
+            client.connect(host, port);
+            
+            obj.tcpClient = client;
         end
         
-        function close(obj)
+        function disconnect(obj)
+            if isempty(obj.tcpClient)
+                return;
+            end
+            
             obj.tcpClient.close();
+            obj.tcpClient = [];
+        end
+        
+        function delete(obj)
+            obj.disconnect();
         end
         
         % Gets the remote window size.
         function s = getWindowSize(obj)
-            obj.tcpClient.send(NetEvents.GET_WINDOW_SIZE);
+            obj.sendEvent(NetEvents.GET_WINDOW_SIZE);
             s = obj.getResponse();
         end
         
         % Sets the remote canvas color. 
         function setCanvasColor(obj, color)
-            obj.tcpClient.send(NetEvents.SET_CANVAS_COLOR, color);
+            obj.sendEvent(NetEvents.SET_CANVAS_COLOR, color);
             obj.getResponse();
         end
         
         % Plays a given presentation on the remote canvas. This method will return immediately. While the presentation 
         % plays remotely, further attempts to interface with the server will block until the presentation completes.
         function play(obj, presentation)
-            obj.tcpClient.send(NetEvents.PLAY, presentation);
+            obj.sendEvent(NetEvents.PLAY, presentation);
             obj.getResponse();
         end
         
         % Gets information about the last remotely played presentation.
         function i = getPlayInfo(obj)
-            obj.tcpClient.send(NetEvents.GET_PLAY_INFO);
+            obj.sendEvent(NetEvents.GET_PLAY_INFO);
             i = obj.getResponse();
         end
         
@@ -64,11 +65,23 @@ classdef StageClient < handle
     
     methods (Access = private)
         
+        function sendEvent(obj, varargin)
+            if isempty(obj.tcpClient)
+                error('Not connected');
+            end
+            
+            obj.tcpClient.send(varargin{:});
+        end
+        
         function r = getResponse(obj)
+            if isempty(obj.tcpClient)
+                error('Not connected');
+            end
+            
             try
                 r = obj.tcpClient.receive();
             catch x
-                obj.close();
+                obj.disconnect();
                 rethrow(x);
             end
             
