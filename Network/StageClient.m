@@ -92,7 +92,7 @@ classdef StageClient < handle
                     r = [];
                 end
             elseif strcmp(r{1}, NetEvents.ERROR)
-                rethrow(r{2});
+                throw(r{2});
             else
                 error('Unknown response code');
             end
