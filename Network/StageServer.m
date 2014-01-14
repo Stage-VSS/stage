@@ -43,6 +43,11 @@ classdef StageServer < handle
         
         function onClientDisconnected(obj, src, data) %#ok<INUSD>
             disp('Client disconnected');
+            
+            % Clear class definitions.
+            warning('off', 'MATLAB:ClassInstanceExists');
+            clear classes;
+            warning('on', 'MATLAB:ClassInstanceExists');
         end
         
         function onEventReceived(obj, src, data) %#ok<INUSL>           
