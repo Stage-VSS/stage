@@ -2,6 +2,13 @@
 
 Stage is a MATLAB-based visual stimulus system for vision research.
 
+## Requirements
+
+- OS X 10.8+ or Windows 7 64-bit
+- MATLAB 2013b+ 64-bit
+- OpenGL 3.2+
+- [Visual C++ Redistributable Packages for Visual Studio 2013](http://www.microsoft.com/en-us/download/details.aspx?id=40784) (Windows only)
+
 ## Install
 
 1. Run `git clone https://github.com/cafarm/Stage --recursive` in Terminal.app or Git Bash.
