@@ -4,3 +4,6 @@
 [submodule "Externals/MOGL"]
 	path = Externals/MOGL
 	url = https://github.com/cafarm/MOGL
+[submodule "Externals/matlab-avbin"]
+	path = Externals/matlab-avbin
+	url = https://github.com/cafarm/matlab-avbin.git
