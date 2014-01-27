@@ -14,7 +14,7 @@ classdef Movie < Stimulus
         vbo         % Vertex buffer object
         vao         % Vertex array object
         texture     % Frame texture
-        reader
+        player      % Video player
     end
     
     methods
@@ -50,19 +50,22 @@ classdef Movie < Stimulus
             obj.vao.setAttribute(obj.vbo, 1, 2, GL.FLOAT, GL.FALSE, 8*4, 4*4);
             obj.vao.setAttribute(obj.vbo, 2, 2, GL.FLOAT, GL.FALSE, 8*4, 6*4);
             
-            obj.reader = AvbinVideoReader(obj.filename);
+            source = VideoSource(obj.filename);
+            obj.player = VideoPlayer(source);
             
             obj.texture = TextureObject(canvas, 2);
-            obj.texture.setImage(zeros(obj.reader.size(2), obj.reader.size(1), 3, 'uint8'));
+            obj.texture.setImage(zeros(source.size(2), source.size(1), 3, 'uint8'));
         end
         
         function draw(obj)
-            frame = obj.reader.nextFrame;
-            if isempty(frame)
-                obj.reader.seek(0);                
-                frame = obj.reader.nextFrame;
+            if ~obj.player.isPlaying
+                obj.player.play();
             end
-            obj.texture.setSubImage(frame);
+            
+            frame = obj.player.getImage();
+            if ~isempty(frame)
+                obj.texture.setSubImage(frame);
+            end
             
             modelView = obj.canvas.modelView;
             modelView.push();
