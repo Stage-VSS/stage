@@ -16,12 +16,17 @@ classdef Presentation < handle
         % Constructs a presentation with the given duration.
         function obj = Presentation(duration)
             obj.duration = duration;
+            obj.stimuli = {};
         end
         
         % Adds a stimulus to the presentation. Stimuli are layered in the order with which they are added; the first
         % stimulus added is on the lowest layer (the layer farthest from the viewer) while the last stimulus added is on
         % the highest layer (the layer closest to the viewer).
         function addStimulus(obj, stimulus)
+            if any(cellfun(@(c)c == stimulus, obj.stimuli))
+                error('Presentation already contains the given stimulus');
+            end
+            
             obj.stimuli{end + 1} = stimulus;
         end
         
@@ -31,6 +36,14 @@ classdef Presentation < handle
         % elapsed since the start of the presentation, etc). The presentation assigns the value returned by the function
         % to the associated property.
         function addController(obj, handle, propertyName, funcHandle)
+            if ~isprop(handle, propertyName)
+                error(['The handle does not contain a property named ''' propertyName '''']);
+            end
+            
+            if nargin(funcHandle) < 1
+                error('The given function must have at least 1 input argument');
+            end
+            
             obj.controllers{end + 1} = {handle, propertyName, funcHandle};
         end
         
