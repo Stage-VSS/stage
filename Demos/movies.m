@@ -10,23 +10,23 @@ function movies()
     % Create a few movie stimuli.
     moviesDir = fullfile(fileparts(mfilename('fullpath')), 'Movies');
     
-    boxing1Movie = Movie(fullfile(moviesDir, 'boxing1.mpg'));
-    boxing1Movie.size = [320, 240];
-    boxing1Movie.position = [width*1/4+20, height/2];
-    boxing1Movie.setMask(Mask.createGaussianMask());
+    boxingMovie = Movie(fullfile(moviesDir, 'boxing.mpg'));
+    boxingMovie.size = [320, 240];
+    boxingMovie.position = [width*1/4+30, height/2];
+    boxingMovie.setMask(Mask.createGaussianMask());
     
-    boxing2Movie = Movie(fullfile(moviesDir, 'boxing2.mpg'));
-    boxing2Movie.size = [320, 240];
-    boxing2Movie.position = [width*3/4-20, height/2];
-    boxing2Movie.setMask(Mask.createGaussianMask());
+    skatingMovie = Movie(fullfile(moviesDir, 'skating.mpg'));
+    skatingMovie.size = [320, 240];
+    skatingMovie.position = [width*3/4-30, height/2];
+    skatingMovie.setMask(Mask.createGaussianMask());
     
-    % Create a 10 second presentation.
-    duration = 10;
+    % Create a 12 second presentation.
+    duration = 12;
     presentation = Presentation(duration);
     
     % Add the stimuli to the presentation.
-    presentation.addStimulus(boxing1Movie);
-    presentation.addStimulus(boxing2Movie);
+    presentation.addStimulus(boxingMovie);
+    presentation.addStimulus(skatingMovie);
     
     % Play the presentation on the canvas!
     presentation.play(canvas);
