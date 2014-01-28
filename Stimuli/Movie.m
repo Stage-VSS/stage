@@ -1,3 +1,6 @@
+% A movie player stimulus capable of playing a wide variety of video formats (see libavcodec). The player does not
+% currently support sound.
+
 classdef Movie < Stimulus
     
     properties
