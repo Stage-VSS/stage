@@ -1,7 +1,9 @@
 function plaid()
-    % Open a window in windowed-mode and grab it's canvas.
+    % Open a window in windowed-mode.
     window = Window([640, 480], false);
-    canvas = window.canvas;
+    
+    % Create a canvas on the window.
+    canvas = Canvas(window);
     
     % Set the canvas background color to gray.
     canvas.setClearColor(0.5);

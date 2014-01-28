@@ -1,7 +1,9 @@
 function movies()
-    % Open a window in windowed-mode and grab it's canvas.
+    % Open a window in windowed-mode.
     window = Window([640, 480], false);
-    canvas = window.canvas;
+    
+    % Create a canvas on the window.
+    canvas = Canvas(window);
     
     % Grab the canvas size so we can center the stimulus.
     width = canvas.size(1);

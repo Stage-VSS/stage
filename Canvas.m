@@ -15,12 +15,15 @@ classdef Canvas < handle
         projectionUniform
         modelViewUniform
         colorUniform
+        
+        windowBeingDestroyed
     end
     
     methods
         
         function obj = Canvas(window)
             obj.window = window;
+            obj.windowBeingDestroyed = addlistener(window, 'ObjectBeingDestroyed', @(e,d)obj.delete());
             
             obj.projection = MatrixStack();
             obj.projection.orthographic(0, window.size(1), 0, window.size(2));
