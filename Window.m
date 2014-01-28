@@ -70,9 +70,9 @@ classdef Window < handle
         end
         
         function delete(obj)
-            if ~isempty(obj.handle)
-                delete(obj.canvas);
-                
+            delete(obj.canvas);
+            
+            if obj.handle
                 % FIXME: Why is Matlab throwing 'Unexpected unknown exception from MEX file..' here?
                 try
                     glfwDestroyWindow(obj.handle);
