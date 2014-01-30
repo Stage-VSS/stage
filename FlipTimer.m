@@ -1,7 +1,9 @@
-classdef FrameTimer < handle
+% A timer for recording the duration between Window flips (buffer swaps). This class is used by Presentation.
+
+classdef FlipTimer < handle
     
     properties (SetAccess = private)
-        frameDurations
+        flipDurations
     end
     
     properties (Access = private)
@@ -16,7 +18,7 @@ classdef FrameTimer < handle
             if isempty(obj.startTime)
                 obj.startTime = currentTime;
             else
-                obj.frameDurations(end + 1) = currentTime - obj.startTime;
+                obj.flipDurations(end + 1) = currentTime - obj.startTime;
                 obj.startTime = currentTime;
             end
         end
@@ -24,4 +26,3 @@ classdef FrameTimer < handle
     end
     
 end
-
