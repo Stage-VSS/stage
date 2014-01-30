@@ -97,6 +97,13 @@ classdef Canvas < handle
             obj.enableBlend(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
         end
         
+        function d = getPixelData(obj)
+            obj.makeCurrent();
+            glReadBuffer(GL.BACK);
+            d = glReadPixels(0, 0, obj.size(1), obj.size(2), GL.RGBA, GL.UNSIGNED_BYTE);
+            d = flipdim(d, 1);
+        end
+        
         function drawArray(obj, array, mode, first, count, color, texture, mask)
             obj.makeCurrent();
             
