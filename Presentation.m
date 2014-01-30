@@ -54,7 +54,7 @@ classdef Presentation < handle
             % Initialize all stimuli.
             for i = 1:length(obj.stimuli)
                 obj.stimuli{i}.init(canvas);
-            end            
+            end
             
             flipTimer = FlipTimer();
             refreshRate = canvas.window.monitor.refreshRate;
@@ -67,14 +67,7 @@ classdef Presentation < handle
                 % Call controllers.
                 state.frame = frame;
                 state.time = time;
-                for i = 1:length(obj.controllers)
-                    controller = obj.controllers{i};
-                    handle = controller{1};
-                    prop = controller{2};
-                    func = controller{3};
-
-                    handle.(prop) = func(state);
-                end
+                obj.callControllers(state);
 
                 % Draw stimuli.
                 for i = 1:length(obj.stimuli)
@@ -89,8 +82,63 @@ classdef Presentation < handle
                 time = time + (1 / refreshRate);
             end
             
-            % TODO: Add more playback information.
             info.flipDurations = flipTimer.flipDurations;
+        end
+        
+        % Exports the presentation to a movie file.
+        function exportMovie(obj, canvas, filename, frameRate)
+            if nargin < 4
+                frameRate = canvas.window.monitor.refreshRate;
+            end
+            
+            % TODO: Use lossless compression to reduce file sizes.
+            writer = VideoWriter(filename, 'Uncompressed AVI');
+            writer.FrameRate = frameRate;
+            writer.open();
+            
+            % Initialize all stimuli.
+            for i = 1:length(obj.stimuli)
+                obj.stimuli{i}.init(canvas);
+            end
+            
+            frame = 0;
+            time = 0;
+            while time < obj.duration
+                canvas.clear();
+                
+                % Call controllers.
+                state.frame = frame;
+                state.time = time;
+                obj.callControllers(state);
+
+                % Draw stimuli.
+                for i = 1:length(obj.stimuli)
+                    obj.stimuli{i}.draw();
+                end
+                
+                pixelData = canvas.getPixelData(GL.BACK);
+                writer.writeVideo(pixelData);
+                
+                frame = frame + 1;
+                time = time + (1 / frameRate);
+            end
+            
+            writer.close();
+        end
+        
+    end
+    
+    methods (Access = private)
+        
+        function callControllers(obj, state)
+            for i = 1:length(obj.controllers)
+                controller = obj.controllers{i};
+                handle = controller{1};
+                prop = controller{2};
+                func = controller{3};
+
+                handle.(prop) = func(state);
+            end
         end
         
     end
