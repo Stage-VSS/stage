@@ -1,21 +1,16 @@
 classdef Canvas < handle
     
     properties (SetAccess = private)
-        window      % Window containing the canvas
-        size        % Size of the canvas [width, height] (pixels)
-        projection  % Projection matrix stack
-        modelView   % Model/View matrix stack
+        window          % Window containing the canvas
+        size            % Size of the canvas [width, height] (pixels)
+        projection      % Projection matrix stack
+        modelView       % Model/View matrix stack
+        currentProgram  % Current shader program
     end
     
     properties (Access = private)
-        standardPrograms
-        currentProgram
-        defaultMask
-        
-        projectionUniform
-        modelViewUniform
-        colorUniform
-        
+        renderer
+        standardPrograms        
         windowBeingDestroyed
     end
     
@@ -29,10 +24,8 @@ classdef Canvas < handle
             obj.projection.orthographic(0, window.size(1), 0, window.size(2));
             obj.modelView = MatrixStack();
             
+            obj.renderer = VideoRenderer(obj);
             obj.standardPrograms = StandardPrograms(obj);
-            
-            obj.defaultMask = TextureObject(obj, 2);
-            obj.defaultMask.setImage(ones(1, 1, 4, 'uint8') * 255);
             
             obj.resetBlend();
         end
@@ -62,14 +55,20 @@ classdef Canvas < handle
             glClear(GL.COLOR_BUFFER_BIT);
         end
         
-        function setProgram(obj, programName)            
-            switch programName
-                case 'PositionOnly'
-                    program = obj.standardPrograms.positionOnlyProgram;
-                case 'SingleTexture'
-                    program = obj.standardPrograms.singleTextureProgram;
-                otherwise
-                    error('Unknown program name');
+        function setRenderer(obj, renderer)
+            obj.renderer = renderer;
+        end
+        
+        function setProgram(obj, program)
+            if ischar(program)
+                switch program
+                    case 'PositionOnly'
+                        program = obj.standardPrograms.positionOnlyProgram;
+                    case 'SingleTexture'
+                        program = obj.standardPrograms.singleTextureProgram;
+                    otherwise
+                        error('Unknown program name');
+                end
             end
             
             if program == obj.currentProgram
@@ -77,11 +76,6 @@ classdef Canvas < handle
             end
             
             obj.makeCurrent();
-            
-            obj.projectionUniform = program.getUniformLocation('projectionMatrix');
-            obj.modelViewUniform = program.getUniformLocation('modelViewMatrix');
-            obj.colorUniform = program.getUniformLocation('color0');
-            
             glUseProgram(program.handle);
             obj.currentProgram = program;
         end
@@ -114,36 +108,14 @@ classdef Canvas < handle
         end
         
         function drawArray(obj, array, mode, first, count, color, texture, mask)
-            obj.makeCurrent();
-            
             if nargin < 7
-                obj.setProgram('PositionOnly');
-            else
-                obj.setProgram('SingleTexture');
-                
-                glActiveTexture(GL.TEXTURE0);
-                glBindTexture(texture.target, texture.handle);
-                
-                glActiveTexture(GL.TEXTURE1);
-                if nargin >= 8
-                    glBindTexture(mask.texture.target, mask.texture.handle);
-                else
-                    glBindTexture(obj.defaultMask.target, obj.defaultMask.handle);
-                end
+                texture = [];
+            end
+            if nargin < 8
+                mask = [];
             end
             
-            prog = obj.currentProgram;
-            prog.setUniformMatrix(obj.projectionUniform, obj.projection.top());
-            prog.setUniformMatrix(obj.modelViewUniform, obj.modelView.top());
-            prog.setUniformfv(obj.colorUniform, color);
-            
-            glBindVertexArray(array.handle);
-            glDrawArrays(mode, first, count);
-            glBindVertexArray(0);
-            
-            if nargin > 6
-                glBindTexture(texture.target, 0);
-            end
+            obj.renderer.drawArray(array, mode, first, count, color, texture, mask);
         end
         
     end

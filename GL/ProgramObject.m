@@ -6,6 +6,7 @@ classdef ProgramObject < handle
     
     properties (Access = private)
         canvas
+        uniformLocationCache
     end
     
     methods
@@ -15,6 +16,8 @@ classdef ProgramObject < handle
             canvas.makeCurrent();
             
             obj.handle = glCreateProgram();
+            
+            obj.uniformLocationCache = containers.Map();
         end
         
         function attach(obj, shader)
@@ -38,8 +41,14 @@ classdef ProgramObject < handle
         end
         
         function l = getUniformLocation(obj, name)
+            if obj.uniformLocationCache.isKey(name)
+                l = obj.uniformLocationCache(name);
+                return;
+            end
+            
             obj.canvas.makeCurrent();
-            l = glGetUniformLocation(obj.handle, name);            
+            l = glGetUniformLocation(obj.handle, name);
+            obj.uniformLocationCache(name) = l;
         end
         
         function setUniformMatrix(obj, location, matrix)
