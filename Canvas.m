@@ -62,9 +62,7 @@ classdef Canvas < handle
             glClear(GL.COLOR_BUFFER_BIT);
         end
         
-        function setProgram(obj, programName)
-            obj.makeCurrent();
-            
+        function setProgram(obj, programName)            
             switch programName
                 case 'PositionOnly'
                     program = obj.standardPrograms.positionOnlyProgram;
@@ -73,6 +71,12 @@ classdef Canvas < handle
                 otherwise
                     error('Unknown program name');
             end
+            
+            if program == obj.currentProgram
+                return;
+            end
+            
+            obj.makeCurrent();
             
             obj.projectionUniform = program.getUniformLocation('projectionMatrix');
             obj.modelViewUniform = program.getUniformLocation('modelViewMatrix');
