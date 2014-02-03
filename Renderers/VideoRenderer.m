@@ -47,7 +47,7 @@ classdef VideoRenderer < Renderer
             
             if ~isempty(texture)
                 glBindTexture(texture.target, 0);
-                if ~isempty(mask)
+                if isempty(mask)
                     glBindTexture(obj.defaultMask.target, 0);
                 else
                     glBindTexture(mask.texture.target, 0);
