@@ -54,6 +54,7 @@ classdef TcpServer < handle
                 try
                     value = client.receive();
                 catch
+                    client.close();
                     notify(obj, 'clientDisconnected', NetEventData(client));
                     break;
                 end

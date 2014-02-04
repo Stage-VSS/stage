@@ -44,10 +44,13 @@ classdef StageServer < handle
         function onClientDisconnected(obj, src, data) %#ok<INUSD>
             disp('Client disconnected');
             
-            % FIXME: Is there a better way to clear class definitions?
-            warning('off', 'MATLAB:ClassInstanceExists');
-            clear classes;
-            warning('on', 'MATLAB:ClassInstanceExists');
+            % Clear class definitions.
+            memory = inmem;
+            for i = 1:length(memory)
+                if exist(memory{i}, 'class')
+                    clear(memory{i});
+                end
+            end
         end
         
         function onEventReceived(obj, src, data) %#ok<INUSL>           
