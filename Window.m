@@ -58,7 +58,6 @@ classdef Window < handle
             
             obj.monitor = monitor;
             
-            glfwSwapInterval(1);
             glfwSetInputMode(obj.handle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
         end
         

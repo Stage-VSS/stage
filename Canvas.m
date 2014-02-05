@@ -26,6 +26,8 @@ classdef Canvas < handle
             obj.standardPrograms = StandardPrograms(obj);
             
             obj.resetBlend();
+            
+            glfwSwapInterval(1);
         end
         
         function s = get.size(obj)
