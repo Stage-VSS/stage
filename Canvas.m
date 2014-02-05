@@ -9,7 +9,8 @@ classdef Canvas < handle
     end
     
     properties (Access = private)
-        standardPrograms        
+        defaultMask
+        standardPrograms
         windowBeingDestroyed
     end
     
@@ -22,6 +23,9 @@ classdef Canvas < handle
             obj.projection = MatrixStack();
             obj.projection.orthographic(0, window.size(1), 0, window.size(2));
             obj.modelView = MatrixStack();
+            
+            obj.defaultMask = Mask(ones(2, 2, 'uint8') * 255);
+            obj.defaultMask.init(obj);
             
             obj.standardPrograms = StandardPrograms(obj);
             
@@ -108,7 +112,7 @@ classdef Canvas < handle
                 texture = [];
             end
             if nargin < 8
-                mask = [];
+                mask = obj.defaultMask;
             end
             
             obj.makeCurrent();
@@ -122,11 +126,7 @@ classdef Canvas < handle
                 glBindTexture(texture.target, texture.handle);
                 
                 glActiveTexture(GL.TEXTURE1);
-                if isempty(mask)
-                    glBindTexture(GL.TEXTURE_2D, 0);
-                else
-                    glBindTexture(mask.texture.target, mask.texture.handle);
-                end
+                glBindTexture(mask.texture.target, mask.texture.handle);
             end
             
             program = obj.currentProgram;
@@ -144,11 +144,7 @@ classdef Canvas < handle
             
             if ~isempty(texture)
                 glBindTexture(texture.target, 0);
-                if isempty(mask)
-                    glBindTexture(GL.TEXTURE_2D, 0);
-                else
-                    glBindTexture(mask.texture.target, 0);
-                end
+                glBindTexture(mask.texture.target, 0);
             end
         end
         
