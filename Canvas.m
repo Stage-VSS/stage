@@ -9,7 +9,6 @@ classdef Canvas < handle
     end
     
     properties (Access = private)
-        renderer
         standardPrograms        
         windowBeingDestroyed
     end
@@ -24,7 +23,6 @@ classdef Canvas < handle
             obj.projection.orthographic(0, window.size(1), 0, window.size(2));
             obj.modelView = MatrixStack();
             
-            obj.renderer = VideoRenderer(obj);
             obj.standardPrograms = StandardPrograms(obj);
             
             obj.resetBlend();
@@ -53,10 +51,6 @@ classdef Canvas < handle
         function clear(obj)
             obj.makeCurrent();
             glClear(GL.COLOR_BUFFER_BIT);
-        end
-        
-        function setRenderer(obj, renderer)
-            obj.renderer = renderer;
         end
         
         function setProgram(obj, program)
@@ -115,7 +109,45 @@ classdef Canvas < handle
                 mask = [];
             end
             
-            obj.renderer.drawArray(array, mode, first, count, color, texture, mask);
+            obj.makeCurrent();
+            
+            if isempty(texture)
+                obj.setProgram('PositionOnly');
+            else
+                obj.setProgram('SingleTexture');
+                
+                glActiveTexture(GL.TEXTURE0);
+                glBindTexture(texture.target, texture.handle);
+                
+                glActiveTexture(GL.TEXTURE1);
+                if isempty(mask)
+                    glBindTexture(GL.TEXTURE_2D, 0);
+                else
+                    glBindTexture(mask.texture.target, mask.texture.handle);
+                end
+            end
+            
+            program = obj.currentProgram;
+            projectUniform = program.getUniformLocation('projectionMatrix');
+            modelUniform = program.getUniformLocation('modelViewMatrix');
+            colorUniform = program.getUniformLocation('color0');
+            
+            program.setUniformMatrix(projectUniform, obj.projection.top());
+            program.setUniformMatrix(modelUniform, obj.modelView.top());
+            program.setUniformfv(colorUniform, color);
+            
+            glBindVertexArray(array.handle);
+            glDrawArrays(mode, first, count);
+            glBindVertexArray(0);
+            
+            if ~isempty(texture)
+                glBindTexture(texture.target, 0);
+                if isempty(mask)
+                    glBindTexture(GL.TEXTURE_2D, 0);
+                else
+                    glBindTexture(mask.texture.target, 0);
+                end
+            end
         end
         
     end
