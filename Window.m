@@ -1,10 +1,13 @@
 classdef Window < handle
     
     properties (SetAccess = private)
-        canvas
         monitor
         size
         handle
+    end
+    
+    events
+        flipping
     end
     
     methods
@@ -54,9 +57,7 @@ classdef Window < handle
             end
             
             obj.monitor = monitor;
-            obj.canvas = Canvas(obj);
             
-            glfwSwapInterval(1);
             glfwSetInputMode(obj.handle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
         end
         
@@ -66,12 +67,11 @@ classdef Window < handle
         end
         
         function flip(obj)
+            notify(obj, 'flipping');
             glfwSwapBuffers(obj.handle);
         end
         
         function delete(obj)
-            delete(obj.canvas);
-            
             if obj.handle
                 % FIXME: Why is Matlab throwing 'Unexpected unknown exception from MEX file..' here?
                 try

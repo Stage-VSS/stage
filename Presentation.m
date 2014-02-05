@@ -3,7 +3,7 @@
 classdef Presentation < handle
     
     properties
-        duration
+        duration    % Play duration (seconds)
     end
     
     properties (SetAccess = private)
@@ -13,7 +13,7 @@ classdef Presentation < handle
     
     methods
         
-        % Constructs a presentation with the given duration.
+        % Constructs a presentation with the given duration in seconds.
         function obj = Presentation(duration)
             obj.duration = duration;
             obj.stimuli = {};
@@ -47,33 +47,27 @@ classdef Presentation < handle
             obj.controllers{end + 1} = {handle, propertyName, funcHandle};
         end
         
+        % Plays the presentation for its set duration. If during playback the presentation fails to draw a new frame 
+        % within the inter-frame interval, the prior frame will be presented for a longer period than expected and the
+        % actual duration of the presentation will be extended.
         function info = play(obj, canvas)            
             % Initialize all stimuli.
             for i = 1:length(obj.stimuli)
                 obj.stimuli{i}.init(canvas);
-            end            
+            end
             
-            frameTimer = FrameTimer();
+            flipTimer = FlipTimer();
+            refreshRate = canvas.window.monitor.refreshRate;
             
             frame = 0;
-            pattern = 0;
             time = 0;
-            start = glfwGetTime();
             while time < obj.duration
                 canvas.clear();
                 
                 % Call controllers.
                 state.frame = frame;
-                state.pattern = pattern;
                 state.time = time;
-                for i = 1:length(obj.controllers)
-                    controller = obj.controllers{i};
-                    handle = controller{1};
-                    prop = controller{2};
-                    func = controller{3};
-
-                    handle.(prop) = func(state);
-                end
+                obj.callControllers(state);
 
                 % Draw stimuli.
                 for i = 1:length(obj.stimuli)
@@ -82,14 +76,69 @@ classdef Presentation < handle
                 
                 % Flip back and front buffers.
                 canvas.window.flip();
-                frameTimer.tick();
+                flipTimer.tick();
                 
                 frame = frame + 1;
-                time = glfwGetTime() - start;
+                time = time + (1 / refreshRate);
             end
             
-            % TODO: Add more playback information.
-            info.frameDurations = frameTimer.frameDurations;
+            info.flipDurations = flipTimer.flipDurations;
+        end
+        
+        % Exports the presentation to a movie file.
+        function exportMovie(obj, canvas, filename, frameRate)
+            if nargin < 4
+                frameRate = canvas.window.monitor.refreshRate;
+            end
+            
+            % TODO: Use lossless compression to reduce file sizes.
+            writer = VideoWriter(filename, 'Uncompressed AVI');
+            writer.FrameRate = frameRate;
+            writer.open();
+            
+            % Initialize all stimuli.
+            for i = 1:length(obj.stimuli)
+                obj.stimuli{i}.init(canvas);
+            end
+            
+            frame = 0;
+            time = 0;
+            while time < obj.duration
+                canvas.clear();
+                
+                % Call controllers.
+                state.frame = frame;
+                state.time = time;
+                obj.callControllers(state);
+
+                % Draw stimuli.
+                for i = 1:length(obj.stimuli)
+                    obj.stimuli{i}.draw();
+                end
+                
+                pixelData = canvas.getPixelData(GL.BACK);
+                writer.writeVideo(pixelData);
+                
+                frame = frame + 1;
+                time = time + (1 / frameRate);
+            end
+            
+            writer.close();
+        end
+        
+    end
+    
+    methods (Access = private)
+        
+        function callControllers(obj, state)
+            for i = 1:length(obj.controllers)
+                controller = obj.controllers{i};
+                handle = controller{1};
+                prop = controller{2};
+                func = controller{3};
+
+                handle.(prop) = func(state);
+            end
         end
         
     end
