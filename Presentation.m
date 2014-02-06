@@ -1,6 +1,6 @@
 % The core object for presenting stimuli.
 
-classdef Presentation < handle
+classdef Presentation < handle %#ok<*PROP>
     
     properties
         duration    % Play duration (seconds)
@@ -56,13 +56,14 @@ classdef Presentation < handle
             if obj.prerender
                 filename = [tempname '.avi'];
                 obj.exportMovie(canvas, filename);
-                deleteMovie = onCleanup(@()delete(filename));
                 
                 movie = Movie(filename);
                 movie.position = canvas.size / 2;
-                movie.size = canvas.size;
+                movie.size = canvas.size;                
                 
-                stimuli = {movie}; %#ok<*PROP>
+                deleteMovie = onCleanup(@()cellfun(@(c)delete(c), {movie, filename}));
+                
+                stimuli = {movie};
                 controllers = {};
             else
                 stimuli = obj.stimuli;
