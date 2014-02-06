@@ -4,7 +4,6 @@ classdef Presentation < handle %#ok<*PROP>
     
     properties
         duration    % Play duration (seconds)
-        prerender   % Pre-render the presentation before playback (true or false)
     end
     
     properties (SetAccess = private)
@@ -17,7 +16,6 @@ classdef Presentation < handle %#ok<*PROP>
         % Constructs a presentation with the given duration in seconds.
         function obj = Presentation(duration)
             obj.duration = duration;
-            obj.prerender = false;
             obj.stimuli = {};
         end
         
@@ -53,26 +51,9 @@ classdef Presentation < handle %#ok<*PROP>
         % within the inter-frame interval, the prior frame will be presented for a longer period than expected and the
         % actual duration of the presentation will be extended.
         function info = play(obj, canvas)
-            if obj.prerender
-                filename = [tempname '.avi'];
-                obj.exportMovie(canvas, filename);
-                
-                movie = Movie(filename);
-                movie.position = canvas.size / 2;
-                movie.size = canvas.size;                
-                
-                deleteMovie = onCleanup(@()cellfun(@(c)delete(c), {movie, filename}));
-                
-                stimuli = {movie};
-                controllers = {};
-            else
-                stimuli = obj.stimuli;
-                controllers = obj.controllers;
-            end
-            
             % Initialize all stimuli.
-            for i = 1:length(stimuli)
-                stimuli{i}.init(canvas);
+            for i = 1:length(obj.stimuli)
+                obj.stimuli{i}.init(canvas);
             end
             
             flipTimer = FlipTimer();
@@ -86,11 +67,11 @@ classdef Presentation < handle %#ok<*PROP>
                 % Call controllers.
                 state.frame = frame;
                 state.time = time;
-                callControllers(controllers, state);
+                obj.callControllers(state);
 
                 % Draw stimuli.
-                for i = 1:length(stimuli)
-                    stimuli{i}.draw();
+                for i = 1:length(obj.stimuli)
+                    obj.stimuli{i}.draw();
                 end
                 
                 % Flip back and front buffers.
@@ -110,17 +91,14 @@ classdef Presentation < handle %#ok<*PROP>
                 frameRate = canvas.window.monitor.refreshRate;
             end
             
-            stimuli = obj.stimuli;
-            controllers = obj.controllers;
-            
             % TODO: Use lossless compression to reduce file sizes.
             writer = VideoWriter(filename, 'Uncompressed AVI');
             writer.FrameRate = frameRate;
             writer.open();
             
             % Initialize all stimuli.
-            for i = 1:length(stimuli)
-                stimuli{i}.init(canvas);
+            for i = 1:length(obj.stimuli)
+                obj.stimuli{i}.init(canvas);
             end
             
             frame = 0;
@@ -131,11 +109,11 @@ classdef Presentation < handle %#ok<*PROP>
                 % Call controllers.
                 state.frame = frame;
                 state.time = time;
-                callControllers(controllers, state);
+                obj.callControllers(state);
 
                 % Draw stimuli.
-                for i = 1:length(stimuli)
-                    stimuli{i}.draw();
+                for i = 1:length(obj.stimuli)
+                    obj.stimuli{i}.draw();
                 end
                 
                 pixelData = canvas.getPixelData(GL.BACK);
@@ -150,15 +128,19 @@ classdef Presentation < handle %#ok<*PROP>
         
     end
     
-end
+    methods (Access = private)
+        
+        function callControllers(obj, state)
+            for i = 1:length(obj.controllers)
+                controller = obj.controllers{i};
+                handle = controller{1};
+                prop = controller{2};
+                func = controller{3};
 
-function callControllers(controllers, state)
-    for i = 1:length(controllers)
-        controller = controllers{i};
-        handle = controller{1};
-        prop = controller{2};
-        func = controller{3};
-
-        handle.(prop) = func(state);
+                handle.(prop) = func(state);
+            end
+        end
+        
     end
+    
 end
