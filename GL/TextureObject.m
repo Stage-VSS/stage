@@ -90,14 +90,10 @@ classdef TextureObject < handle
             obj.canvas.makeCurrent();
             glBindTexture(obj.target, obj.handle);
             
-            nPlanes = size(image, 3);
+            data = permute(flipdim(image, 1), [3, 2, 1]);
+            
             width = size(image, 2);
             height = size(image, 1);
-            
-            data = zeros(nPlanes, width, height, 'uint8');
-            for i = 1:nPlanes
-                data(i, :, :) = rot90(image(:, :, i), -1);
-            end
             
             switch obj.target
                 case GL.TEXTURE_1D
