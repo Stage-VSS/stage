@@ -52,7 +52,6 @@ classdef Window < handle
             end
             
             if ~obj.handle
-                glfwTerminate();
                 error('Unable to create window. Verify your drivers support OpenGL 3.2+.');
             end
             
