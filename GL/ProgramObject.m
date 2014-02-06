@@ -41,9 +41,11 @@ classdef ProgramObject < handle
         end
         
         function l = getUniformLocation(obj, name)
-            if obj.uniformLocationCache.isKey(name)
+            try
                 l = obj.uniformLocationCache(name);
                 return;
+            catch
+                % Do nothing. This is faster than checking for the key first.
             end
             
             obj.canvas.makeCurrent();

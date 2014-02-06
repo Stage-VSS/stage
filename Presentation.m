@@ -1,6 +1,6 @@
 % The core object for presenting stimuli.
 
-classdef Presentation < handle %#ok<*PROP>
+classdef Presentation < handle
     
     properties
         duration    % Play duration (seconds)
