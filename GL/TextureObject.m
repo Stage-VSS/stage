@@ -96,7 +96,7 @@ classdef TextureObject < handle
             
             data = zeros(nPlanes, width, height, 'uint8');
             for i = 1:nPlanes
-                data(i, :, :) = transpose(flipud(image(:, :, i)));
+                data(i, :, :) = rot90(image(:, :, i), -1);
             end
             
             switch obj.target
