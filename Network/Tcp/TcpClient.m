@@ -2,7 +2,7 @@
 
 classdef TcpClient < handle
     
-    properties (SetAccess = private)
+    properties (SetAccess = private, Transient)
         socket
     end
     
@@ -74,6 +74,15 @@ classdef TcpClient < handle
         
         function delete(obj)
             obj.close();
+        end
+        
+    end
+    
+    methods (Static)
+        
+        function obj = loadobj(lobj)
+            obj = lobj;
+            obj.socket = java.net.Socket();
         end
         
     end
