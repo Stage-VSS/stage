@@ -96,8 +96,11 @@ classdef StageServer < handle
             end
         end
         
-        function onTimedOut(obj, src, data) %#ok<INUSD>           
-            escState = glfwGetKey(obj.canvas.window.handle, GLFW.GLFW_KEY_ESCAPE);
+        function onTimedOut(obj, src, data) %#ok<INUSD>
+            window = obj.canvas.window;
+            
+            window.pollEvents();
+            escState = window.getKeyState(GLFW.GLFW_KEY_ESCAPE);
             if escState == GLFW.GLFW_PRESS
                 obj.tcpServer.requestStop();
             end

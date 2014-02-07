@@ -70,6 +70,10 @@ classdef Window < handle
             glfwSwapBuffers(obj.handle);
         end
         
+        function pollEvents(obj) %#ok<MANU>
+            glfwPollEvents();
+        end
+        
         % Gets the last polled state of the specified keyboard key while this window has focus. See GLFW.m for key codes. 
         function s = getKeyState(obj, key)
             s = glfwGetKey(obj.handle, key);
