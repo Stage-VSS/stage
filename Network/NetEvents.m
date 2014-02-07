@@ -3,8 +3,8 @@ classdef NetEvents < handle
     properties (Constant)
         %% Client to server:
         
-        % Requests the current window size.
-        GET_WINDOW_SIZE = 'GET_WINDOW_SIZE';
+        % Requests the current canvas size.
+        GET_CANVAS_SIZE = 'GET_CANVAS_SIZE';
         
         % Request a new canvas color.
         SET_CANVAS_COLOR = 'SET_CANVAS_COLOR';

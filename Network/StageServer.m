@@ -1,10 +1,10 @@
-% A single-client server that allows remote access to a Stage Window.
+% A single-client server that allows remote access to a Stage session.
 
 classdef StageServer < handle
     
     properties (Access = private)
         tcpServer
-        window
+        canvas
         playInfo
     end
     
@@ -26,8 +26,9 @@ classdef StageServer < handle
         % method will block the current Matlab session until all clients are disconnected and Matlab receives a break
         % command (Ctrl+C).
         function start(obj, varargin)
-            obj.window = Window(varargin{:});
-            close = onCleanup(@()delete(obj.window));
+            window = Window(varargin{:});
+            obj.canvas = Canvas(window);
+            close = onCleanup(@()delete(obj.canvas));
             
             disp(['Serving on port: ' num2str(obj.tcpServer.port)]);
             obj.tcpServer.start();
@@ -58,9 +59,9 @@ classdef StageServer < handle
             value = data.value;
             
             switch value{1}
-                case NetEvents.GET_WINDOW_SIZE
+                case NetEvents.GET_CANVAS_SIZE
                     try
-                        client.send(NetEvents.OK, obj.window.size);
+                        client.send(NetEvents.OK, obj.canvas.size);
                     catch x
                         client.send(NetEvents.ERROR, x);
                     end
@@ -68,9 +69,9 @@ classdef StageServer < handle
                 case NetEvents.SET_CANVAS_COLOR
                     try
                         color = value{2};
-                        obj.window.canvas.setClearColor(color);
-                        obj.window.canvas.clear();
-                        obj.window.flip();
+                        obj.canvas.setClearColor(color);
+                        obj.canvas.clear();
+                        obj.canvas.window.flip();
                         client.send(NetEvents.OK);
                     catch x
                         client.send(NetEvents.ERROR, x);
@@ -80,7 +81,7 @@ classdef StageServer < handle
                     client.send(NetEvents.OK);
                     try
                         presentation = value{2};
-                        obj.playInfo = presentation.play(obj.window.canvas);
+                        obj.playInfo = presentation.play(obj.canvas);
                     catch x
                         obj.playInfo = x;
                     end

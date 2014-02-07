@@ -36,9 +36,9 @@ classdef StageClient < handle
             obj.disconnect();
         end
         
-        % Gets the remote window size.
-        function s = getWindowSize(obj)
-            obj.sendEvent(NetEvents.GET_WINDOW_SIZE);
+        % Gets the remote canvas size.
+        function s = getCanvasSize(obj)
+            obj.sendEvent(NetEvents.GET_CANVAS_SIZE);
             s = obj.getResponse();
         end
         
