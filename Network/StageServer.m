@@ -20,11 +20,12 @@ classdef StageServer < handle
             addlistener(obj.tcpServer, 'clientConnected', @obj.onClientConnected);
             addlistener(obj.tcpServer, 'clientDisconnected', @obj.onClientDisconnected);
             addlistener(obj.tcpServer, 'eventReceived', @obj.onEventReceived);
+            addlistener(obj.tcpServer, 'timedOut', @obj.onTimedOut);
         end
         
         % Creates a window and starts serving clients. All arguments are passed through to the Window constructor. This
-        % method will block the current Matlab session until all clients are disconnected and Matlab receives a break
-        % command (Ctrl+C).
+        % method will block the current Matlab session until all clients are disconnected and the escape key is held
+        % while the window has focus.
         function start(obj, varargin)
             window = Window(varargin{:});
             obj.canvas = Canvas(window);
@@ -92,6 +93,13 @@ classdef StageServer < handle
                 otherwise
                     x = MException('Stage:StageServer', 'Unknown event');
                     client.send(NetEvents.ERROR, x);
+            end
+        end
+        
+        function onTimedOut(obj, src, data) %#ok<INUSD>           
+            escState = glfwGetKey(obj.canvas.window.handle, GLFW.GLFW_KEY_ESCAPE);
+            if escState == GLFW.GLFW_PRESS
+                obj.tcpServer.requestStop();
             end
         end
         

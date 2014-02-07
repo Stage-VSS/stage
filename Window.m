@@ -70,6 +70,11 @@ classdef Window < handle
             glfwSwapBuffers(obj.handle);
         end
         
+        % Gets the last polled state of the specified keyboard key while this window has focus. See GLFW.m for key codes. 
+        function s = getKeyState(obj, key)
+            s = glfwGetKey(obj.handle, key);
+        end
+        
         function delete(obj)
             if obj.handle
                 % FIXME: Why is Matlab throwing 'Unexpected unknown exception from MEX file..' here?
