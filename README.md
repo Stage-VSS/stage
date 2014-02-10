@@ -14,6 +14,20 @@ Stage is a MATLAB-based visual stimulus system for vision research.
 1. Run `git clone https://github.com/cafarm/Stage --recursive` in Terminal.app or Git Bash.
 2. Add the Stage folder and it's subfolders to the Matlab path.
 
+## FAQ
+
+- Why am I seeing odd timing behavior and/or screen tearing?
+On Windows Vista and later you must use the Windows Basic or Classic theme. Aero is not supported by Stage and will cause performance and timing issues.
+
+- Why do I receive an error claiming "Invalid MEX-file ... The specified module could not be found."?
+Make sure you have installed the latest OS updates and the Visual C++ Redistributable Packages listed under requirements. If that fails to fix the issue open the problematic mex file with [Dependency Walker](http://www.dependencywalker.com) and look for any missing DLLs.
+
+- Why do I receive an error claiming "Undefined function or variable ..."
+Make sure you are using a 64-bit version of MATLAB and that you included the `--recursive` flag when cloning the Stage repository during install. If you recently updated Stage via `git pull` also ensure that you have run `git submodule update` within the Stage directory.
+
+- How do I update Stage to the latest version?
+In Terminal.app or Git Bash navigate to the Stage directory. Run `git pull` and then `git submodule update`.
+
 ## License
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
