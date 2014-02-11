@@ -50,18 +50,15 @@ classdef TextureObject < handle
             end
             
             [pixelFormat, pixelDatatype, internalFormat] = getFormatAndType(image);
+            width = size(image, 2);
+            height = size(image, 1);
             
             obj.canvas.makeCurrent();
             glBindTexture(obj.target, obj.handle);
             
-            nPlanes = size(image, 3);
-            width = size(image, 2);
-            height = size(image, 1);
+            data = permute(flipdim(image, 1), [3, 2, 1]);
             
-            data = zeros(nPlanes, width, height, 'uint8');
-            for i = 1:nPlanes
-                data(i, :, :) = transpose(flipud(image(:, :, i)));
-            end
+            glPixelStorei(GL.UNPACK_ALIGNMENT, 1);
             
             switch obj.target
                 case GL.TEXTURE_1D
@@ -86,14 +83,15 @@ classdef TextureObject < handle
             end
             
             [pixelFormat, pixelDatatype] = getFormatAndType(image);
+            width = size(image, 2);
+            height = size(image, 1);
             
             obj.canvas.makeCurrent();
             glBindTexture(obj.target, obj.handle);
             
             data = permute(flipdim(image, 1), [3, 2, 1]);
             
-            width = size(image, 2);
-            height = size(image, 1);
+            glPixelStorei(GL.UNPACK_ALIGNMENT, 1);
             
             switch obj.target
                 case GL.TEXTURE_1D
@@ -155,6 +153,8 @@ end
 
 function [pixelFormat, pixelDatatype, internalFormat] = getFormatAndType(image)
     switch size(image, 3)
+        case 1
+            pixelFormat = GL.RED;
         case 3
             pixelFormat = GL.RGB;
         case 4
@@ -172,6 +172,8 @@ function [pixelFormat, pixelDatatype, internalFormat] = getFormatAndType(image)
 
     internalFormat = [];
     switch pixelFormat
+        case GL.RED
+            internalFormat = GL.R8;
         case GL.RGB
             internalFormat = GL.RGB8;
         case GL.RGBA
