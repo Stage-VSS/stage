@@ -15,8 +15,8 @@ classdef Filter < handle
         
         % Constructs a filter from an M-by-N-by-1 convolution matrix (kernel). 
         function obj = Filter(kernel)
-            if size(kernel, 3) ~= 1
-                error('Kernel must be 2-dimensional');
+            if ~ismatrix(kernel)
+                error('Kernel must be a matrix');
             end
             
             obj.kernel = single(kernel);

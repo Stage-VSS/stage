@@ -20,8 +20,8 @@ classdef Mask < handle
                 error('Matrix must be of class uint8');
             end
             
-            if size(matrix, 3) ~= 1
-                error('Matrix must be 2-dimensional');
+            if ~ismatrix(matrix)
+                error('Matrix must be a matrix');
             end
             
             obj.matrix = matrix;
