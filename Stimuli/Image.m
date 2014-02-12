@@ -14,8 +14,8 @@ classdef Image < Stimulus
     
     properties (Access = private)
         matrix                      % Original image matrix
-        minFilter                   % Texture minifying function
-        magFilter                   % Texture magnification function
+        minFunction                 % Texture minifying function
+        magFunction                 % Texture magnification function
         mask                        % Stimulus mask
         filter                      % Stimulus filter
         vbo                         % Vertex buffer object
@@ -38,8 +38,8 @@ classdef Image < Stimulus
             end
             
             obj.matrix = matrix;
-            obj.minFilter = GL.LINEAR_MIPMAP_LINEAR;
-            obj.magFilter = GL.LINEAR;
+            obj.minFunction = GL.LINEAR_MIPMAP_LINEAR;
+            obj.magFunction = GL.LINEAR;
         end
         
         % Assigns a mask to the stimulus.
@@ -53,13 +53,13 @@ classdef Image < Stimulus
         end
         
         % Sets the OpenGL minifying function for the image (GL.NEAREST, GL.LINEAR, GL.NEAREST_MIPMAP_NEAREST, etc).
-        function setMinFilter(obj, filter)
-            obj.minFilter = filter;
+        function setMinFunction(obj, func)
+            obj.minFunction = func;
         end
         
         % Sets the OpenGL magnification function for the image (GL.NEAREST or GL.LINEAR).
-        function setMagFilter(obj, filter)
-            obj.magFilter = filter;
+        function setMagFunction(obj, func)
+            obj.magFunction = func;
         end
         
         function init(obj, canvas)
@@ -95,8 +95,8 @@ classdef Image < Stimulus
             obj.texture = TextureObject(canvas, 2);
             obj.texture.setWrapModeS(GL.REPEAT);
             obj.texture.setWrapModeT(GL.REPEAT);
-            obj.texture.setMinFilter(obj.minFilter);
-            obj.texture.setMagFilter(obj.magFilter);
+            obj.texture.setMinFunction(obj.minFunction);
+            obj.texture.setMagFunction(obj.magFunction);
             obj.texture.setImage(image);
             obj.texture.generateMipmap();
             

@@ -128,17 +128,17 @@ classdef TextureObject < handle
             glBindTexture(obj.target, 0);
         end
         
-        function setMinFilter(obj, filter)
+        function setMinFunction(obj, func)
             obj.canvas.makeCurrent();
             glBindTexture(obj.target, obj.handle);
-            glTexParameteri(obj.target, GL.TEXTURE_MIN_FILTER, filter);
+            glTexParameteri(obj.target, GL.TEXTURE_MIN_FILTER, func);
             glBindTexture(obj.target, 0);
         end
         
-        function setMagFilter(obj, filter)
+        function setMagFunction(obj, func)
             obj.canvas.makeCurrent();
             glBindTexture(obj.target, obj.handle);
-            glTexParameteri(obj.target, GL.TEXTURE_MAG_FILTER, filter);
+            glTexParameteri(obj.target, GL.TEXTURE_MAG_FILTER, func);
             glBindTexture(obj.target, 0);
         end
         

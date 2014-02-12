@@ -1,4 +1,5 @@
-% A convolution filter.
+% A convolution filter. Filters are generally applied to stimuli that support them via the setFilter() method of the
+% Stimulus.
 
 classdef Filter < handle
     
@@ -23,8 +24,8 @@ classdef Filter < handle
         
         function init(obj, canvas)            
             obj.texture = TextureObject(canvas, 2);
-            obj.texture.setMinFilter(GL.NEAREST);
-            obj.texture.setMagFilter(GL.NEAREST);
+            obj.texture.setMinFunction(GL.NEAREST);
+            obj.texture.setMagFunction(GL.NEAREST);
             obj.texture.setImage(obj.kernel);
         end
         
