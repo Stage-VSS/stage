@@ -36,6 +36,6 @@ void main(void)
     vec4 texFrag = texture(texture0, texCoord);
     vec4 maskFrag = texture(mask, maskCoord);
     
-    color.a = color0.a * texFrag.a * maskFrag.a;
+    color.a = color0.a * texFrag.a * maskFrag.r;
     color.rgb = color0.rgb * sum;
 }

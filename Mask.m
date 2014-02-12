@@ -1,4 +1,5 @@
-% A transparency (alpha) mask.
+% A transparency (alpha) mask. Masks are generally applied to stimuli that support them via the setMask() method of the 
+% Stimulus.
 
 classdef Mask < handle
     
@@ -16,21 +17,19 @@ classdef Mask < handle
         % completely opaque.
         function obj = Mask(matrix)
             if ~isa(matrix, 'uint8')
-                error('Matrix must be of class uint8')
+                error('Matrix must be of class uint8');
+            end
+            
+            if size(matrix, 3) ~= 1
+                error('Matrix must be 2-dimensional');
             end
             
             obj.matrix = matrix;
         end
         
-        function init(obj, canvas)
-            width = size(obj.matrix, 2);
-            height = size(obj.matrix, 1);
-            
-            mask = zeros(height, width, 4, 'uint8');
-            mask(:, :, 4) = obj.matrix;
-            
+        function init(obj, canvas)            
             obj.texture = TextureObject(canvas, 2);
-            obj.texture.setImage(mask);
+            obj.texture.setImage(obj.matrix);
             obj.texture.generateMipmap();
         end
         
