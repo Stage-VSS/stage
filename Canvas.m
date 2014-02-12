@@ -66,6 +66,8 @@ classdef Canvas < handle
                         program = obj.standardPrograms.positionOnlyProgram;
                     case 'SingleTexture'
                         program = obj.standardPrograms.singleTextureProgram;
+                    case 'SingleFilter'
+                        program = obj.standardPrograms.singleFilterProgram;
                     otherwise
                         error('Unknown program name');
                 end
@@ -107,19 +109,24 @@ classdef Canvas < handle
             d = imrotate(d, 90);
         end
         
-        function drawArray(obj, array, mode, first, count, color, texture, mask)
+        function drawArray(obj, array, mode, first, count, color, texture, mask, filter)
             if nargin < 7
                 texture = [];
             end
-            if nargin < 8
+            
+            if nargin < 8 || isempty(mask)
                 mask = obj.defaultMask;
+            end
+            
+            if nargin < 9
+                filter = [];
             end
             
             obj.makeCurrent();
             
             if isempty(texture)
                 obj.setProgram('PositionOnly');
-            else
+            elseif isempty(filter)
                 obj.setProgram('SingleTexture');
                 
                 glActiveTexture(GL.TEXTURE0);
@@ -127,6 +134,17 @@ classdef Canvas < handle
                 
                 glActiveTexture(GL.TEXTURE1);
                 glBindTexture(mask.texture.target, mask.texture.handle);
+            else
+                obj.setProgram('SingleFilter');
+                
+                glActiveTexture(GL.TEXTURE0);
+                glBindTexture(texture.target, texture.handle);
+                
+                glActiveTexture(GL.TEXTURE1);
+                glBindTexture(mask.texture.target, mask.texture.handle);
+
+                glActiveTexture(GL.TEXTURE2);
+                glBindTexture(filter.texture.target, filter.texture.handle);                
             end
             
             program = obj.currentProgram;
@@ -144,11 +162,15 @@ classdef Canvas < handle
             
             if ~isempty(texture)
                 glBindTexture(texture.target, 0);
-                glBindTexture(mask.texture.target, 0);
             end
+            
+            if ~isempty(filter)
+                glBindTexture(filter.texture.target, 0);
+            end
+            
+            glBindTexture(mask.texture.target, 0);
         end
         
     end
     
 end
-

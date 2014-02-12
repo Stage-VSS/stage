@@ -17,6 +17,7 @@ classdef Image < Stimulus
         minFilter                   % Texture minifying function
         magFilter                   % Texture magnification function
         mask                        % Stimulus mask
+        filter                      % Stimulus filter
         vbo                         % Vertex buffer object
         vao                         % Vertex array object
         texture                     % Image texture
@@ -46,6 +47,11 @@ classdef Image < Stimulus
             obj.mask = mask;
         end
         
+        % Assigns a filter to the stimulus.
+        function setFilter(obj, filter)
+            obj.filter = filter;
+        end
+        
         % Sets the OpenGL minifying function for the image (GL.NEAREST, GL.LINEAR, GL.NEAREST_MIPMAP_NEAREST, etc).
         function setMinFilter(obj, filter)
             obj.minFilter = filter;
@@ -61,6 +67,10 @@ classdef Image < Stimulus
             
             if ~isempty(obj.mask)
                 obj.mask.init(canvas);
+            end
+            
+            if ~isempty(obj.filter)
+                obj.filter.init(canvas);
             end
             
             % Each vertex position is followed by a texture coordinate and a mask coordinate.
@@ -111,11 +121,7 @@ classdef Image < Stimulus
                 c = [c, obj.opacity];
             end
             
-            if isempty(obj.mask)
-                obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.texture);
-            else
-                obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.texture, obj.mask);
-            end
+            obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.texture, obj.mask, obj.filter);
             
             modelView.pop();
         end

@@ -166,19 +166,33 @@ function [pixelFormat, pixelDatatype, internalFormat] = getFormatAndType(image)
     switch class(image)
         case 'uint8'
             pixelDatatype = GL.UNSIGNED_BYTE;
+        case 'single'
+            pixelDatatype = GL.FLOAT;
         otherwise
             error('Unsupported pixel datatype');
     end
-
+    
     internalFormat = [];
-    switch pixelFormat
-        case GL.RED
-            internalFormat = GL.R8;
-        case GL.RGB
-            internalFormat = GL.RGB8;
-        case GL.RGBA
-            internalFormat = GL.RGBA8;
-    end
+    switch pixelDatatype
+        case GL.UNSIGNED_BYTE
+            switch pixelFormat
+                case GL.RED
+                    internalFormat = GL.R8;
+                case GL.RGB
+                    internalFormat = GL.RGB8;
+                case GL.RGBA
+                    internalFormat = GL.RGBA8;
+            end
+        case GL.FLOAT
+            switch pixelFormat
+                case GL.RED
+                    internalFormat = GL.R32F;
+                case GL.RGB
+                    internalFormat = GL.RGB32F;
+                case GL.RGBA
+                    internalFormat = GL.RGBA32F;
+            end
+    end           
     
     if isempty(internalFormat)
         error('Cannot match to an internal format');

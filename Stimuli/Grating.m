@@ -16,6 +16,7 @@ classdef Grating < Stimulus
     properties (Access = private)
         profile                     % Luminance profile wave ('sine', 'square', or 'sawtooth')
         mask                        % Stimulus mask
+        filter                      % Stimulus filter
         resolution                  % Texture resolution
         vbo                         % Vertex buffer object
         vao                         % Vertex array object
@@ -50,11 +51,20 @@ classdef Grating < Stimulus
             obj.mask = mask;
         end
         
+        % Assigns a filter to the stimulus.
+        function setFilter(obj, filter)
+            obj.filter = filter;
+        end
+        
         function init(obj, canvas)
             init@Stimulus(obj, canvas);
             
             if ~isempty(obj.mask)
                 obj.mask.init(canvas);
+            end
+            
+            if ~isempty(obj.filter)
+                obj.filter.init(canvas);
             end
             
             % Each vertex position is followed by a texture coordinate and a mask coordinate.
@@ -101,11 +111,7 @@ classdef Grating < Stimulus
                 c = [c, obj.opacity];
             end
             
-            if isempty(obj.mask)
-                obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.texture);
-            else
-                obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.texture, obj.mask);
-            end
+            obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.texture, obj.mask, obj.filter);
             
             modelView.pop();
         end
