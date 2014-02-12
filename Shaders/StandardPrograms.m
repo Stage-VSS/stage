@@ -1,44 +1,44 @@
 classdef StandardPrograms < handle
     
     properties (SetAccess = private)
-        positionOnlyProgram
-        singleTextureProgram
-        singleFilterProgram
+        primitiveProgram
+        texturedPrimitiveProgram
+        filteredTexturedPrimitiveProgram
     end
     
     methods
         
         function obj = StandardPrograms(canvas)            
-            obj.createPositionOnlyProgram(canvas);
-            obj.createSingleTextureProgram(canvas);
-            obj.createSingleFilterProgram(canvas);
+            obj.createPrimitiveProgram(canvas);
+            obj.createTexturedPrimitiveProgram(canvas);
+            obj.createFilteredTexturedPrimitiveProgram(canvas);
         end
         
     end
     
     methods (Access = private)
         
-        function createPositionOnlyProgram(obj, canvas)
+        function createPrimitiveProgram(obj, canvas)
             filePath = mfilename('fullpath');
             shadersDir = fileparts(filePath);
             
-            vertShader = ShaderObject(canvas, GL.VERTEX_SHADER, fullfile(shadersDir, 'PositionOnly.vert'));
+            vertShader = ShaderObject(canvas, GL.VERTEX_SHADER, fullfile(shadersDir, 'Primitive.vert'));
             vertShader.compile();
             
-            fragShader = ShaderObject(canvas, GL.FRAGMENT_SHADER, fullfile(shadersDir, 'PositionOnly.frag'));
+            fragShader = ShaderObject(canvas, GL.FRAGMENT_SHADER, fullfile(shadersDir, 'Primitive.frag'));
             fragShader.compile();
             
-            obj.positionOnlyProgram = ProgramObject.createAndLink(canvas, [vertShader, fragShader]);
+            obj.primitiveProgram = ProgramObject.createAndLink(canvas, [vertShader, fragShader]);
         end
         
-        function createSingleTextureProgram(obj, canvas)
+        function createTexturedPrimitiveProgram(obj, canvas)
             filePath = mfilename('fullpath');
             shadersDir = fileparts(filePath);
             
-            vertShader = ShaderObject(canvas, GL.VERTEX_SHADER, fullfile(shadersDir, 'SingleTexture.vert'));
+            vertShader = ShaderObject(canvas, GL.VERTEX_SHADER, fullfile(shadersDir, 'TexturedPrimitive.vert'));
             vertShader.compile();
             
-            fragShader = ShaderObject(canvas, GL.FRAGMENT_SHADER, fullfile(shadersDir, 'SingleTexture.frag'));
+            fragShader = ShaderObject(canvas, GL.FRAGMENT_SHADER, fullfile(shadersDir, 'TexturedPrimitive.frag'));
             fragShader.compile();
             
             program = ProgramObject.createAndLink(canvas, [vertShader, fragShader]);
@@ -53,17 +53,17 @@ classdef StandardPrograms < handle
             
             glUseProgram(0);
             
-            obj.singleTextureProgram = program;
+            obj.texturedPrimitiveProgram = program;
         end
         
-        function createSingleFilterProgram(obj, canvas)
+        function createFilteredTexturedPrimitiveProgram(obj, canvas)
             filePath = mfilename('fullpath');
             shadersDir = fileparts(filePath);
             
-            vertShader = ShaderObject(canvas, GL.VERTEX_SHADER, fullfile(shadersDir, 'SingleFilter.vert'));
+            vertShader = ShaderObject(canvas, GL.VERTEX_SHADER, fullfile(shadersDir, 'FilteredTexturedPrimitive.vert'));
             vertShader.compile();
             
-            fragShader = ShaderObject(canvas, GL.FRAGMENT_SHADER, fullfile(shadersDir, 'SingleFilter.frag'));
+            fragShader = ShaderObject(canvas, GL.FRAGMENT_SHADER, fullfile(shadersDir, 'FilteredTexturedPrimitive.frag'));
             fragShader.compile();
             
             program = ProgramObject.createAndLink(canvas, [vertShader, fragShader]);
@@ -81,7 +81,7 @@ classdef StandardPrograms < handle
             
             glUseProgram(0);
             
-            obj.singleFilterProgram = program;
+            obj.filteredTexturedPrimitiveProgram = program;
         end
         
     end

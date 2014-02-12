@@ -62,12 +62,12 @@ classdef Canvas < handle
         function setProgram(obj, program)
             if ischar(program)
                 switch program
-                    case 'PositionOnly'
-                        program = obj.standardPrograms.positionOnlyProgram;
-                    case 'SingleTexture'
-                        program = obj.standardPrograms.singleTextureProgram;
-                    case 'SingleFilter'
-                        program = obj.standardPrograms.singleFilterProgram;
+                    case 'Primitive'
+                        program = obj.standardPrograms.primitiveProgram;
+                    case 'TexturedPrimitive'
+                        program = obj.standardPrograms.texturedPrimitiveProgram;
+                    case 'FilteredTexturedPrimitive'
+                        program = obj.standardPrograms.filteredTexturedPrimitiveProgram;
                     otherwise
                         error('Unknown program name');
                 end
@@ -125,9 +125,9 @@ classdef Canvas < handle
             obj.makeCurrent();
             
             if isempty(texture)
-                obj.setProgram('PositionOnly');
+                obj.setProgram('Primitive');
             elseif isempty(filter)
-                obj.setProgram('SingleTexture');
+                obj.setProgram('TexturedPrimitive');
                 
                 glActiveTexture(GL.TEXTURE0);
                 glBindTexture(texture.target, texture.handle);
@@ -135,7 +135,7 @@ classdef Canvas < handle
                 glActiveTexture(GL.TEXTURE1);
                 glBindTexture(mask.texture.target, mask.texture.handle);
             else
-                obj.setProgram('SingleFilter');
+                obj.setProgram('FilteredTexturedPrimitive');
                 
                 glActiveTexture(GL.TEXTURE0);
                 glBindTexture(texture.target, texture.handle);
