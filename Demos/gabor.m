@@ -9,13 +9,9 @@ function gabor()
     canvas.setClearColor(0.5);
     canvas.clear();
     
-    % Grab the canvas size so we can center the stimulus.
-    width = canvas.size(1);
-    height = canvas.size(2);
-    
     % Create the grating stimulus.
     grating = Grating();
-    grating.position = [width/2, height/2];
+    grating.position = canvas.size / 2;
     grating.size = [300, 300];
     grating.spatialFreq = 1/100; % 1 cycle per 100 pixels
     

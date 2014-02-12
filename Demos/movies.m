@@ -5,7 +5,7 @@ function movies()
     % Create a canvas on the window.
     canvas = Canvas(window);
     
-    % Grab the canvas size so we can center the stimulus.
+    % Grab the canvas size for convenience.
     width = canvas.size(1);
     height = canvas.size(2);
     

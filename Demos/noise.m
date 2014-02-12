@@ -5,14 +5,10 @@ function noise()
     % Create a canvas on the window.
     canvas = Canvas(window);
     
-    % Grab the canvas size so we can center the stimulus.
-    width = canvas.size(1);
-    height = canvas.size(2);
-    
     % Create the noise stimulus.
     noiseMatrix = uint8(rand(200, 200) * 255);
     noise = Image(noiseMatrix);
-    noise.position = [width/2, height/2];
+    noise.position = canvas.size / 2;
     noise.size = [200, 200];
     
     % Create a 5 second presentation.

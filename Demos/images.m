@@ -5,7 +5,7 @@ function images()
     % Create a canvas on the window.
     canvas = Canvas(window);
     
-    % Grab the canvas size so we can center the stimulus.
+    % Grab the canvas size for convenience.
     width = canvas.size(1);
     height = canvas.size(2);
     
@@ -15,7 +15,7 @@ function images()
     butterflyImage = imread(fullfile(imagesDir, 'butterfly.jpg'));
     butterfly = Image(butterflyImage);
     butterfly.size = [size(butterflyImage, 2), size(butterflyImage, 1)];
-    butterfly.position = [width/2, height/2];
+    butterfly.position = canvas.size / 2;
     
     mask = Mask.createGaussianMask();
     butterfly.setMask(mask);

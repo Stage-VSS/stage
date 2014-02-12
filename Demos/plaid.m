@@ -9,13 +9,9 @@ function plaid()
     canvas.setClearColor(0.5);
     canvas.clear();
     
-    % Grab the canvas size so we can center the stimulus.
-    width = canvas.size(1);
-    height = canvas.size(2);
-    
     % Create two grating stimuli to layer on one another.
     grating1 = Grating();
-    grating1.position = [width/2, height/2];
+    grating1.position = canvas.size / 2;
     grating1.size = [300, 300];
     grating1.spatialFreq = 1/100; % 1 cycle per 100 pixels
     grating1.orientation = 45;
