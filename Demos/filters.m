@@ -16,10 +16,10 @@ function filters()
     kernel = [-1 -1 -1; ...
               -1  8 -1; ...
               -1 -1 -1];
-    edgeEmphasizingFilter = Filter(kernel);
+    filter = Filter(kernel);
     
     % Assign the filter to the movie stimulus.
-    boxingMovie.setFilter(edgeEmphasizingFilter);
+    boxingMovie.setFilter(filter);
     
     % Set the stimulus s (i.e. x) and t (i.e. y) coordinate wrap mode to determine the filter's edge handling.
     boxingMovie.setWrapModeS(GL.MIRRORED_REPEAT);
