@@ -12,13 +12,17 @@ classdef Movie < Stimulus
     end
     
     properties (Access = private)
-        filename    % Movie filename
-        mask        % Stimulus mask
-        filter      % Stimulus filter
-        vbo         % Vertex buffer object
-        vao         % Vertex array object
-        texture     % Frame texture
-        player      % Video player
+        filename        % Movie filename
+        mask            % Stimulus mask
+        filter          % Stimulus filter
+        minFunction     % Texture minifying function
+        magFunction     % Texture magnification function
+        wrapModeS       % Wrap mode for texture coordinate s (i.e. x)
+        wrapModeT       % Wrap mode for texture coordinate t (i.e. y)
+        vbo             % Vertex buffer object
+        vao             % Vertex array object
+        texture         % Frame texture
+        player          % Video player
     end
     
     methods
@@ -27,6 +31,11 @@ classdef Movie < Stimulus
         % relative or complete file path if the movie is not in the current working directory.
         function obj = Movie(filename)            
             obj.filename = filename;
+            
+            obj.minFunction = GL.LINEAR;
+            obj.magFunction = GL.LINEAR;
+            obj.wrapModeS = GL.REPEAT;
+            obj.wrapModeT = GL.REPEAT;
         end
         
         % Assigns a mask to the stimulus.
@@ -37,6 +46,26 @@ classdef Movie < Stimulus
         % Assigns a filter to the stimulus.
         function setFilter(obj, filter)
             obj.filter = filter;
+        end
+        
+        % Sets the OpenGL minifying function for the movie (GL.NEAREST, GL.LINEAR, GL.NEAREST_MIPMAP_NEAREST, etc).
+        function setMinFunction(obj, func)
+            obj.minFunction = func;
+        end
+        
+        % Sets the OpenGL magnification function for the movie (GL.NEAREST or GL.LINEAR).
+        function setMagFunction(obj, func)
+            obj.magFunction = func;
+        end
+        
+        % Sets the OpenGL S (i.e. X) coordinate wrap mode for the movie (GL.CLAMP_TO_EDGE, GL.MIRRORED_REPEAT, GL.REPEAT, etc).
+        function setWrapModeS(obj, mode)
+            obj.wrapModeS = mode;
+        end
+        
+        % Sets the OpenGL T (i.e. Y) coordinate wrap mode for the movie (GL.CLAMP_TO_EDGE, GL.MIRRORED_REPEAT, GL.REPEAT, etc).
+        function setWrapModeT(obj, mode)
+            obj.wrapModeT = mode;
         end
         
         function init(obj, canvas)
@@ -67,6 +96,10 @@ classdef Movie < Stimulus
             obj.player = VideoPlayer(source);
             
             obj.texture = TextureObject(canvas, 2);
+            obj.texture.setWrapModeS(obj.wrapModeS);
+            obj.texture.setWrapModeT(obj.wrapModeT);
+            obj.texture.setMinFunction(obj.minFunction);
+            obj.texture.setMagFunction(obj.magFunction);
             obj.texture.setImage(zeros(source.size(2), source.size(1), 3, 'uint8'));
         end
         

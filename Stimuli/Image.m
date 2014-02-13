@@ -14,10 +14,12 @@ classdef Image < Stimulus
     
     properties (Access = private)
         matrix                      % Original image matrix
-        minFunction                 % Texture minifying function
-        magFunction                 % Texture magnification function
         mask                        % Stimulus mask
         filter                      % Stimulus filter
+        minFunction                 % Texture minifying function
+        magFunction                 % Texture magnification function
+        wrapModeS                   % Wrap mode for texture coordinate s (i.e. x)
+        wrapModeT                   % Wrap mode for texture coordinate t (i.e. y)
         vbo                         % Vertex buffer object
         vao                         % Vertex array object
         texture                     % Image texture
@@ -40,6 +42,8 @@ classdef Image < Stimulus
             obj.matrix = matrix;
             obj.minFunction = GL.LINEAR_MIPMAP_LINEAR;
             obj.magFunction = GL.LINEAR;
+            obj.wrapModeS = GL.REPEAT;
+            obj.wrapModeT = GL.REPEAT;
         end
         
         % Assigns a mask to the stimulus.
@@ -60,6 +64,16 @@ classdef Image < Stimulus
         % Sets the OpenGL magnification function for the image (GL.NEAREST or GL.LINEAR).
         function setMagFunction(obj, func)
             obj.magFunction = func;
+        end
+        
+        % Sets the OpenGL S (i.e. X) coordinate wrap mode for the image (GL.CLAMP_TO_EDGE, GL.MIRRORED_REPEAT, GL.REPEAT, etc).
+        function setWrapModeS(obj, mode)
+            obj.wrapModeS = mode;
+        end
+        
+        % Sets the OpenGL T (i.e. Y) coordinate wrap mode for the image (GL.CLAMP_TO_EDGE, GL.MIRRORED_REPEAT, GL.REPEAT, etc).
+        function setWrapModeT(obj, mode)
+            obj.wrapModeT = mode;
         end
         
         function init(obj, canvas)
@@ -93,8 +107,8 @@ classdef Image < Stimulus
             end
             
             obj.texture = TextureObject(canvas, 2);
-            obj.texture.setWrapModeS(GL.REPEAT);
-            obj.texture.setWrapModeT(GL.REPEAT);
+            obj.texture.setWrapModeS(obj.wrapModeS);
+            obj.texture.setWrapModeT(obj.wrapModeT);
             obj.texture.setMinFunction(obj.minFunction);
             obj.texture.setMagFunction(obj.magFunction);
             obj.texture.setImage(image);

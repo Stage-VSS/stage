@@ -11,13 +11,19 @@ function filters()
     boxingMovie.size = [320, 240];
     boxingMovie.position = canvas.size / 2;
     
-    % Assign an edge-emphasizing filter. The fspecial() function may also be used to create kernel matrices if the Image 
+    % Create an edge-emphasizing filter. The fspecial() function may also be used to create kernel matrices if the Image 
     % Processing Toolbox is available.
     kernel = [-1 -1 -1; ...
               -1  8 -1; ...
               -1 -1 -1];
     edgeEmphasizingFilter = Filter(kernel);
+    
+    % Assign the filter to the movie stimulus.
     boxingMovie.setFilter(edgeEmphasizingFilter);
+    
+    % Set the stimulus s (i.e. x) and t (i.e. y) coordinate wrap mode to determine the filter's edge handling.
+    boxingMovie.setWrapModeS(GL.MIRRORED_REPEAT);
+    boxingMovie.setWrapModeT(GL.MIRRORED_REPEAT);
     
     % Create a 12 second presentation.
     duration = 12;

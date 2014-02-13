@@ -22,6 +22,10 @@ function noise()
     presentation.addController(noise, 'shiftX', @(state)state.time * 0.5);
     presentation.addController(noise, 'shiftY', @(state)state.time * 0.5);
     
+    % Set the noise texture to repeat in the x and y as it is shifted.
+    noise.setWrapModeS(GL.REPEAT); % x
+    noise.setWrapModeT(GL.REPEAT); % y
+    
     % Play the presentation on the canvas!
     presentation.play(canvas);
     

@@ -1,5 +1,5 @@
 % A convolution filter. Filters are generally applied to stimuli that support them via the setFilter() method of the
-% Stimulus.
+% Stimulus. Edge handling is determined by the wrap mode of the stimulus.
 
 classdef Filter < handle
     
