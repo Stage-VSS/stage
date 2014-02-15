@@ -144,16 +144,26 @@ classdef Canvas < handle
                 glBindTexture(mask.texture.target, mask.texture.handle);
 
                 glActiveTexture(GL.TEXTURE2);
-                glBindTexture(filter.texture.target, filter.texture.handle);                
+                glBindTexture(filter.texture.target, filter.texture.handle);
+                
+                program = obj.currentProgram;
+                
+                kernelSizeUniform = program.getUniformLocation('kernelSize');
+                program.setUniformfv(kernelSizeUniform, filter.texture.size);
+                
+                texture0SizeUniform = program.getUniformLocation('texture0Size');                
+                program.setUniformfv(texture0SizeUniform, texture.size);
             end
             
             program = obj.currentProgram;
-            projectUniform = program.getUniformLocation('projectionMatrix');
-            modelUniform = program.getUniformLocation('modelViewMatrix');
-            colorUniform = program.getUniformLocation('color0');
             
+            projectUniform = program.getUniformLocation('projectionMatrix');
             program.setUniformMatrix(projectUniform, obj.projection.top());
+            
+            modelUniform = program.getUniformLocation('modelViewMatrix');
             program.setUniformMatrix(modelUniform, obj.modelView.top());
+            
+            colorUniform = program.getUniformLocation('color0');
             program.setUniformfv(colorUniform, color);
             
             glBindVertexArray(array.handle);

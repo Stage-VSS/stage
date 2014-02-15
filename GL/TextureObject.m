@@ -1,6 +1,7 @@
 classdef TextureObject < handle
     
     properties (SetAccess = private)
+        size
         target
         handle
     end
@@ -68,6 +69,10 @@ classdef TextureObject < handle
                     glTexImage1D(obj.target, level, internalFormat, width, 0, pixelFormat, pixelDatatype, data);
                 case GL.TEXTURE_2D
                     glTexImage2D(obj.target, level, internalFormat, width, height, 0, pixelFormat, pixelDatatype, data);
+            end
+            
+            if level == 0
+                obj.size = [width, height];
             end
             
             glBindTexture(obj.target, 0);

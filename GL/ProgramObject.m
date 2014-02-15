@@ -64,10 +64,26 @@ classdef ProgramObject < handle
             glUniform1i(location, value);
         end
         
-        function setUniformfv(obj, location, vector)
+        function setUniformfv(obj, location, vector, count)
+            if nargin < 4
+                count = 1;
+            end
+            
             obj.canvas.makeCurrent();
-            % TODO: Finish.
-            glUniform4fv(location, 1, vector);
+            
+            size = floor(numel(vector) / count);
+            switch size
+                case 1
+                    glUniform1fv(location, count, vector);
+                case 2
+                    glUniform2fv(location, count, vector);
+                case 3
+                    glUniform3fv(location, count, vector);
+                case 4
+                    glUniform4fv(location, count, vector);
+                otherwise
+                    error('Size too large');
+            end
         end
         
     end
