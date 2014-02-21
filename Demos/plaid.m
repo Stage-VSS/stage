@@ -23,8 +23,8 @@ function plaid()
     grating2.orientation = 135;
     grating2.opacity = 0.5;
     
-    % Assign a circle mask to the gratings.
-    mask = Mask.createCircleMask();
+    % Assign a circular envelope mask to the gratings.
+    mask = Mask.createCircularEnvelope();
     grating1.setMask(mask);
     grating2.setMask(mask);
     

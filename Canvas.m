@@ -126,6 +126,9 @@ classdef Canvas < handle
             
             if isempty(texture)
                 obj.setProgram('Primitive');
+                
+                glActiveTexture(GL.TEXTURE0);
+                glBindTexture(mask.texture.target, mask.texture.handle);
             elseif isempty(filter)
                 obj.setProgram('TexturedPrimitive');
                 

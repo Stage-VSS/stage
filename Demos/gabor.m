@@ -15,8 +15,8 @@ function gabor()
     grating.size = [300, 300];
     grating.spatialFreq = 1/100; % 1 cycle per 100 pixels
     
-    % Assign a gaussian mask to the grating.
-    mask = Mask.createGaussianMask();
+    % Assign a gaussian envelope mask to the grating.
+    mask = Mask.createGaussianEnvelope();
     grating.setMask(mask);
     
     % Create a 5 second presentation.

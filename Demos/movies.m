@@ -15,12 +15,12 @@ function movies()
     boxingMovie = Movie(fullfile(moviesDir, 'boxing.mpg'));
     boxingMovie.size = [320, 240];
     boxingMovie.position = [width*1/4+30, height/2];
-    boxingMovie.setMask(Mask.createGaussianMask());
+    boxingMovie.setMask(Mask.createGaussianEnvelope());
     
     skatingMovie = Movie(fullfile(moviesDir, 'skating.mpg'));
     skatingMovie.size = [320, 240];
     skatingMovie.position = [width*3/4-30, height/2];
-    skatingMovie.setMask(Mask.createGaussianMask());
+    skatingMovie.setMask(Mask.createGaussianEnvelope());
     
     % Create a 12 second presentation.
     duration = 12;

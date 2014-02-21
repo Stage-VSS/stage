@@ -38,9 +38,9 @@ classdef Mask < handle
     methods (Static)
         
         % Creates a circular envelope mask.
-        function mask = createCircleMask(resolution)
+        function mask = createCircularEnvelope(resolution)
             if nargin < 1
-                resolution = 256;
+                resolution = 512;
             end
             
             distanceMatrix = createDistanceMatrix(resolution);
@@ -50,9 +50,9 @@ classdef Mask < handle
         end
         
         % Creates a gaussian envelope mask.
-        function mask = createGaussianMask(resolution)
+        function mask = createGaussianEnvelope(resolution)
             if nargin < 1
-                resolution = 256;
+                resolution = 512;
             end
             
             distanceMatrix = createDistanceMatrix(resolution);
@@ -60,6 +60,30 @@ classdef Mask < handle
             sigma = 1/3;
             gaussian = uint8(exp(-distanceMatrix.^2 / (2 * sigma^2)) * 255);
             mask = Mask(gaussian);
+        end
+        
+        % Creates a circular aperture mask with a given aperture size from 0 to 1.
+        function mask = createCircularAperture(size, resolution)
+            if nargin < 2
+                resolution = 512;
+            end
+            
+            distanceMatrix = createDistanceMatrix(resolution);
+            aperture = uint8((distanceMatrix > size) * 255);
+            mask = Mask(aperture);
+        end
+        
+        % Creates a square aperture mask with a given aperture size from 0 to 1.
+        function mask = createSquareAperture(size, resolution)
+            if nargin < 2
+                resolution = 512;
+            end
+            
+            step = 2 / (resolution - 1);
+            [xx, yy] = meshgrid(-1:step:1, -1:step:1);
+            grid = max(abs(xx), abs(yy));
+            aperture = uint8((grid > size) * 255);
+            mask = Mask(aperture);
         end
         
     end

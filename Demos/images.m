@@ -17,7 +17,7 @@ function images()
     butterfly.size = [size(butterflyImage, 2), size(butterflyImage, 1)];
     butterfly.position = canvas.size / 2;
     
-    mask = Mask.createGaussianMask();
+    mask = Mask.createGaussianEnvelope();
     butterfly.setMask(mask);
     
     [horseImage, ~, horseAlpha] = imread(fullfile(imagesDir, 'horse.png'));

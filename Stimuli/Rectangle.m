@@ -11,6 +11,7 @@ classdef Rectangle < Stimulus
     end
     
     properties (Access = private)
+        mask    % Stimulus mask
         vbo     % Vertex buffer object
         vao     % Vertex array object
     end
@@ -20,15 +21,26 @@ classdef Rectangle < Stimulus
         function init(obj, canvas)
             init@Stimulus(obj, canvas);
             
-            vertexData = [-1  1  0  1 ...
-                          -1 -1  0  1 ...
-                           1  1  0  1 ...
-                           1 -1  0  1];
+            if ~isempty(obj.mask)
+                obj.mask.init(canvas);
+            end
+            
+            % Each vertex position is followed by a mask coordinate.
+            vertexData = [-1  1  0  1,  0  1 ...
+                          -1 -1  0  1,  0  0 ...
+                           1  1  0  1,  1  1 ...
+                           1 -1  0  1,  1  0];
                      
             obj.vbo = VertexBufferObject(canvas, GL.ARRAY_BUFFER, single(vertexData), GL.STATIC_DRAW);
             
             obj.vao = VertexArrayObject(canvas);
-            obj.vao.setAttribute(obj.vbo, 0, 4, GL.FLOAT, GL.FALSE, 0, 0);
+            obj.vao.setAttribute(obj.vbo, 0, 4, GL.FLOAT, GL.FALSE, 6*4, 0);
+            obj.vao.setAttribute(obj.vbo, 1, 2, GL.FLOAT, GL.FALSE, 6*4, 4*4);
+        end
+        
+        % Assigns a mask to the stimulus.
+        function setMask(obj, mask)
+            obj.mask = mask;
         end
         
         function draw(obj)
@@ -45,7 +57,7 @@ classdef Rectangle < Stimulus
                 c = [c, obj.opacity];
             end
             
-            obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c);
+            obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, [], obj.mask);
             
             modelView.pop();
         end

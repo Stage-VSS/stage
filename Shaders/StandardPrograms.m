@@ -28,7 +28,16 @@ classdef StandardPrograms < handle
             fragShader = ShaderObject(canvas, GL.FRAGMENT_SHADER, fullfile(shadersDir, 'Primitive.frag'));
             fragShader.compile();
             
-            obj.primitiveProgram = ProgramObject.createAndLink(canvas, [vertShader, fragShader]);
+            program = ProgramObject.createAndLink(canvas, [vertShader, fragShader]);
+            
+            glUseProgram(program.handle);
+            
+            maskUni = program.getUniformLocation('mask');
+            program.setUniform1i(maskUni, 0);
+            
+            glUseProgram(0);
+            
+            obj.primitiveProgram = program;
         end
         
         function createTexturedPrimitiveProgram(obj, canvas)
