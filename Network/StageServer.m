@@ -5,7 +5,7 @@ classdef StageServer < handle
     properties (Access = private)
         tcpServer
         canvas
-        playInfo
+        sessionData
     end
     
     methods
@@ -40,11 +40,13 @@ classdef StageServer < handle
             rport = data.client.socket.getPort();
             disp(['Serving connection from ' char(rhost) ':' num2str(rport)]);
             
-            obj.playInfo = [];
+            obj.sessionData.playInfo = [];
         end
         
         function onClientDisconnected(obj, src, data) %#ok<INUSD>
             disp('Client disconnected');
+            
+            obj.sessionData = [];
             
             % Clear class definitions.
             memory = inmem;
@@ -66,7 +68,6 @@ classdef StageServer < handle
                     catch x
                         client.send(NetEvents.ERROR, x);
                     end
-                    
                 case NetEvents.SET_CANVAS_COLOR
                     try
                         color = value{2};
@@ -77,19 +78,16 @@ classdef StageServer < handle
                     catch x
                         client.send(NetEvents.ERROR, x);
                     end
-                    
                 case NetEvents.PLAY
                     client.send(NetEvents.OK);
                     try
                         presentation = value{2};
-                        obj.playInfo = presentation.play(obj.canvas);
+                        obj.sessionData.playInfo = presentation.play(obj.canvas);
                     catch x
-                        obj.playInfo = x;
-                    end
-                    
+                        obj.sessionData.playInfo = x;
+                    end                  
                 case NetEvents.GET_PLAY_INFO
-                    client.send(NetEvents.OK, obj.playInfo);
-                    
+                    client.send(NetEvents.OK, obj.sessionData.playInfo);
                 otherwise
                     x = MException('Stage:StageServer', 'Unknown event');
                     client.send(NetEvents.ERROR, x);
