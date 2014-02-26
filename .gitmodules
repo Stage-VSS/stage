@@ -7,3 +7,6 @@
 [submodule "Externals/matlab-avbin"]
 	path = Externals/matlab-avbin
 	url = https://github.com/cafarm/matlab-avbin.git
+[submodule "Externals/matlab-dwm"]
+	path = Externals/matlab-dwm
+	url = https://github.com/cafarm/matlab-dwm.git
