@@ -61,7 +61,7 @@ classdef Presentation < handle
             
             frame = 0;
             time = 0;
-            while time < obj.duration
+            while time <= obj.duration
                 canvas.clear();
                 
                 % Call controllers.
@@ -79,7 +79,7 @@ classdef Presentation < handle
                 flipTimer.tick();
                 
                 frame = frame + 1;
-                time = time + (1 / refreshRate);
+                time = frame * (1 / refreshRate);
             end
             
             info.flipDurations = flipTimer.flipDurations;
@@ -103,7 +103,7 @@ classdef Presentation < handle
             
             frame = 0;
             time = 0;
-            while time < obj.duration
+            while time <= obj.duration
                 canvas.clear();
                 
                 % Call controllers.
@@ -120,7 +120,7 @@ classdef Presentation < handle
                 writer.writeVideo(pixelData);
                 
                 frame = frame + 1;
-                time = time + (1 / frameRate);
+                time = frame * (1 / frameRate);
             end
             
             writer.close();
