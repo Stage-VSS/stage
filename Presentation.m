@@ -85,14 +85,19 @@ classdef Presentation < handle
             info.flipDurations = flipTimer.flipDurations;
         end
         
-        % Exports the presentation to a movie file.
-        function exportMovie(obj, canvas, filename, frameRate)
+        % Exports the presentation to a movie file. The VideoWriter frame rate and profile may optionally be provided.
+        % If the given profile specifies only one color channel, the red, green, and blue color channels of the
+        % presentation are averaged to produce the output video data.
+        function exportMovie(obj, canvas, filename, frameRate, profile)
             if nargin < 4
                 frameRate = canvas.window.monitor.refreshRate;
             end
             
-            % TODO: Use lossless compression to reduce file sizes.
-            writer = VideoWriter(filename, 'Uncompressed AVI');
+            if nargin < 5
+                profile = 'Uncompressed AVI';
+            end
+            
+            writer = VideoWriter(filename, profile);
             writer.FrameRate = frameRate;
             writer.open();
             
@@ -117,6 +122,10 @@ classdef Presentation < handle
                 end
                 
                 pixelData = canvas.getPixelData(GL.BACK);
+                if writer.ColorChannels == 1
+                    pixelData = uint8(mean(pixelData, 3));
+                end
+                
                 writer.writeVideo(pixelData);
                 
                 frame = frame + 1;
