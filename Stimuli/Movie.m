@@ -1,18 +1,18 @@
-% A movie player stimulus capable of playing a wide variety of video formats (see libavcodec). The player does not
-% currently support sound.
+% A movie player stimulus capable of playing a wide variety of video formats (see libavcodec). Sound is not supported.
 
 classdef Movie < Stimulus
     
     properties
-        position = [0, 0]   % Center position on the canvas [x, y] (pixels)
-        size = [100, 100]   % Size [width, height] (pixels)
-        orientation = 0     % Orientation (degrees)
-        color = [1, 1, 1]   % Color multiplier as single value or [R, G, B] (real number)
-        opacity = 1         % Opacity (0 to 1)
+        position = [0, 0]       % Center position on the canvas [x, y] (pixels)
+        size = [100, 100]       % Size [width, height] (pixels)
+        orientation = 0         % Orientation (degrees)
+        color = [1, 1, 1]       % Color multiplier as single value or [R, G, B] (real number)
+        opacity = 1             % Opacity (0 to 1)
     end
     
     properties (Access = private)
         filename        % Movie filename
+        frameByFrame    % Frame-by-frame playback setting
         mask            % Stimulus mask
         filter          % Stimulus filter
         minFunction     % Texture minifying function
@@ -31,11 +31,17 @@ classdef Movie < Stimulus
         % relative or complete file path if the movie is not in the current working directory.
         function obj = Movie(filename)            
             obj.filename = filename;
-            
+            obj.frameByFrame = false;
             obj.minFunction = GL.LINEAR;
             obj.magFunction = GL.LINEAR;
             obj.wrapModeS = GL.REPEAT;
             obj.wrapModeT = GL.REPEAT;
+        end
+        
+        % Specifies if the movie should play frame-by-frame. In frame-by-frame mode the movie will advance one frame per 
+        % draw irrespective of the movie's frame rate.
+        function setFrameByFramePlayback(obj, tf)
+            obj.frameByFrame = tf;
         end
         
         % Assigns a mask to the stimulus.
@@ -105,7 +111,7 @@ classdef Movie < Stimulus
         
         function draw(obj)
             if ~obj.player.isPlaying
-                obj.player.play();
+                obj.player.play(obj.frameByFrame);
             end
             
             frame = obj.player.getImage();
