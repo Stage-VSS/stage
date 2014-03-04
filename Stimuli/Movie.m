@@ -12,6 +12,7 @@ classdef Movie < Stimulus
     
     properties (Access = private)
         filename        % Movie filename
+        preload         % Preload setting
         frameByFrame    % Frame-by-frame playback setting
         mask            % Stimulus mask
         filter          % Stimulus filter
@@ -31,11 +32,18 @@ classdef Movie < Stimulus
         % relative or complete file path if the movie is not in the current working directory.
         function obj = Movie(filename)            
             obj.filename = filename;
+            obj.preload = false;
             obj.frameByFrame = false;
             obj.minFunction = GL.LINEAR;
             obj.magFunction = GL.LINEAR;
             obj.wrapModeS = GL.REPEAT;
             obj.wrapModeT = GL.REPEAT;
+        end
+        
+        % Specifies if the entire movie should be loaded into memory during initialization. Preloading can improve
+        % playback performance at the cost of increased initialization time and RAM usage.
+        function setPreload(obj, tf)
+            obj.preload = tf;
         end
         
         % Specifies if the movie should play frame-by-frame. In frame-by-frame mode the movie will advance one frame per 
@@ -99,6 +107,9 @@ classdef Movie < Stimulus
             obj.vao.setAttribute(obj.vbo, 2, 2, GL.FLOAT, GL.FALSE, 8*4, 6*4);
             
             source = VideoSource(obj.filename);
+            if obj.preload
+                source.preload();
+            end
             obj.player = VideoPlayer(source);
             
             obj.texture = TextureObject(canvas, 2);
@@ -109,14 +120,14 @@ classdef Movie < Stimulus
             obj.texture.setImage(zeros(source.size(2), source.size(1), 3, 'uint8'));
         end
         
-        function draw(obj)
-            if ~obj.player.isPlaying
-                obj.player.play(obj.frameByFrame);
-            end
-            
+        function draw(obj)            
             frame = obj.player.getImage();
             if ~isempty(frame)
                 obj.texture.setSubImage(frame);
+            end
+            
+            if ~obj.player.isPlaying
+                obj.player.play(obj.frameByFrame);
             end
             
             modelView = obj.canvas.modelView;
