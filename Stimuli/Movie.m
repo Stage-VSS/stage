@@ -13,7 +13,7 @@ classdef Movie < Stimulus
     properties (Access = private)
         filename        % Movie filename
         preloading      % Preloading setting
-        frameByFrame    % Frame-by-frame playback setting
+        playbackSpeed   % Playback speed
         mask            % Stimulus mask
         filter          % Stimulus filter
         minFunction     % Texture minifying function
@@ -33,7 +33,7 @@ classdef Movie < Stimulus
         function obj = Movie(filename)            
             obj.filename = filename;
             obj.preloading = false;
-            obj.frameByFrame = false;
+            obj.playbackSpeed = PlaybackSpeed.NORMAL;
             obj.minFunction = GL.LINEAR;
             obj.magFunction = GL.LINEAR;
             obj.wrapModeS = GL.REPEAT;
@@ -46,10 +46,10 @@ classdef Movie < Stimulus
             obj.preloading = tf;
         end
         
-        % Specifies if the movie should play frame-by-frame. In frame-by-frame mode the movie will advance one frame per 
-        % draw irrespective of the movie's frame rate.
-        function setFrameByFramePlayback(obj, tf)
-            obj.frameByFrame = tf;
+        % Specifies a multiplier of the movie's normal playback speed (e.g. 0.5 plays the movie at half speed, 2.0 plays
+        % the movie at double speed). A value of PlaybackSpeed.FRAME_BY_FRAME will advance the movie one frame per draw.
+        function setPlaybackSpeed(obj, speed)
+            obj.playbackSpeed = speed;
         end
         
         % Assigns a mask to the stimulus.
@@ -111,6 +111,7 @@ classdef Movie < Stimulus
                 source.preload();
             end
             obj.player = VideoPlayer(source);
+            obj.player.playbackSpeed = obj.playbackSpeed;
             
             obj.texture = TextureObject(canvas, 2);
             obj.texture.setWrapModeS(obj.wrapModeS);
@@ -127,7 +128,7 @@ classdef Movie < Stimulus
             end
             
             if ~obj.player.isPlaying
-                obj.player.play(obj.frameByFrame);
+                obj.player.play();
             end
             
             modelView = obj.canvas.modelView;
