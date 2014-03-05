@@ -12,7 +12,7 @@ classdef Movie < Stimulus
     
     properties (Access = private)
         filename        % Movie filename
-        preload         % Preload setting
+        preloading      % Preloading setting
         frameByFrame    % Frame-by-frame playback setting
         mask            % Stimulus mask
         filter          % Stimulus filter
@@ -32,7 +32,7 @@ classdef Movie < Stimulus
         % relative or complete file path if the movie is not in the current working directory.
         function obj = Movie(filename)            
             obj.filename = filename;
-            obj.preload = false;
+            obj.preloading = false;
             obj.frameByFrame = false;
             obj.minFunction = GL.LINEAR;
             obj.magFunction = GL.LINEAR;
@@ -42,8 +42,8 @@ classdef Movie < Stimulus
         
         % Specifies if the entire movie should be loaded into memory during initialization. Preloading can improve
         % playback performance at the cost of increased initialization time and RAM usage.
-        function setPreload(obj, tf)
-            obj.preload = tf;
+        function setPreloading(obj, tf)
+            obj.preloading = tf;
         end
         
         % Specifies if the movie should play frame-by-frame. In frame-by-frame mode the movie will advance one frame per 
@@ -107,7 +107,7 @@ classdef Movie < Stimulus
             obj.vao.setAttribute(obj.vbo, 2, 2, GL.FLOAT, GL.FALSE, 8*4, 6*4);
             
             source = VideoSource(obj.filename);
-            if obj.preload
+            if obj.preloading
                 source.preload();
             end
             obj.player = VideoPlayer(source);
