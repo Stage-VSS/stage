@@ -63,7 +63,7 @@ classdef StageClient < handle
         
     end
     
-    methods (Access = private)
+    methods (Access = protected)
         
         function sendEvent(obj, varargin)
             if isempty(obj.tcpClient)
