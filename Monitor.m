@@ -27,11 +27,6 @@ classdef Monitor < handle
         function r = get.refreshRate(obj)
             mode = glfwGetVideoMode(obj.handle);
             r = mode.refreshRate;
-            
-            % HACK: Monitors that report a refresh rate of 59Hz generally run at a TV-compatible timing of 60Hz/1.001.
-            if r == 59
-                r = 60/1.001;
-            end
         end
         
         function r = get.resolution(obj)
