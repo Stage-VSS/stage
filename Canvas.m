@@ -6,10 +6,10 @@ classdef Canvas < handle
         projection      % Projection matrix stack
         modelView       % Model/View matrix stack
         currentProgram  % Current shader program
+        renderer        % Primitive renderer
     end
     
     properties (Access = private)
-        defaultMask
         standardPrograms
         windowBeingDestroyed
     end
@@ -24,11 +24,8 @@ classdef Canvas < handle
             obj.projection.orthographic(0, window.size(1), 0, window.size(2));
             obj.modelView = MatrixStack();
             
-            obj.defaultMask = Mask(ones(2, 2, 'uint8') * 255);
-            obj.defaultMask.init(obj);
-            
             obj.standardPrograms = StandardPrograms(obj);
-            
+            obj.setRenderer(Renderer());
             obj.resetBlend();
             
             glfwSwapInterval(1);
@@ -109,79 +106,25 @@ classdef Canvas < handle
             d = imrotate(d, 90);
         end
         
+        function setRenderer(obj, renderer)
+            obj.renderer = renderer;
+            obj.renderer.setCanvas(obj);
+        end
+        
         function drawArray(obj, array, mode, first, count, color, texture, mask, filter)
             if nargin < 7
                 texture = [];
             end
             
-            if nargin < 8 || isempty(mask)
-                mask = obj.defaultMask;
+            if nargin < 8
+                mask = [];
             end
             
             if nargin < 9
                 filter = [];
             end
             
-            obj.makeCurrent();
-            
-            if isempty(texture)
-                obj.setProgram('Primitive');
-                
-                glActiveTexture(GL.TEXTURE0);
-                glBindTexture(mask.texture.target, mask.texture.handle);
-            elseif isempty(filter)
-                obj.setProgram('TexturedPrimitive');
-                
-                glActiveTexture(GL.TEXTURE0);
-                glBindTexture(texture.target, texture.handle);
-                
-                glActiveTexture(GL.TEXTURE1);
-                glBindTexture(mask.texture.target, mask.texture.handle);
-            else
-                obj.setProgram('FilteredTexturedPrimitive');
-                
-                glActiveTexture(GL.TEXTURE0);
-                glBindTexture(texture.target, texture.handle);
-                
-                glActiveTexture(GL.TEXTURE1);
-                glBindTexture(mask.texture.target, mask.texture.handle);
-
-                glActiveTexture(GL.TEXTURE2);
-                glBindTexture(filter.texture.target, filter.texture.handle);
-                
-                program = obj.currentProgram;
-                
-                kernelSizeUniform = program.getUniformLocation('kernelSize');
-                program.setUniformfv(kernelSizeUniform, filter.texture.size);
-                
-                texture0SizeUniform = program.getUniformLocation('texture0Size');                
-                program.setUniformfv(texture0SizeUniform, texture.size);
-            end
-            
-            program = obj.currentProgram;
-            
-            projectUniform = program.getUniformLocation('projectionMatrix');
-            program.setUniformMatrix(projectUniform, obj.projection.top());
-            
-            modelUniform = program.getUniformLocation('modelViewMatrix');
-            program.setUniformMatrix(modelUniform, obj.modelView.top());
-            
-            colorUniform = program.getUniformLocation('color0');
-            program.setUniformfv(colorUniform, color);
-            
-            glBindVertexArray(array.handle);
-            glDrawArrays(mode, first, count);
-            glBindVertexArray(0);
-            
-            if ~isempty(texture)
-                glBindTexture(texture.target, 0);
-            end
-            
-            if ~isempty(filter)
-                glBindTexture(filter.texture.target, 0);
-            end
-            
-            glBindTexture(mask.texture.target, 0);
+            obj.renderer.drawArray(array, mode, first, count, color, texture, mask, filter);
         end
         
     end
