@@ -9,6 +9,7 @@ classdef Presentation < handle
     properties (SetAccess = private)
         stimuli
         controllers
+        compositor
     end
     
     methods
@@ -16,25 +17,25 @@ classdef Presentation < handle
         % Constructs a presentation with the given duration in seconds.
         function obj = Presentation(duration)
             obj.duration = duration;
-            obj.stimuli = {};
+            obj.setCompositor(Compositor());
         end
         
-        % Adds a stimulus to the presentation. Stimuli are layered in the order with which they are added; the first
-        % stimulus added is on the lowest layer (the layer farthest from the viewer) while the last stimulus added is on
-        % the highest layer (the layer closest to the viewer).
+        % Adds a stimulus to the presentation. By default stimuli are layered in the order with which they are added; 
+        % the first stimulus added is on the lowest layer (the layer farthest from the viewer) while the last stimulus 
+        % added is on the highest layer (the layer closest to the viewer). The presentation's compositor ultimately 
+        % determines this behavior and may be specified by the user.
         function addStimulus(obj, stimulus)
-            if any(cellfun(@(c)c == stimulus, obj.stimuli))
+            if ~isempty(obj.stimuli) && any(cellfun(@(c)c == stimulus, obj.stimuli))
                 error('Presentation already contains the given stimulus');
             end
             
             obj.stimuli{end + 1} = stimulus;
         end
         
-        % Adds a controller to the presentation. A controller associates an object's property with a given function. 
-        % With each frame presented, the presentation calls the given function and passes it a struct containing
-        % information about the current state of the presentation (the current number of frames presented, the time
-        % elapsed since the start of the presentation, etc). The presentation assigns the value returned by the function
-        % to the associated property.
+        % Adds a controller to the presentation. A controller associates an object's property with a given function. As 
+        % each frame is presented, the given function will be called and passed a struct containing information about
+        % the current state of the presentation (the current number of frames presented, the time elapsed since the 
+        % start of the presentation, etc). The value returned by the function is assigned to the associated property.
         function addController(obj, handle, propertyName, funcHandle)
             if ~isprop(handle, propertyName)
                 error(['The handle does not contain a property named ''' propertyName '''']);
@@ -45,6 +46,10 @@ classdef Presentation < handle
             end
             
             obj.controllers{end + 1} = {handle, propertyName, funcHandle};
+        end
+        
+        function setCompositor(obj, compositor)
+            obj.compositor = compositor;
         end
         
         % Plays the presentation for its set duration. If during playback the presentation fails to draw a new frame 
@@ -60,26 +65,19 @@ classdef Presentation < handle
             refreshRate = canvas.window.monitor.refreshRate;
             
             frame = 0;
-            time = 0;
+            frameDuration = 1 / refreshRate;
+            time = frame * frameDuration;
             while time <= obj.duration
                 canvas.clear();
                 
-                % Call controllers.
-                state.frame = frame;
-                state.time = time;
-                obj.callControllers(state);
-
-                % Draw stimuli.
-                for i = 1:length(obj.stimuli)
-                    obj.stimuli{i}.draw();
-                end
+                obj.compositor.drawFrame(obj.stimuli, obj.controllers, frame, frameDuration, time);
                 
                 % Flip back and front buffers.
                 canvas.window.flip();
                 flipTimer.tick();
                 
                 frame = frame + 1;
-                time = frame * (1 / refreshRate);
+                time = frame * frameDuration;
             end
             
             info.flipDurations = flipTimer.flipDurations;
@@ -107,19 +105,12 @@ classdef Presentation < handle
             end
             
             frame = 0;
-            time = 0;
+            frameDuration = 1 / frameRate;
+            time = frame * frameDuration;
             while time <= obj.duration
                 canvas.clear();
                 
-                % Call controllers.
-                state.frame = frame;
-                state.time = time;
-                obj.callControllers(state);
-
-                % Draw stimuli.
-                for i = 1:length(obj.stimuli)
-                    obj.stimuli{i}.draw();
-                end
+                obj.compositor.drawFrame(obj.stimuli, obj.controllers, frame, frameDuration, time);
                 
                 pixelData = canvas.getPixelData(GL.BACK);
                 if writer.ColorChannels == 1
@@ -129,25 +120,10 @@ classdef Presentation < handle
                 writer.writeVideo(pixelData);
                 
                 frame = frame + 1;
-                time = frame * (1 / frameRate);
+                time = frame * frameDuration;
             end
             
             writer.close();
-        end
-        
-    end
-    
-    methods (Access = private)
-        
-        function callControllers(obj, state)
-            for i = 1:length(obj.controllers)
-                controller = obj.controllers{i};
-                handle = controller{1};
-                prop = controller{2};
-                func = controller{3};
-
-                handle.(prop) = func(state);
-            end
         end
         
     end
