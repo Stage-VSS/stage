@@ -25,8 +25,7 @@ classdef Monitor < handle
         end
         
         function r = get.refreshRate(obj)
-            mode = glfwGetVideoMode(obj.handle);
-            r = mode.refreshRate;
+            r = obj.getRefreshRate();
         end
         
         function r = get.resolution(obj)
@@ -55,6 +54,16 @@ classdef Monitor < handle
             ramp.green = green;
             ramp.blue = blue;
             glfwSetGammaRamp(obj.handle, ramp);
+        end
+        
+    end
+    
+    methods (Access = protected)
+        
+        % Allows overriding refresh rate getter.
+        function r = getRefreshRate(obj)
+            mode = glfwGetVideoMode(obj.handle);
+            r = mode.refreshRate;
         end
         
     end
