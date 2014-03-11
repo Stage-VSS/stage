@@ -2,8 +2,11 @@
 
 classdef Renderer < handle
     
-    properties (Access = protected)
+    properties (SetAccess = private)
         canvas
+    end
+    
+    properties (Access = protected)
         defaultMask
     end
     
@@ -16,18 +19,20 @@ classdef Renderer < handle
             obj.defaultMask.init(canvas);
         end
         
-        function drawArray(obj, array, mode, first, count, color, texture, mask, filter)
+        function drawArray(obj, array, mode, first, count, color, mask, texture, filter)
             if isempty(mask)
                 mask = obj.defaultMask;
             end
             
             obj.canvas.makeCurrent();
             
-            obj.setupProgram(color, texture, mask, filter);
+            obj.setupProgram(color, mask, texture, filter);
             
             glBindVertexArray(array.handle);
             glDrawArrays(mode, first, count);
             glBindVertexArray(0);
+            
+            glBindTexture(mask.texture.target, 0);
             
             if ~isempty(texture)
                 glBindTexture(texture.target, 0);
@@ -35,23 +40,21 @@ classdef Renderer < handle
             
             if ~isempty(filter)
                 glBindTexture(filter.texture.target, 0);
-            end
-            
-            glBindTexture(mask.texture.target, 0);
+            end            
         end
         
     end
     
     methods (Access = protected)
         
-        function setupProgram(obj, color, texture, mask, filter)            
+        function setupProgram(obj, color, mask, texture, filter)            
             if isempty(texture)
-                obj.canvas.setProgram('Primitive');
+                obj.canvas.setProgram('primitive');
                 
                 glActiveTexture(GL.TEXTURE0);
                 glBindTexture(mask.texture.target, mask.texture.handle);
             elseif isempty(filter)
-                obj.canvas.setProgram('TexturedPrimitive');
+                obj.canvas.setProgram('texturedPrimitive');
                 
                 glActiveTexture(GL.TEXTURE0);
                 glBindTexture(texture.target, texture.handle);
@@ -59,7 +62,7 @@ classdef Renderer < handle
                 glActiveTexture(GL.TEXTURE1);
                 glBindTexture(mask.texture.target, mask.texture.handle);
             else
-                obj.canvas.setProgram('FilteredTexturedPrimitive');
+                obj.canvas.setProgram('filteredTexturedPrimitive');
                 
                 glActiveTexture(GL.TEXTURE0);
                 glBindTexture(texture.target, texture.handle);

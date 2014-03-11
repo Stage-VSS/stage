@@ -57,7 +57,7 @@ classdef Rectangle < Stimulus
                 c = [c, obj.opacity];
             end
             
-            obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, [], obj.mask);
+            obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.mask);
             
             modelView.pop();
         end

@@ -59,11 +59,11 @@ classdef Canvas < handle
         function setProgram(obj, program)
             if ischar(program)
                 switch program
-                    case 'Primitive'
+                    case 'primitive'
                         program = obj.standardPrograms.primitiveProgram;
-                    case 'TexturedPrimitive'
+                    case 'texturedPrimitive'
                         program = obj.standardPrograms.texturedPrimitiveProgram;
-                    case 'FilteredTexturedPrimitive'
+                    case 'filteredTexturedPrimitive'
                         program = obj.standardPrograms.filteredTexturedPrimitiveProgram;
                     otherwise
                         error('Unknown program name');
@@ -111,20 +111,20 @@ classdef Canvas < handle
             obj.renderer.setCanvas(obj);
         end
         
-        function drawArray(obj, array, mode, first, count, color, texture, mask, filter)
+        function drawArray(obj, array, mode, first, count, color, mask, texture, filter)
             if nargin < 7
-                texture = [];
+                mask = [];
             end
             
             if nargin < 8
-                mask = [];
+                texture = [];
             end
             
             if nargin < 9
                 filter = [];
             end
             
-            obj.renderer.drawArray(array, mode, first, count, color, texture, mask, filter);
+            obj.renderer.drawArray(array, mode, first, count, color, mask, texture, filter);
         end
         
     end
