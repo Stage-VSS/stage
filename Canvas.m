@@ -111,6 +111,25 @@ classdef Canvas < handle
             obj.renderer.setCanvas(obj);
         end
         
+        function setFrameBuffer(obj, drawBuffer)
+            if drawBuffer.canvas ~= obj
+                error('FrameBuffer canvas must equal this canvas');
+            end
+            
+            drawBuffer.checkFrameBufferComplete();
+            drawBuffer.bindFrameBuffer();
+        end
+        
+        function resetFrameBuffer(obj)
+            obj.makeCurrent();
+            
+            glBindFramebuffer(GL.FRAMEBUFFER, 0);
+            glBindFramebuffer(GL.READ_FRAMEBUFFER, 0);
+            
+            glDrawBuffer(GL.BACK);
+            glReadBuffer(GL.BACK);
+        end
+        
         function drawArray(obj, array, mode, first, count, color, mask, texture, filter)
             if nargin < 7
                 mask = [];

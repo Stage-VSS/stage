@@ -111,6 +111,20 @@ classdef TextureObject < handle
             glBindTexture(obj.target, 0);
         end
         
+        function d = getPixelData(obj, level)
+            if nargin < 2
+                level = 0;
+            end
+            
+            obj.canvas.makeCurrent();
+            glBindTexture(obj.target, obj.handle);
+            
+            d = glGetTexImage(obj.target, level, GL.RGBA, GL.UNSIGNED_BYTE);
+            d = flipdim(permute(d, [2, 3, 1]), 1);
+            
+            glBindTexture(obj.target, 0);
+        end
+        
         function generateMipmap(obj)
             obj.canvas.makeCurrent();
             glBindTexture(obj.target, obj.handle);
