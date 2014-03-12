@@ -112,7 +112,7 @@ classdef Presentation < handle
                 
                 obj.compositor.drawFrame(obj.stimuli, obj.controllers, frame, frameDuration, time);
                 
-                pixelData = canvas.getPixelData(GL.BACK);
+                pixelData = canvas.getPixelData();
                 if writer.ColorChannels == 1
                     pixelData = uint8(mean(pixelData, 3));
                 end

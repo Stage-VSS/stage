@@ -1,4 +1,4 @@
-classdef FrameBufferObject < handle
+classdef FramebufferObject < handle
     
     properties (SetAccess = private)
         target
@@ -13,7 +13,7 @@ classdef FrameBufferObject < handle
     
     methods
         
-        function obj = FrameBufferObject(canvas)
+        function obj = FramebufferObject(canvas)
             obj.canvas = canvas;            
             canvas.makeCurrent();
             
@@ -51,7 +51,7 @@ classdef FrameBufferObject < handle
             end
         end
         
-        function bindFrameBuffer(obj)
+        function bindFramebuffer(obj)
             obj.canvas.makeCurrent();
             
             glBindFramebuffer(GL.FRAMEBUFFER, obj.handle);
@@ -59,7 +59,7 @@ classdef FrameBufferObject < handle
             glReadBuffer(GL.COLOR_ATTACHMENT0);
         end
         
-        function checkFrameBufferComplete(obj)
+        function checkFramebufferComplete(obj)
             obj.canvas.makeCurrent();
             
             lastBound = glGetIntegerv(obj.binding);
@@ -68,7 +68,7 @@ classdef FrameBufferObject < handle
             
             r = glCheckFramebufferStatus(GL.FRAMEBUFFER);
             if r ~= GL.FRAMEBUFFER_COMPLETE
-                error('FrameBuffer is not complete');
+                error('Framebuffer is not complete');
             end
         end
         

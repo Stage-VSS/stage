@@ -11,6 +11,7 @@ classdef Canvas < handle
     
     properties (Access = private)
         standardPrograms
+        framebufferBound
         windowBeingDestroyed
     end
     
@@ -24,8 +25,10 @@ classdef Canvas < handle
             obj.projection.orthographic(0, window.size(1), 0, window.size(2));
             obj.modelView = MatrixStack();
             
-            obj.standardPrograms = StandardPrograms(obj);
             obj.setRenderer(Renderer());
+            
+            obj.standardPrograms = StandardPrograms(obj);
+            obj.framebufferBound = false;
             obj.resetBlend();
             
             glfwSwapInterval(1);
@@ -95,13 +98,13 @@ classdef Canvas < handle
         end
         
         % Gets image matrix of current framebuffer data. 
-        function d = getPixelData(obj, mode)
-            if nargin < 2
-                mode = GL.FRONT;
+        function d = getPixelData(obj)
+            obj.makeCurrent();
+            
+            if ~obj.framebufferBound
+                glReadBuffer(GL.BACK);
             end
             
-            obj.makeCurrent();
-            glReadBuffer(mode);
             d = glReadPixels(0, 0, obj.size(1), obj.size(2), GL.RGB, GL.UNSIGNED_BYTE);
             d = imrotate(d, 90);
         end
@@ -111,16 +114,18 @@ classdef Canvas < handle
             obj.renderer.setCanvas(obj);
         end
         
-        function setFrameBuffer(obj, drawBuffer)
+        function setFramebuffer(obj, drawBuffer)
             if drawBuffer.canvas ~= obj
-                error('FrameBuffer canvas must equal this canvas');
+                error('Buffer canvas must equal this canvas');
             end
             
-            drawBuffer.checkFrameBufferComplete();
-            drawBuffer.bindFrameBuffer();
+            drawBuffer.checkFramebufferComplete();
+            drawBuffer.bindFramebuffer();
+            
+            obj.framebufferBound = true;
         end
         
-        function resetFrameBuffer(obj)
+        function resetFramebuffer(obj)
             obj.makeCurrent();
             
             glBindFramebuffer(GL.FRAMEBUFFER, 0);
@@ -128,6 +133,8 @@ classdef Canvas < handle
             
             glDrawBuffer(GL.BACK);
             glReadBuffer(GL.BACK);
+            
+            obj.framebufferBound = false;
         end
         
         function drawArray(obj, array, mode, first, count, color, mask, texture, filter)

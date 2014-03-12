@@ -13,6 +13,10 @@ classdef Renderer < handle
     methods
         
         function setCanvas(obj, canvas)
+            if canvas == obj.canvas
+                return;
+            end
+            
             obj.canvas = canvas;
             
             obj.defaultMask = Mask(ones(2, 2, 'uint8') * 255);
