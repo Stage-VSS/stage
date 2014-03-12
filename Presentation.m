@@ -9,7 +9,6 @@ classdef Presentation < handle
     properties (SetAccess = private)
         stimuli
         controllers
-        compositor
     end
     
     methods
@@ -17,7 +16,6 @@ classdef Presentation < handle
         % Constructs a presentation with the given duration in seconds.
         function obj = Presentation(duration)
             obj.duration = duration;
-            obj.setCompositor(Compositor());
         end
         
         % Adds a stimulus to the presentation. By default stimuli are layered in the order with which they are added; 
@@ -48,15 +46,10 @@ classdef Presentation < handle
             obj.controllers{end + 1} = {handle, propertyName, funcHandle};
         end
         
-        function setCompositor(obj, compositor)
-            obj.compositor = compositor;
-        end
-        
         % Plays the presentation for its set duration. If during playback the presentation fails to draw a new frame 
         % within the inter-frame interval, the prior frame will be presented for a longer period than expected and the
         % actual duration of the presentation will be extended.
         function info = play(obj, canvas)
-            % Initialize all stimuli.
             for i = 1:length(obj.stimuli)
                 obj.stimuli{i}.init(canvas);
             end
@@ -70,9 +63,8 @@ classdef Presentation < handle
             while time <= obj.duration
                 canvas.clear();
                 
-                obj.compositor.drawFrame(obj.stimuli, obj.controllers, frame, frameDuration, time);
+                obj.drawFrame(frame, frameDuration, time);
                 
-                % Flip back and front buffers.
                 canvas.window.flip();
                 flipTimer.tick();
                 
@@ -99,7 +91,6 @@ classdef Presentation < handle
             writer.FrameRate = frameRate;
             writer.open();
             
-            % Initialize all stimuli.
             for i = 1:length(obj.stimuli)
                 obj.stimuli{i}.init(canvas);
             end
@@ -110,7 +101,7 @@ classdef Presentation < handle
             while time <= obj.duration
                 canvas.clear();
                 
-                obj.compositor.drawFrame(obj.stimuli, obj.controllers, frame, frameDuration, time);
+                obj.drawFrame(frame, frameDuration, time);
                 
                 pixelData = canvas.getPixelData();
                 if writer.ColorChannels == 1
@@ -124,6 +115,31 @@ classdef Presentation < handle
             end
             
             writer.close();
+        end
+        
+    end
+    
+    methods (Access = protected)
+        
+        function drawFrame(obj, frame, frameDuration, time)
+            state.frame = frame;
+            state.frameDuration = frameDuration;
+            state.time = time;
+            
+            % Call controllers.
+            for i = 1:length(obj.controllers)
+                c = obj.controllers{i};
+                handle = c{1};
+                prop = c{2};
+                func = c{3};
+
+                handle.(prop) = func(state);
+            end
+            
+            % Draw stimuli.
+            for i = 1:length(obj.stimuli)
+                obj.stimuli{i}.draw();
+            end
         end
         
     end
