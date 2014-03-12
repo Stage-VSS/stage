@@ -109,11 +109,6 @@ classdef Canvas < handle
             d = imrotate(d, 90);
         end
         
-        function setRenderer(obj, renderer)
-            obj.renderer = renderer;
-            obj.renderer.setCanvas(obj);
-        end
-        
         function setFramebuffer(obj, drawBuffer)
             if drawBuffer.canvas ~= obj
                 error('Buffer canvas must equal this canvas');
@@ -135,6 +130,11 @@ classdef Canvas < handle
             glReadBuffer(GL.BACK);
             
             obj.framebufferBound = false;
+        end
+        
+        function setRenderer(obj, renderer)
+            obj.renderer = renderer;
+            obj.renderer.setCanvas(obj);
         end
         
         function drawArray(obj, array, mode, first, count, color, mask, texture, filter)
