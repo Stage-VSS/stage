@@ -1,15 +1,16 @@
 classdef Canvas < handle
     
     properties (SetAccess = private)
-        window          % Window containing the canvas
-        size            % Size of the canvas [width, height] (pixels)
-        projection      % Projection matrix stack
-        modelView       % Model/View matrix stack
-        currentProgram  % Current shader program
-        renderer        % Primitive renderer
+        window              % Window containing the canvas
+        size                % Size of the canvas [width, height] (pixels)
+        projection          % Projection matrix stack
+        modelView           % Model/View matrix stack
+        currentProgram      % Current shader program
+        currentRenderer     % Current primitive renderer
     end
     
     properties (Access = private)
+        defaultRenderer
         standardPrograms
         framebufferBound
         windowBeingDestroyed
@@ -25,7 +26,8 @@ classdef Canvas < handle
             obj.projection.orthographic(0, window.size(1), 0, window.size(2));
             obj.modelView = MatrixStack();
             
-            obj.setRenderer(Renderer());
+            obj.defaultRenderer = Renderer();
+            obj.resetRenderer();
             
             obj.standardPrograms = StandardPrograms(obj);
             obj.framebufferBound = false;
@@ -133,8 +135,12 @@ classdef Canvas < handle
         end
         
         function setRenderer(obj, renderer)
-            obj.renderer = renderer;
-            obj.renderer.setCanvas(obj);
+            obj.currentRenderer = renderer;
+            obj.currentRenderer.setCanvas(obj);
+        end
+        
+        function resetRenderer(obj)
+            obj.setRenderer(obj.defaultRenderer);
         end
         
         function drawArray(obj, array, mode, first, count, color, mask, texture, filter)
@@ -150,7 +156,7 @@ classdef Canvas < handle
                 filter = [];
             end
             
-            obj.renderer.drawArray(array, mode, first, count, color, mask, texture, filter);
+            obj.currentRenderer.drawArray(array, mode, first, count, color, mask, texture, filter);
         end
         
     end
