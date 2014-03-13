@@ -135,7 +135,7 @@ classdef Image < Stimulus
                 c = [c, obj.opacity];
             end
             
-            obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.texture, obj.mask, obj.filter);
+            obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.mask, obj.texture, obj.filter);
             
             modelView.pop();
         end

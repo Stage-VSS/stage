@@ -16,14 +16,13 @@ classdef Presentation < handle
         % Constructs a presentation with the given duration in seconds.
         function obj = Presentation(duration)
             obj.duration = duration;
-            obj.stimuli = {};
         end
         
         % Adds a stimulus to the presentation. Stimuli are layered in the order with which they are added; the first
         % stimulus added is on the lowest layer (the layer farthest from the viewer) while the last stimulus added is on
         % the highest layer (the layer closest to the viewer).
         function addStimulus(obj, stimulus)
-            if any(cellfun(@(c)c == stimulus, obj.stimuli))
+            if ~isempty(obj.stimuli) && any(cellfun(@(c)c == stimulus, obj.stimuli))
                 error('Presentation already contains the given stimulus');
             end
             
@@ -51,7 +50,6 @@ classdef Presentation < handle
         % within the inter-frame interval, the prior frame will be presented for a longer period than expected and the
         % actual duration of the presentation will be extended.
         function info = play(obj, canvas)
-            % Initialize all stimuli.
             for i = 1:length(obj.stimuli)
                 obj.stimuli{i}.init(canvas);
             end
@@ -60,26 +58,18 @@ classdef Presentation < handle
             refreshRate = canvas.window.monitor.refreshRate;
             
             frame = 0;
-            time = 0;
+            frameDuration = 1 / refreshRate;
+            time = frame * frameDuration;
             while time <= obj.duration
                 canvas.clear();
                 
-                % Call controllers.
-                state.frame = frame;
-                state.time = time;
-                obj.callControllers(state);
-
-                % Draw stimuli.
-                for i = 1:length(obj.stimuli)
-                    obj.stimuli{i}.draw();
-                end
+                obj.drawFrame(frame, frameDuration, time);
                 
-                % Flip back and front buffers.
                 canvas.window.flip();
                 flipTimer.tick();
                 
                 frame = frame + 1;
-                time = frame * (1 / refreshRate);
+                time = frame * frameDuration;
             end
             
             info.flipDurations = flipTimer.flipDurations;
@@ -101,27 +91,19 @@ classdef Presentation < handle
             writer.FrameRate = frameRate;
             writer.open();
             
-            % Initialize all stimuli.
             for i = 1:length(obj.stimuli)
                 obj.stimuli{i}.init(canvas);
             end
             
             frame = 0;
-            time = 0;
+            frameDuration = 1 / frameRate;
+            time = frame * frameDuration;
             while time <= obj.duration
                 canvas.clear();
                 
-                % Call controllers.
-                state.frame = frame;
-                state.time = time;
-                obj.callControllers(state);
-
-                % Draw stimuli.
-                for i = 1:length(obj.stimuli)
-                    obj.stimuli{i}.draw();
-                end
+                obj.drawFrame(frame, frameDuration, time);
                 
-                pixelData = canvas.getPixelData(GL.BACK);
+                pixelData = canvas.getPixelData();
                 if writer.ColorChannels == 1
                     pixelData = uint8(mean(pixelData, 3));
                 end
@@ -129,7 +111,7 @@ classdef Presentation < handle
                 writer.writeVideo(pixelData);
                 
                 frame = frame + 1;
-                time = frame * (1 / frameRate);
+                time = frame * frameDuration;
             end
             
             writer.close();
@@ -137,16 +119,26 @@ classdef Presentation < handle
         
     end
     
-    methods (Access = private)
+    methods (Access = protected)
         
-        function callControllers(obj, state)
+        function drawFrame(obj, frame, frameDuration, time)
+            state.frame = frame;
+            state.frameDuration = frameDuration;
+            state.time = time;
+            
+            % Call controllers.
             for i = 1:length(obj.controllers)
-                controller = obj.controllers{i};
-                handle = controller{1};
-                prop = controller{2};
-                func = controller{3};
+                c = obj.controllers{i};
+                handle = c{1};
+                prop = c{2};
+                func = c{3};
 
                 handle.(prop) = func(state);
+            end
+            
+            % Draw stimuli.
+            for i = 1:length(obj.stimuli)
+                obj.stimuli{i}.draw();
             end
         end
         

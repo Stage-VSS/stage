@@ -1,16 +1,18 @@
 classdef Canvas < handle
     
     properties (SetAccess = private)
-        window          % Window containing the canvas
-        size            % Size of the canvas [width, height] (pixels)
-        projection      % Projection matrix stack
-        modelView       % Model/View matrix stack
-        currentProgram  % Current shader program
+        window              % Window containing the canvas
+        size                % Size of the canvas [width, height] (pixels)
+        projection          % Projection matrix stack
+        modelView           % Model/View matrix stack
+        currentProgram      % Current shader program
+        currentRenderer     % Current primitive renderer
     end
     
     properties (Access = private)
-        defaultMask
+        defaultRenderer
         standardPrograms
+        framebufferBound
         windowBeingDestroyed
     end
     
@@ -24,11 +26,11 @@ classdef Canvas < handle
             obj.projection.orthographic(0, window.size(1), 0, window.size(2));
             obj.modelView = MatrixStack();
             
-            obj.defaultMask = Mask(ones(2, 2, 'uint8') * 255);
-            obj.defaultMask.init(obj);
+            obj.defaultRenderer = Renderer();
+            obj.resetRenderer();
             
             obj.standardPrograms = StandardPrograms(obj);
-            
+            obj.framebufferBound = false;
             obj.resetBlend();
             
             glfwSwapInterval(1);
@@ -62,11 +64,11 @@ classdef Canvas < handle
         function setProgram(obj, program)
             if ischar(program)
                 switch program
-                    case 'Primitive'
+                    case 'primitive'
                         program = obj.standardPrograms.primitiveProgram;
-                    case 'TexturedPrimitive'
+                    case 'texturedPrimitive'
                         program = obj.standardPrograms.texturedPrimitiveProgram;
-                    case 'FilteredTexturedPrimitive'
+                    case 'filteredTexturedPrimitive'
                         program = obj.standardPrograms.filteredTexturedPrimitiveProgram;
                     otherwise
                         error('Unknown program name');
@@ -98,90 +100,63 @@ classdef Canvas < handle
         end
         
         % Gets image matrix of current framebuffer data. 
-        function d = getPixelData(obj, mode)
-            if nargin < 2
-                mode = GL.FRONT;
+        function d = getPixelData(obj)
+            obj.makeCurrent();
+            
+            if ~obj.framebufferBound
+                glReadBuffer(GL.BACK);
             end
             
-            obj.makeCurrent();
-            glReadBuffer(mode);
             d = glReadPixels(0, 0, obj.size(1), obj.size(2), GL.RGB, GL.UNSIGNED_BYTE);
             d = imrotate(d, 90);
         end
         
-        function drawArray(obj, array, mode, first, count, color, texture, mask, filter)
-            if nargin < 7
-                texture = [];
+        function setFramebuffer(obj, drawBuffer)
+            if drawBuffer.canvas ~= obj
+                error('Buffer canvas must equal this canvas');
             end
             
-            if nargin < 8 || isempty(mask)
-                mask = obj.defaultMask;
+            drawBuffer.checkFramebufferComplete();
+            drawBuffer.bindFramebuffer();
+            
+            obj.framebufferBound = true;
+        end
+        
+        function resetFramebuffer(obj)
+            obj.makeCurrent();
+            
+            glBindFramebuffer(GL.FRAMEBUFFER, 0);
+            glBindFramebuffer(GL.READ_FRAMEBUFFER, 0);
+            
+            glDrawBuffer(GL.BACK);
+            glReadBuffer(GL.BACK);
+            
+            obj.framebufferBound = false;
+        end
+        
+        function setRenderer(obj, renderer)
+            obj.currentRenderer = renderer;
+            obj.currentRenderer.setCanvas(obj);
+        end
+        
+        function resetRenderer(obj)
+            obj.setRenderer(obj.defaultRenderer);
+        end
+        
+        function drawArray(obj, array, mode, first, count, color, mask, texture, filter)
+            if nargin < 7
+                mask = [];
+            end
+            
+            if nargin < 8
+                texture = [];
             end
             
             if nargin < 9
                 filter = [];
             end
             
-            obj.makeCurrent();
-            
-            if isempty(texture)
-                obj.setProgram('Primitive');
-                
-                glActiveTexture(GL.TEXTURE0);
-                glBindTexture(mask.texture.target, mask.texture.handle);
-            elseif isempty(filter)
-                obj.setProgram('TexturedPrimitive');
-                
-                glActiveTexture(GL.TEXTURE0);
-                glBindTexture(texture.target, texture.handle);
-                
-                glActiveTexture(GL.TEXTURE1);
-                glBindTexture(mask.texture.target, mask.texture.handle);
-            else
-                obj.setProgram('FilteredTexturedPrimitive');
-                
-                glActiveTexture(GL.TEXTURE0);
-                glBindTexture(texture.target, texture.handle);
-                
-                glActiveTexture(GL.TEXTURE1);
-                glBindTexture(mask.texture.target, mask.texture.handle);
-
-                glActiveTexture(GL.TEXTURE2);
-                glBindTexture(filter.texture.target, filter.texture.handle);
-                
-                program = obj.currentProgram;
-                
-                kernelSizeUniform = program.getUniformLocation('kernelSize');
-                program.setUniformfv(kernelSizeUniform, filter.texture.size);
-                
-                texture0SizeUniform = program.getUniformLocation('texture0Size');                
-                program.setUniformfv(texture0SizeUniform, texture.size);
-            end
-            
-            program = obj.currentProgram;
-            
-            projectUniform = program.getUniformLocation('projectionMatrix');
-            program.setUniformMatrix(projectUniform, obj.projection.top());
-            
-            modelUniform = program.getUniformLocation('modelViewMatrix');
-            program.setUniformMatrix(modelUniform, obj.modelView.top());
-            
-            colorUniform = program.getUniformLocation('color0');
-            program.setUniformfv(colorUniform, color);
-            
-            glBindVertexArray(array.handle);
-            glDrawArrays(mode, first, count);
-            glBindVertexArray(0);
-            
-            if ~isempty(texture)
-                glBindTexture(texture.target, 0);
-            end
-            
-            if ~isempty(filter)
-                glBindTexture(filter.texture.target, 0);
-            end
-            
-            glBindTexture(mask.texture.target, 0);
+            obj.currentRenderer.drawArray(array, mode, first, count, color, mask, texture, filter);
         end
         
     end
