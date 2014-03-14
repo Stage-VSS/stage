@@ -50,29 +50,8 @@ classdef Presentation < handle
         % within the inter-frame interval, the prior frame will be presented for a longer period than expected and the
         % actual duration of the presentation will be extended.
         function info = play(obj, canvas)
-            for i = 1:length(obj.stimuli)
-                obj.stimuli{i}.init(canvas);
-            end
-            
-            flipTimer = FlipTimer();
-            refreshRate = canvas.window.monitor.refreshRate;
-            
-            frame = 0;
-            frameDuration = 1 / refreshRate;
-            time = frame * frameDuration;
-            while time <= obj.duration
-                canvas.clear();
-                
-                obj.drawFrame(frame, frameDuration, time);
-                
-                canvas.window.flip();
-                flipTimer.tick();
-                
-                frame = frame + 1;
-                time = frame * frameDuration;
-            end
-            
-            info.flipDurations = flipTimer.flipDurations;
+            player = RealtimePlayer(obj);
+            info = player.play(canvas);
         end
         
         % Exports the presentation to a movie file. The VideoWriter frame rate and profile may optionally be provided.
@@ -87,59 +66,8 @@ classdef Presentation < handle
                 profile = 'Uncompressed AVI';
             end
             
-            writer = VideoWriter(filename, profile);
-            writer.FrameRate = frameRate;
-            writer.open();
-            
-            for i = 1:length(obj.stimuli)
-                obj.stimuli{i}.init(canvas);
-            end
-            
-            frame = 0;
-            frameDuration = 1 / frameRate;
-            time = frame * frameDuration;
-            while time <= obj.duration
-                canvas.clear();
-                
-                obj.drawFrame(frame, frameDuration, time);
-                
-                pixelData = canvas.getPixelData();
-                if writer.ColorChannels == 1
-                    pixelData = uint8(mean(pixelData, 3));
-                end
-                
-                writer.writeVideo(pixelData);
-                
-                frame = frame + 1;
-                time = frame * frameDuration;
-            end
-            
-            writer.close();
-        end
-        
-    end
-    
-    methods (Access = protected)
-        
-        function drawFrame(obj, frame, frameDuration, time)
-            state.frame = frame;
-            state.frameDuration = frameDuration;
-            state.time = time;
-            
-            % Call controllers.
-            for i = 1:length(obj.controllers)
-                c = obj.controllers{i};
-                handle = c{1};
-                prop = c{2};
-                func = c{3};
-
-                handle.(prop) = func(state);
-            end
-            
-            % Draw stimuli.
-            for i = 1:length(obj.stimuli)
-                obj.stimuli{i}.draw();
-            end
+            player = RealtimePlayer(obj);
+            player.exportMovie(canvas, filename, frameRate, profile);
         end
         
     end
