@@ -107,8 +107,11 @@ classdef Canvas < handle
                 glReadBuffer(GL.BACK);
             end
             
-            d = glReadPixels(0, 0, obj.size(1), obj.size(2), GL.RGB, GL.UNSIGNED_BYTE);
-            d = imrotate(d, 90);
+            pixels = glReadPixels(0, 0, obj.size(1), obj.size(2), GL.RGB, GL.UNSIGNED_BYTE);
+            d = zeros(size(pixels, 2), size(pixels, 1), size(pixels, 3), 'uint8');
+            for i = 1:size(d, 3)
+                d(:, :, i) = rot90(pixels(:, :, i));
+            end
         end
         
         function setFramebuffer(obj, drawBuffer)
