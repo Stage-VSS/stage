@@ -45,19 +45,27 @@ classdef TextureObject < handle
             obj.canvasBeingDestroyed = addlistener(canvas, 'ObjectBeingDestroyed', @(e,d)obj.delete());
         end
         
-        function setImage(obj, image, level)
+        function setImage(obj, image, level, permuteImage)
             if nargin < 3
                 level = 0;
             end
             
-            [pixelFormat, pixelDatatype, internalFormat] = getFormatAndType(image);
-            width = size(image, 2);
-            height = size(image, 1);
+            if nargin < 4
+                permuteImage = true;
+            end
+            
+            if permuteImage
+                glImage = permute(flipdim(image, 1), [3, 2, 1]);
+            else
+                glImage = image;                
+            end
+            
+            [pixelFormat, pixelDatatype, internalFormat] = getFormatAndType(glImage);
+            width = size(glImage, 2);
+            height = size(glImage, 3);
             
             obj.canvas.makeCurrent();
             glBindTexture(obj.target, obj.handle);
-            
-            data = permute(flipdim(image, 1), [3, 2, 1]);
             
             glPixelStorei(GL.UNPACK_ALIGNMENT, 1);
             
@@ -66,9 +74,9 @@ classdef TextureObject < handle
                     if height ~= 1
                         error('1D textures must have a height of 1');
                     end
-                    glTexImage1D(obj.target, level, internalFormat, width, 0, pixelFormat, pixelDatatype, data);
+                    glTexImage1D(obj.target, level, internalFormat, width, 0, pixelFormat, pixelDatatype, glImage);
                 case GL.TEXTURE_2D
-                    glTexImage2D(obj.target, level, internalFormat, width, height, 0, pixelFormat, pixelDatatype, data);
+                    glTexImage2D(obj.target, level, internalFormat, width, height, 0, pixelFormat, pixelDatatype, glImage);
             end
             
             if level == 0
@@ -78,7 +86,7 @@ classdef TextureObject < handle
             glBindTexture(obj.target, 0);
         end
         
-        function setSubImage(obj, image, level, offset)
+        function setSubImage(obj, image, level, offset, permuteImage)
             if nargin < 3
                 level = 0;
             end
@@ -87,14 +95,22 @@ classdef TextureObject < handle
                 offset = [0, 0];
             end
             
-            [pixelFormat, pixelDatatype] = getFormatAndType(image);
-            width = size(image, 2);
-            height = size(image, 1);
+            if nargin < 5
+                permuteImage = true;
+            end
+            
+            if permuteImage
+                glImage = permute(flipdim(image, 1), [3, 2, 1]);
+            else
+                glImage = image;                
+            end
+            
+            [pixelFormat, pixelDatatype] = getFormatAndType(glImage);
+            width = size(glImage, 2);
+            height = size(glImage, 3);
             
             obj.canvas.makeCurrent();
             glBindTexture(obj.target, obj.handle);
-            
-            data = permute(flipdim(image, 1), [3, 2, 1]);
             
             glPixelStorei(GL.UNPACK_ALIGNMENT, 1);
             
@@ -103,9 +119,9 @@ classdef TextureObject < handle
                     if height ~= 1
                         error('1D textures must have a height of 1');
                     end
-                    glTexSubImage1D(obj.target, level, offset(1), width, pixelFormat, pixelDatatype, data);
+                    glTexSubImage1D(obj.target, level, offset(1), width, pixelFormat, pixelDatatype, glImage);
                 case GL.TEXTURE_2D
-                    glTexSubImage2D(obj.target, level, offset(1), offset(2), width, height, pixelFormat, pixelDatatype, data);
+                    glTexSubImage2D(obj.target, level, offset(1), offset(2), width, height, pixelFormat, pixelDatatype, glImage);
             end
             
             glBindTexture(obj.target, 0);
@@ -170,8 +186,8 @@ classdef TextureObject < handle
     
 end
 
-function [pixelFormat, pixelDatatype, internalFormat] = getFormatAndType(image)
-    switch size(image, 3)
+function [pixelFormat, pixelDatatype, internalFormat] = getFormatAndType(glImage)
+    switch size(glImage, 1)
         case 1
             pixelFormat = GL.RED;
         case 3
@@ -182,7 +198,7 @@ function [pixelFormat, pixelDatatype, internalFormat] = getFormatAndType(image)
             error('Unsupported pixel format');
     end
 
-    switch class(image)
+    switch class(glImage)
         case 'uint8'
             pixelDatatype = GL.UNSIGNED_BYTE;
         case 'single'
