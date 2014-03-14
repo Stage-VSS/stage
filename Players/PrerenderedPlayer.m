@@ -19,7 +19,7 @@ classdef PrerenderedPlayer < Player
             frameRate = canvas.window.monitor.refreshRate;
             nFrames = floor(obj.presentation.duration * frameRate) + 1;
             
-            obj.frameBuffer = zeros(3, canvas.size(1), canvas.size(2), nFrames, 'uint8');
+            obj.frameBuffer = cell(1, nFrames);
             
             for i = 1:length(obj.presentation.stimuli)
                 obj.presentation.stimuli{i}.init(canvas);
@@ -34,7 +34,7 @@ classdef PrerenderedPlayer < Player
                 obj.drawFrame(frame, frameDuration, time);
                 
                 data = canvas.getPixelData();
-                obj.frameBuffer(:,:,:,frame+1) = permute(flipdim(data, 1), [3, 2, 1]);
+                obj.frameBuffer{frame + 1} = permute(flipdim(data, 1), [3, 2, 1]);
                 
                 frame = frame + 1;
                 time = frame * frameDuration;
@@ -60,7 +60,7 @@ classdef PrerenderedPlayer < Player
             vao.setAttribute(vbo, 2, 2, GL.FLOAT, GL.FALSE, 8*4, 6*4);
 
             texture = TextureObject(canvas, 2);
-            texture.setImage(obj.frameBuffer(:,:,:,1), 0, false);
+            texture.setImage(obj.frameBuffer{1}, 0, false);
             
             currentRenderer = canvas.currentRenderer;
             canvas.resetRenderer();
@@ -69,12 +69,11 @@ classdef PrerenderedPlayer < Player
             canvas.projection.setIdentity();
             canvas.projection.orthographic(0, canvas.size(1), 0, canvas.size(2));
 
-            nFrames = size(obj.frameBuffer, 4);
+            nFrames = length(obj.frameBuffer);
             for frame = 1:nFrames
                 canvas.clear();
                 
-                image = obj.frameBuffer(:,:,:,frame);
-                texture.setSubImage(image, 0, [0, 0], false);
+                texture.setSubImage(obj.frameBuffer{frame}, 0, [0, 0], false);
                 canvas.drawArray(vao, GL.TRIANGLE_STRIP, 0, 4, [1, 1, 1, 1], [], texture);
 
                 canvas.window.flip();
