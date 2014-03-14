@@ -26,8 +26,7 @@ function filters()
     boxingMovie.setWrapModeT(GL.MIRRORED_REPEAT);
     
     % Create a 12 second presentation.
-    duration = 12;
-    presentation = Presentation(duration);
+    presentation = Presentation(12);
     
     % Add the stimulus to the presentation.
     presentation.addStimulus(boxingMovie);

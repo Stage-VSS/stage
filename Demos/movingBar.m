@@ -13,8 +13,7 @@ function movingBar()
     bar.size = [100, height];
     
     % Create a 4 second presentation.
-    duration = 4;
-    presentation = Presentation(duration);
+    presentation = Presentation(4);
     
     % Add the bar to the presentation.
     presentation.addStimulus(bar);

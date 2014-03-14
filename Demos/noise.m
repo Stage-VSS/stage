@@ -12,8 +12,7 @@ function noise()
     noise.size = [200, 200];
     
     % Create a 5 second presentation.
-    duration = 5;
-    presentation = Presentation(duration);
+    presentation = Presentation(5);
     
     % Add the noise stimulus to the presentation.
     presentation.addStimulus(noise);

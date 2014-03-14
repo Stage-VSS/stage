@@ -24,8 +24,7 @@ function aperture()
     aperture.setMask(mask);
     
     % Create a 7 second presentation.
-    duration = 7;
-    presentation = Presentation(duration);
+    presentation = Presentation(7);
     
     % Add the stimuli to the presentation.
     presentation.addStimulus(butterfly);

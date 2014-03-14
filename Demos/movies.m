@@ -23,8 +23,7 @@ function movies()
     skatingMovie.setMask(Mask.createGaussianEnvelope());
     
     % Create a 12 second presentation.
-    duration = 12;
-    presentation = Presentation(duration);
+    presentation = Presentation(12);
     
     % Add the stimuli to the presentation.
     presentation.addStimulus(boxingMovie);

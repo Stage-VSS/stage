@@ -29,8 +29,7 @@ function plaid()
     grating2.setMask(mask);
     
     % Create a 5 second presentation.
-    duration = 5;
-    presentation = Presentation(duration);
+    presentation = Presentation(5);
     
     % Add the grating stimuli to the presentation.
     presentation.addStimulus(grating1);

@@ -32,8 +32,7 @@ function images()
     lightHorse.color = 1;
     
     % Create a 6 second presentation.
-    duration = 6;
-    presentation = Presentation(duration);
+    presentation = Presentation(6);
     
     % Add the stimuli to the presentation.
     presentation.addStimulus(lightHorse);
