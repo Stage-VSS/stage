@@ -5,23 +5,20 @@ function images()
     % Create a canvas on the window.
     canvas = Canvas(window);
     
-    % Grab the canvas size for convenience.
-    width = canvas.size(1);
-    height = canvas.size(2);
+    % Read a few images from file.
+    imagesDir = fullfile(fileparts(mfilename('fullpath')), 'Images');
+    butterflyImage = imread(fullfile(imagesDir, 'butterfly.jpg'));
+    
+    [horseImage, ~, horseAlpha] = imread(fullfile(imagesDir, 'horse.png'));
+    horseImage(:, :, 4) = horseAlpha;
     
     % Create a few image stimuli.
-    imagesDir = fullfile(fileparts(mfilename('fullpath')), 'Images');
-    
-    butterflyImage = imread(fullfile(imagesDir, 'butterfly.jpg'));
     butterfly = Image(butterflyImage);
     butterfly.size = [size(butterflyImage, 2), size(butterflyImage, 1)];
     butterfly.position = canvas.size / 2;
     
     mask = Mask.createGaussianEnvelope();
-    butterfly.setMask(mask);
-    
-    [horseImage, ~, horseAlpha] = imread(fullfile(imagesDir, 'horse.png'));
-    horseImage(:, :, 4) = horseAlpha;    
+    butterfly.setMask(mask);  
     
     darkHorse = Image(horseImage);
     darkHorse.size = [size(horseImage, 2), size(horseImage, 1)];
@@ -39,9 +36,9 @@ function images()
     presentation.addStimulus(butterfly);
     presentation.addStimulus(darkHorse);
     
-    % Define the horse position's as functions of time.
-    presentation.addController(lightHorse, 'position', @(state)[width-state.time*75-100, height/2]);
-    presentation.addController(darkHorse, 'position', @(state)[state.time*100, height/2-50]);
+    % Define the horse positions as functions of time.
+    presentation.addController(lightHorse, 'position', @(state)[canvas.width-state.time*75-100, canvas.height/2]);
+    presentation.addController(darkHorse, 'position', @(state)[state.time*100, canvas.height/2-50]);
     
     % Play the presentation on the canvas!
     presentation.play(canvas);

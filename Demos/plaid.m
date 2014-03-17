@@ -24,9 +24,8 @@ function plaid()
     grating2.opacity = 0.5;
     
     % Assign a circular envelope mask to the gratings.
-    mask = Mask.createCircularEnvelope();
-    grating1.setMask(mask);
-    grating2.setMask(mask);
+    grating1.setMask(Mask.createCircularEnvelope());
+    grating2.setMask(Mask.createCircularEnvelope());
     
     % Create a 5 second presentation.
     presentation = Presentation(5);
@@ -35,8 +34,8 @@ function plaid()
     presentation.addStimulus(grating1);
     presentation.addStimulus(grating2);
     
-    % Define the grating's phase property as a function of time. The first grating will shift 360 degrees per second.
-    % The second grating will shift 180 degrees per second.
+    % Define the grating phases as functions of time. The first grating will shift 360 degrees per second. The second 
+    % grating will shift 180 degrees per second.
     presentation.addController(grating1, 'phase', @(state)state.time * 360);
     presentation.addController(grating2, 'phase', @(state)state.time * 180);
     

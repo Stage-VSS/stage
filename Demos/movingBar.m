@@ -5,12 +5,9 @@ function movingBar()
     % Create a canvas on the window.
     canvas = Canvas(window);
     
-    % Grab the canvas height for convenience.
-    height = canvas.size(2);
-    
     % Create the bar stimulus.
     bar = Rectangle();
-    bar.size = [100, height];
+    bar.size = [100, canvas.height];
     
     % Create a 4 second presentation.
     presentation = Presentation(4);
@@ -19,7 +16,7 @@ function movingBar()
     presentation.addStimulus(bar);
     
     % Define the bar's position property as a function of time.
-    presentation.addController(bar, 'position', @(state)[state.time*200-50, height/2]);
+    presentation.addController(bar, 'position', @(state)[state.time*200-50, canvas.height/2]);
     
     % Play the presentation on the canvas!
     presentation.play(canvas);

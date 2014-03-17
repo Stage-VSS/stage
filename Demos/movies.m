@@ -5,21 +5,18 @@ function movies()
     % Create a canvas on the window.
     canvas = Canvas(window);
     
-    % Grab the canvas size for convenience.
-    width = canvas.size(1);
-    height = canvas.size(2);
-    
-    % Create a few movie stimuli.
+    % Get the full path of the Demos/Movies directory.
     moviesDir = fullfile(fileparts(mfilename('fullpath')), 'Movies');
     
+    % Create a few movie stimuli.
     boxingMovie = Movie(fullfile(moviesDir, 'boxing.mpg'));
     boxingMovie.size = [320, 240];
-    boxingMovie.position = [width*1/4+30, height/2];
+    boxingMovie.position = [canvas.width*1/4+30, canvas.height/2];
     boxingMovie.setMask(Mask.createGaussianEnvelope());
     
     skatingMovie = Movie(fullfile(moviesDir, 'skating.mpg'));
     skatingMovie.size = [320, 240];
-    skatingMovie.position = [width*3/4-30, height/2];
+    skatingMovie.position = [canvas.width*3/4-30, canvas.height/2];
     skatingMovie.setMask(Mask.createGaussianEnvelope());
     
     % Create a 12 second presentation.

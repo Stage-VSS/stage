@@ -5,8 +5,10 @@ function filters()
     % Create a canvas on the window.
     canvas = Canvas(window);
     
-    % Create a movie stimulus.
+    % Get the full path of the Demos/Movies directory.
     moviesDir = fullfile(fileparts(mfilename('fullpath')), 'Movies');
+    
+    % Create a movie stimulus.
     boxingMovie = Movie(fullfile(moviesDir, 'boxing.mpg'));
     boxingMovie.size = [320, 240];
     boxingMovie.position = canvas.size / 2;

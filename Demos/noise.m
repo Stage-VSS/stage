@@ -5,8 +5,10 @@ function noise()
     % Create a canvas on the window.
     canvas = Canvas(window);
     
-    % Create the noise stimulus.
+    % Create the noise image matrix.
     noiseMatrix = uint8(rand(200, 200) * 255);
+    
+    % Create the noise stimulus.
     noise = Image(noiseMatrix);
     noise.position = canvas.size / 2;
     noise.size = [200, 200];
@@ -21,7 +23,7 @@ function noise()
     presentation.addController(noise, 'shiftX', @(state)state.time * 0.5);
     presentation.addController(noise, 'shiftY', @(state)state.time * 0.5);
     
-    % Set the noise texture to repeat in the x and y as it is shifted.
+    % Set the noise texture to repeat in the s (i.e. x) and t (i.e. y) coordinate as it is shifted.
     noise.setWrapModeS(GL.REPEAT); % x
     noise.setWrapModeT(GL.REPEAT); % y
     

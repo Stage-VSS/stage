@@ -3,6 +3,8 @@ classdef Canvas < handle
     properties (SetAccess = private)
         window              % Window containing the canvas
         size                % Size of the canvas [width, height] (pixels)
+        width               % Width of the canvas, for convenience (pixels)
+        height              % Height of the canvas, for convenience (pixels)
         projection          % Projection matrix stack
         modelView           % Model/View matrix stack
         currentProgram      % Current shader program
@@ -38,6 +40,14 @@ classdef Canvas < handle
         
         function s = get.size(obj)
             s = obj.window.size;
+        end
+        
+        function w = get.width(obj)
+            w = obj.size(1);
+        end
+        
+        function h = get.height(obj)
+            h = obj.size(2);
         end
         
         function makeCurrent(obj)
