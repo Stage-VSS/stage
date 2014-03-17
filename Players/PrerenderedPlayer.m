@@ -33,8 +33,7 @@ classdef PrerenderedPlayer < Player
                 
                 obj.drawFrame(frame, frameDuration, time);
                 
-                data = canvas.getPixelData();
-                obj.frameBuffer{frame + 1} = permute(flipdim(data, 1), [3, 2, 1]);
+                obj.frameBuffer{frame + 1} = canvas.getPixelData(false);
                 
                 frame = frame + 1;
                 time = frame * frameDuration;

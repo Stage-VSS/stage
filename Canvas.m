@@ -100,17 +100,21 @@ classdef Canvas < handle
         end
         
         % Gets image matrix of current framebuffer data. 
-        function d = getPixelData(obj)
+        function d = getPixelData(obj, permuteImage)
+            if nargin < 2
+                permuteImage = true;
+            end
+            
             obj.makeCurrent();
             
             if ~obj.framebufferBound
                 glReadBuffer(GL.BACK);
             end
             
-            pixels = glReadPixels(0, 0, obj.size(1), obj.size(2), GL.RGB, GL.UNSIGNED_BYTE);
-            d = zeros(size(pixels, 2), size(pixels, 1), size(pixels, 3), 'uint8');
-            for i = 1:size(d, 3)
-                d(:, :, i) = rot90(pixels(:, :, i));
+            d = glReadPixels(0, 0, obj.size(1), obj.size(2), GL.RGB, GL.UNSIGNED_BYTE);
+            
+            if permuteImage
+                d = flipdim(permute(d, [3, 2, 1]), 1);
             end
         end
         
