@@ -61,7 +61,7 @@ classdef StageClient < handle
             obj.getResponse();
         end
         
-        % Gets information about the last remotely played presentation.
+        % Gets information about the last remotely played (or replayed) presentation.
         function i = getPlayInfo(obj)
             obj.sendEvent(NetEvents.GET_PLAY_INFO);
             i = obj.getResponse();
