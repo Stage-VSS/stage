@@ -51,6 +51,7 @@ classdef StageServer < handle
             rport = data.client.socket.getPort();
             disp(['Serving connection from ' char(rhost) ':' num2str(rport)]);
             
+            obj.sessionData.player = [];
             obj.sessionData.playInfo = [];
         end
         
@@ -80,6 +81,8 @@ classdef StageServer < handle
                         obj.onEventSetCanvasColor(client, value);
                     case NetEvents.PLAY
                         obj.onEventPlay(client, value);
+                    case NetEvents.REPLAY
+                        obj.onEventReplay(client, value);
                     case NetEvents.GET_PLAY_INFO
                         obj.onEventGetPlayInfo(client, value);
                     otherwise
@@ -107,11 +110,28 @@ classdef StageServer < handle
         function onEventPlay(obj, client, value)
             presentation = value{2};
             
+            obj.sessionData.player = RealtimePlayer(presentation);
+            
             % Unlock client to allow async operations during play.
             client.send(NetEvents.OK);
             
             try
-                obj.sessionData.playInfo = presentation.play(obj.canvas);
+                obj.sessionData.playInfo = obj.sessionData.player.play(obj.canvas);
+            catch x
+                obj.sessionData.playInfo = x;
+            end
+        end
+        
+        function onEventReplay(obj, client, value) %#ok<INUSD>
+            if isempty(obj.sessionData.player)
+                error('No player exists');
+            end
+            
+            % Unlock client to allow async operations during play.
+            client.send(NetEvents.OK);
+            
+            try
+                obj.sessionData.playInfo = obj.sessionData.player.play(obj.canvas);
             catch x
                 obj.sessionData.playInfo = x;
             end

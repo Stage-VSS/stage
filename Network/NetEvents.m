@@ -11,6 +11,9 @@ classdef NetEvents
         % Requests that a presentation be played.
         PLAY = 'PLAY'
         
+        % Requests that the last played presentation be played again.
+        REPLAY = 'REPLAY'
+        
         % Requests information about the last played presentation.
         GET_PLAY_INFO = 'GET_PLAY_INFO'
         
