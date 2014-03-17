@@ -1,3 +1,5 @@
+% A player that draws all frames to memory prior to playback.
+
 classdef PrerenderedPlayer < Player
     
     properties (Access = private)

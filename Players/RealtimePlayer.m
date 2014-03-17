@@ -1,3 +1,5 @@
+% A player that draws each frame during the inter-frame interval.
+
 classdef RealtimePlayer < Player
     
     methods
