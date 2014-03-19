@@ -28,11 +28,11 @@ Make sure you have installed the latest OS updates and the Visual C++ Redistribu
 
 **Why do I receive an error claiming "Undefined function or variable ..."**
 
-Make sure you are using a 64-bit version of MATLAB and that you included the `--recursive` flag when cloning the Stage repository during installation. If you recently updated Stage via `git pull` also ensure that you have run `git submodule update` within the Stage directory.
+Make sure you are using a 64-bit version of MATLAB and that you included the `--recursive` flag when cloning the Stage repository during installation. If you recently updated Stage via `git pull` also ensure that you have run `git submodule init` and then `git submodule update` within the Stage directory.
 
 **How do I update Stage to the latest version?**
 
-In Terminal or Git Bash navigate to the Stage directory. Run `git pull` and then `git submodule update`.
+In Terminal or Git Bash navigate to the Stage directory. Run `git pull` and then `git submodule init` followed by `git submodule update`.
 
 ## License
 

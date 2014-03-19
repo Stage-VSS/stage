@@ -69,7 +69,11 @@ classdef PrerenderedPlayer < Player
             canvas.projection.push();
             canvas.projection.setIdentity();
             canvas.projection.orthographic(0, canvas.size(1), 0, canvas.size(2));
-
+            
+            try %#ok<TRYNC>
+                setMaxPriority();
+            end
+            
             nFrames = length(obj.renderedFrames);
             for frame = 1:nFrames
                 canvas.clear();
@@ -79,6 +83,10 @@ classdef PrerenderedPlayer < Player
 
                 canvas.window.flip();
                 flipTimer.tick();
+            end
+            
+            try %#ok<TRYNC>
+                setNormalPriority();
             end
             
             canvas.projection.pop();

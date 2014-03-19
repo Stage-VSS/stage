@@ -10,3 +10,6 @@
 [submodule "Externals/matlab-dwm"]
 	path = Externals/matlab-dwm
 	url = https://github.com/cafarm/matlab-dwm.git
+[submodule "Externals/matlab-priority"]
+	path = Externals/matlab-priority
+	url = https://github.com/cafarm/matlab-priority.git

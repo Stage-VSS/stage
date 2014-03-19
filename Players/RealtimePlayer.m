@@ -15,6 +15,10 @@ classdef RealtimePlayer < Player
                 obj.presentation.stimuli{i}.init(canvas);
             end
             
+            try %#ok<TRYNC>
+                setMaxPriority();
+            end
+            
             frame = 0;
             frameDuration = 1 / canvas.window.monitor.refreshRate;
             time = frame * frameDuration;
@@ -28,6 +32,10 @@ classdef RealtimePlayer < Player
                 
                 frame = frame + 1;
                 time = frame * frameDuration;
+            end
+            
+            try %#ok<TRYNC>
+                setNormalPriority();
             end
             
             info.flipDurations = flipTimer.flipDurations;
