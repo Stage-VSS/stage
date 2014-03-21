@@ -79,7 +79,7 @@ classdef StageClient < handle
             obj.tcpClient.send(varargin{:});
         end
         
-        function r = getResponse(obj)
+        function varargout = getResponse(obj)
             if isempty(obj.tcpClient)
                 error('Not connected');
             end
@@ -93,9 +93,9 @@ classdef StageClient < handle
             
             if strcmp(r{1}, NetEvents.OK)
                 if length(r) > 1
-                    r = r{2:end};
+                    varargout = r(2:end);
                 else
-                    r = [];
+                    varargout = [];
                 end
             elseif strcmp(r{1}, NetEvents.ERROR)
                 throw(r{2});
