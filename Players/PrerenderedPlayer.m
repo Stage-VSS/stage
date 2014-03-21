@@ -63,12 +63,8 @@ classdef PrerenderedPlayer < Player
             texture = TextureObject(canvas, 2);
             texture.setImage(obj.renderedFrames{1}, 0, false);
             
-            currentRenderer = canvas.currentRenderer;
-            canvas.resetRenderer();
-            
-            canvas.projection.push();
-            canvas.projection.setIdentity();
-            canvas.projection.orthographic(0, canvas.size(1), 0, canvas.size(2));
+            renderer = Renderer(canvas);
+            renderer.projection.orthographic(0, canvas.size(1), 0, canvas.size(2));
             
             try %#ok<TRYNC>
                 setMaxPriority();
@@ -79,7 +75,8 @@ classdef PrerenderedPlayer < Player
                 canvas.clear();
                 
                 texture.setSubImage(obj.renderedFrames{frame}, 0, [0, 0], false);
-                canvas.drawArray(vao, GL.TRIANGLE_STRIP, 0, 4, [1, 1, 1, 1], [], texture);
+                
+                renderer.drawArray(vao, GL.TRIANGLE_STRIP, 0, 4, [1, 1, 1, 1], [], texture, []);
 
                 canvas.window.flip();
                 flipTimer.tick();
@@ -88,10 +85,6 @@ classdef PrerenderedPlayer < Player
             try %#ok<TRYNC>
                 setNormalPriority();
             end
-            
-            canvas.projection.pop();
-            
-            canvas.setRenderer(currentRenderer);
 
             info.flipDurations = flipTimer.flipDurations;
         end

@@ -78,6 +78,10 @@ classdef MatrixStack < handle
             obj.stack(:,:,obj.depth) = obj.stack(:,:,obj.depth) * o;
         end
         
+        function setMatrix(obj, m)
+            obj.stack(:,:,obj.depth) = m;
+        end
+        
         function setIdentity(obj)
             obj.stack(:,:,obj.depth) = [1 0 0 0;
                                         0 1 0 0;

@@ -4,6 +4,8 @@ classdef Renderer < handle
     
     properties (SetAccess = private)
         canvas
+        projection
+        modelView
     end
     
     properties (Access = protected)
@@ -11,6 +13,15 @@ classdef Renderer < handle
     end
     
     methods
+        
+        function obj = Renderer(canvas)
+            if nargin > 0
+                obj.setCanvas(canvas);
+            end
+            
+            obj.projection = MatrixStack();
+            obj.modelView = MatrixStack();
+        end
         
         function setCanvas(obj, canvas)
             if canvas == obj.canvas
@@ -89,10 +100,10 @@ classdef Renderer < handle
             program = obj.canvas.currentProgram;
             
             projectUniform = program.getUniformLocation('projectionMatrix');
-            program.setUniformMatrix(projectUniform, obj.canvas.projection.top());
+            program.setUniformMatrix(projectUniform, obj.projection.top());
             
             modelUniform = program.getUniformLocation('modelViewMatrix');
-            program.setUniformMatrix(modelUniform, obj.canvas.modelView.top());
+            program.setUniformMatrix(modelUniform, obj.modelView.top());
             
             colorUniform = program.getUniformLocation('color0');
             program.setUniformfv(colorUniform, color);

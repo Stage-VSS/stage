@@ -173,6 +173,9 @@ classdef Canvas < handle
                 filter = [];
             end
             
+            obj.currentRenderer.projection.setMatrix(obj.projection.top());
+            obj.currentRenderer.modelView.setMatrix(obj.modelView.top());
+            
             obj.currentRenderer.drawArray(array, mode, first, count, color, mask, texture, filter);
         end
         
