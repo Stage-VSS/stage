@@ -25,7 +25,7 @@ classdef RealtimePlayer < Player
             while time <= obj.presentation.duration
                 canvas.clear();
                 
-                obj.drawFrame(frame, frameDuration, time);
+                obj.drawFrame(canvas, frame, frameDuration, time);
                 
                 canvas.window.flip();
                 flipTimer.tick();

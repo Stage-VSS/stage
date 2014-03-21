@@ -31,7 +31,7 @@ classdef Player < handle
             while time <= obj.presentation.duration
                 canvas.clear();
                 
-                obj.drawFrame(frame, frameDuration, time);
+                obj.drawFrame(canvas, frame, frameDuration, time);
                 
                 pixelData = canvas.getPixelData();
                 if writer.ColorChannels == 1
@@ -51,14 +51,14 @@ classdef Player < handle
     
     methods (Access = protected)
         
-        function drawFrame(obj, frame, frameDuration, time)
+        function drawFrame(obj, canvas, frame, frameDuration, time)
             state.frame = frame;
             state.frameDuration = frameDuration;
             state.time = time;
             
             obj.callControllers(state);
             
-            obj.drawStimuli();
+            obj.drawStimuli(canvas);
         end
         
         function callControllers(obj, state)
@@ -72,7 +72,7 @@ classdef Player < handle
             end
         end
         
-        function drawStimuli(obj)
+        function drawStimuli(obj, canvas) %#ok<INUSD>
             for i = 1:length(obj.presentation.stimuli)
                 obj.presentation.stimuli{i}.draw();
             end

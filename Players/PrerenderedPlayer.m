@@ -33,7 +33,7 @@ classdef PrerenderedPlayer < Player
             while time <= obj.presentation.duration
                 canvas.clear();
                 
-                obj.drawFrame(frame, frameDuration, time);
+                obj.drawFrame(canvas, frame, frameDuration, time);
                 
                 obj.renderedFrames{frame + 1} = canvas.getPixelData(false);
                 
