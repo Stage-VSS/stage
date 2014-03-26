@@ -50,8 +50,12 @@ classdef StageClient < handle
         
         % Plays a given presentation on the remote canvas. This method will return immediately. While the presentation 
         % plays remotely, further attempts to interface with the server will block until the presentation completes.
-        function play(obj, presentation)
-            obj.sendEvent(NetEvents.PLAY, presentation);
+        function play(obj, presentation, prerender)
+            if nargin < 3
+                prerender = false;
+            end
+            
+            obj.sendEvent(NetEvents.PLAY, presentation, prerender);
             obj.getResponse();
         end
         

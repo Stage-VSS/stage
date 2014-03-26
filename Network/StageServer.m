@@ -109,8 +109,13 @@ classdef StageServer < handle
         
         function onEventPlay(obj, client, value)
             presentation = value{2};
+            prerender = value{3};
             
-            obj.sessionData.player = RealtimePlayer(presentation);
+            if prerender
+                obj.sessionData.player = PrerenderedPlayer(presentation);
+            else
+                obj.sessionData.player = RealtimePlayer(presentation);
+            end
             
             % Unlock client to allow async operations during play.
             client.send(NetEvents.OK);
@@ -131,7 +136,12 @@ classdef StageServer < handle
             client.send(NetEvents.OK);
             
             try
-                obj.sessionData.playInfo = obj.sessionData.player.play(obj.canvas);
+                player = obj.sessionData.player;
+                if ismethod(player, 'replay')
+                    obj.sessionData.playInfo = player.replay(obj.canvas);
+                else
+                    obj.sessionData.playInfo = player.play(obj.canvas);
+                end
             catch x
                 obj.sessionData.playInfo = x;
             end
