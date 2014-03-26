@@ -23,6 +23,8 @@ classdef PrerenderedPlayer < Player
             
             obj.renderedFrames = cell(1, nFrames);
             
+            obj.compositor.setCanvas(canvas);
+            
             for i = 1:length(obj.presentation.stimuli)
                 obj.presentation.stimuli{i}.init(canvas);
             end
@@ -33,7 +35,7 @@ classdef PrerenderedPlayer < Player
             while time <= obj.presentation.duration
                 canvas.clear();
                 
-                obj.drawFrame(canvas, frame, frameDuration, time);
+                obj.compositor.drawFrame(obj.presentation, frame, frameDuration, time);
                 
                 obj.renderedFrames{frame + 1} = canvas.getPixelData(false);
                 

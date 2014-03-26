@@ -11,6 +11,8 @@ classdef RealtimePlayer < Player
         function info = play(obj, canvas)
             flipTimer = FlipTimer();
             
+            obj.compositor.setCanvas(canvas);
+            
             for i = 1:length(obj.presentation.stimuli)
                 obj.presentation.stimuli{i}.init(canvas);
             end
@@ -25,7 +27,7 @@ classdef RealtimePlayer < Player
             while time <= obj.presentation.duration
                 canvas.clear();
                 
-                obj.drawFrame(canvas, frame, frameDuration, time);
+                obj.compositor.drawFrame(obj.presentation, frame, frameDuration, time);
                 
                 canvas.window.flip();
                 flipTimer.tick();

@@ -4,12 +4,18 @@ classdef Player < handle
     
     properties (SetAccess = private)
         presentation
+        compositor
     end
     
     methods
         
         function obj = Player(presentation)
             obj.presentation = presentation;
+            obj.setCompositor(Compositor());
+        end
+        
+        function setCompositor(obj, compositor)
+            obj.compositor = compositor;
         end
         
         function exportMovie(obj, canvas, filename, frameRate, profile)
@@ -25,13 +31,19 @@ classdef Player < handle
             writer.FrameRate = frameRate;
             writer.open();
             
+            obj.compositor.setCanvas(canvas);
+            
+            for i = 1:length(obj.presentation.stimuli)
+                obj.presentation.stimuli{i}.init(canvas);
+            end
+            
             frame = 0;
             frameDuration = 1 / frameRate;
             time = frame * frameDuration;
             while time <= obj.presentation.duration
                 canvas.clear();
                 
-                obj.drawFrame(canvas, frame, frameDuration, time);
+                obj.compositor.drawFrame(obj.presentation, frame, frameDuration, time);
                 
                 pixelData = canvas.getPixelData();
                 if writer.ColorChannels == 1
@@ -45,37 +57,6 @@ classdef Player < handle
             end
             
             writer.close();
-        end
-        
-    end
-    
-    methods (Access = protected)
-        
-        function drawFrame(obj, canvas, frame, frameDuration, time)
-            state.frame = frame;
-            state.frameDuration = frameDuration;
-            state.time = time;
-            
-            obj.callControllers(state);
-            
-            obj.drawStimuli(canvas);
-        end
-        
-        function callControllers(obj, state)
-            for i = 1:length(obj.presentation.controllers)
-                c = obj.presentation.controllers{i};
-                handle = c{1};
-                prop = c{2};
-                func = c{3};
-
-                handle.(prop) = func(state);
-            end
-        end
-        
-        function drawStimuli(obj, canvas) %#ok<INUSD>
-            for i = 1:length(obj.presentation.stimuli)
-                obj.presentation.stimuli{i}.draw();
-            end
         end
         
     end
