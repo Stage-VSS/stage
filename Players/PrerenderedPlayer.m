@@ -48,12 +48,10 @@ classdef PrerenderedPlayer < Player
             flipTimer = FlipTimer();
             
             % Each vertex position is followed by a texture coordinate and a mask coordinate.
-            w = canvas.size(1);
-            h = canvas.size(2);
-            vertexData = [ 0  h  0  1,  0  1,  0  1 ...
+            vertexData = [ 0  1  0  1,  0  1,  0  1 ...
                            0  0  0  1,  0  0,  0  0 ...
-                           w  h  0  1,  1  1,  1  1 ...
-                           w  0  0  1,  1  0,  1  0];
+                           1  1  0  1,  1  1,  1  1 ...
+                           1  0  0  1,  1  0,  1  0];
 
             vbo = VertexBufferObject(canvas, GL.ARRAY_BUFFER, single(vertexData), GL.STATIC_DRAW);
 
@@ -66,7 +64,7 @@ classdef PrerenderedPlayer < Player
             texture.setImage(obj.renderedFrames{1}, 0, false);
             
             renderer = Renderer(canvas);
-            renderer.projection.orthographic(0, canvas.size(1), 0, canvas.size(2));
+            renderer.projection.orthographic(0, 1, 0, 1);
             
             try %#ok<TRYNC>
                 setMaxPriority();
