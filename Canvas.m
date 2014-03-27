@@ -110,8 +110,24 @@ classdef Canvas < handle
         end
         
         % Gets image matrix of current framebuffer data. 
-        function d = getPixelData(obj, permuteImage)
+        function d = getPixelData(obj, x, y, width, height, permuteImage)
             if nargin < 2
+                x = 0;
+            end
+            
+            if nargin < 3
+                y = 0;
+            end
+            
+            if nargin < 4
+                width = obj.size(1);
+            end
+            
+            if nargin < 5
+                height = obj.size(2);
+            end
+            
+            if nargin < 6
                 permuteImage = true;
             end
             
@@ -121,7 +137,7 @@ classdef Canvas < handle
                 glReadBuffer(GL.BACK);
             end
             
-            d = glReadPixels(0, 0, obj.size(1), obj.size(2), GL.RGB, GL.UNSIGNED_BYTE);
+            d = glReadPixels(x, y, width, height, GL.RGB, GL.UNSIGNED_BYTE);
             
             if permuteImage
                 d = flipdim(permute(d, [3, 2, 1]), 1);

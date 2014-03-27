@@ -37,7 +37,7 @@ classdef PrerenderedPlayer < Player
                 
                 obj.compositor.drawFrame(obj.presentation, frame, frameDuration, time);
                 
-                obj.renderedFrames{frame + 1} = canvas.getPixelData(false);
+                obj.renderedFrames{frame + 1} = canvas.getPixelData(0, 0, canvas.size(1), canvas.size(2), false);
                 
                 frame = frame + 1;
                 time = frame * frameDuration;
