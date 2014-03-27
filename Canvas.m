@@ -128,13 +128,22 @@ classdef Canvas < handle
             end
         end
         
-        function setFramebuffer(obj, drawBuffer)
-            if drawBuffer.canvas ~= obj
+        function setFramebuffer(obj, drawBuffer, readBuffer)
+            if nargin < 3
+                readBuffer = [];
+            end
+            
+            if drawBuffer.canvas ~= obj || (~isempty(readBuffer) && readBuffer.canvas ~= obj)
                 error('Buffer canvas must equal this canvas');
             end
             
             drawBuffer.checkFramebufferComplete();
-            drawBuffer.bindFramebuffer();
+            drawBuffer.bindFramebuffer(true);
+            
+            if ~isempty(readBuffer)
+                readBuffer.checkFramebufferComplete();
+                readBuffer.bindFramebuffer(false);
+            end                
             
             obj.framebufferBound = true;
         end

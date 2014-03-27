@@ -23,6 +23,10 @@ classdef FramebufferObject < handle
             obj.canvasBeingDestroyed = addlistener(canvas, 'ObjectBeingDestroyed', @(e,d)obj.delete());
         end
         
+        function setTarget(obj, target)
+            obj.target = target;
+        end
+        
         function b = get.binding(obj)
             if obj.target == GL.DRAW_FRAMEBUFFER
                 b = GL.DRAW_FRAMEBUFFER_BINDING;
@@ -51,10 +55,15 @@ classdef FramebufferObject < handle
             end
         end
         
-        function bindFramebuffer(obj)
+        function bindFramebuffer(obj, writeOnly)
             obj.canvas.makeCurrent();
             
-            glBindFramebuffer(GL.FRAMEBUFFER, obj.handle);
+            if writeOnly
+                glBindFramebuffer(GL.FRAMEBUFFER, obj.handle);
+            else
+                glBindFramebuffer(GL.READ_FRAMEBUFFER, obj.handle);
+            end
+            
             glDrawBuffer(GL.COLOR_ATTACHMENT0);
             glReadBuffer(GL.COLOR_ATTACHMENT0);
         end
