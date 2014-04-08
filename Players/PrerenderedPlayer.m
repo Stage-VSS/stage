@@ -39,6 +39,8 @@ classdef PrerenderedPlayer < Player
                 
                 obj.renderedFrames{frame + 1} = canvas.getPixelData(0, 0, canvas.size(1), canvas.size(2), false);
                 
+                canvas.window.pollEvents();
+                
                 frame = frame + 1;
                 time = frame * frameDuration;
             end
