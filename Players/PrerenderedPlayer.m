@@ -80,6 +80,8 @@ classdef PrerenderedPlayer < Player
 
                 canvas.window.flip();
                 flipTimer.tick();
+                
+                canvas.window.pollEvents();
             end
             
             try %#ok<TRYNC>

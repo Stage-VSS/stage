@@ -32,6 +32,8 @@ classdef RealtimePlayer < Player
                 canvas.window.flip();
                 flipTimer.tick();
                 
+                canvas.window.pollEvents();
+                
                 frame = frame + 1;
                 time = frame * frameDuration;
             end
