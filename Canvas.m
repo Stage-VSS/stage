@@ -7,13 +7,12 @@ classdef Canvas < handle
         height              % Height of the canvas, for convenience (pixels)
         projection          % Projection matrix stack
         modelView           % Model/View matrix stack
-        currentProgram      % Current shader program
         currentRenderer     % Current primitive renderer
+        standardPrograms    % Standard shader programs available for renderers
     end
     
     properties (Access = private)
         defaultRenderer
-        standardPrograms
         framebufferBound
         windowBeingDestroyed
     end
@@ -72,26 +71,8 @@ classdef Canvas < handle
         end
         
         function setProgram(obj, program)
-            if ischar(program)
-                switch program
-                    case 'primitive'
-                        program = obj.standardPrograms.primitiveProgram;
-                    case 'texturedPrimitive'
-                        program = obj.standardPrograms.texturedPrimitiveProgram;
-                    case 'filteredTexturedPrimitive'
-                        program = obj.standardPrograms.filteredTexturedPrimitiveProgram;
-                    otherwise
-                        error('Unknown program name');
-                end
-            end
-            
-            if program == obj.currentProgram
-                return;
-            end
-            
             obj.makeCurrent();
             glUseProgram(program.handle);
-            obj.currentProgram = program;
         end
         
         function enableBlend(obj, src, dest)            

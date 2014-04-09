@@ -64,12 +64,14 @@ classdef Renderer < handle
         
         function setupProgram(obj, color, mask, texture, filter)            
             if isempty(texture)
-                obj.canvas.setProgram('primitive');
+                program = obj.canvas.standardPrograms.primitiveProgram;
+                obj.canvas.setProgram(program);
                 
                 glActiveTexture(GL.TEXTURE0);
                 glBindTexture(mask.texture.target, mask.texture.handle);
             elseif isempty(filter)
-                obj.canvas.setProgram('texturedPrimitive');
+                program = obj.canvas.standardPrograms.texturedPrimitiveProgram;
+                obj.canvas.setProgram(program);
                 
                 glActiveTexture(GL.TEXTURE0);
                 glBindTexture(texture.target, texture.handle);
@@ -77,7 +79,8 @@ classdef Renderer < handle
                 glActiveTexture(GL.TEXTURE1);
                 glBindTexture(mask.texture.target, mask.texture.handle);
             else
-                obj.canvas.setProgram('filteredTexturedPrimitive');
+                program = obj.canvas.standardPrograms.filteredTexturedPrimitiveProgram;
+                obj.canvas.setProgram(program);
                 
                 glActiveTexture(GL.TEXTURE0);
                 glBindTexture(texture.target, texture.handle);
@@ -96,8 +99,6 @@ classdef Renderer < handle
                 texture0SizeUniform = program.getUniformLocation('texture0Size');                
                 program.setUniformfv(texture0SizeUniform, texture.size);
             end
-            
-            program = obj.canvas.currentProgram;
             
             projectUniform = program.getUniformLocation('projectionMatrix');
             program.setUniformMatrix(projectUniform, obj.projection.top());
