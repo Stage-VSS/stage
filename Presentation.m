@@ -19,7 +19,9 @@ classdef Presentation < handle
             obj.duration = duration;
         end
         
-        % Adds a stimulus to this presentation.
+        % Adds a stimulus to this presentation. Stimuli are layered in the order with which they are added; the first 
+        % stimulus added is considered on the lowest layer (the layer farthest from the viewer) while the last stimulus 
+        % added is considered on the highest layer (the layer closest to the viewer).
         function addStimulus(obj, stimulus)
             if ~isempty(obj.stimuli) && any(cellfun(@(c)c == stimulus, obj.stimuli))
                 error('Presentation already contains the given stimulus');
@@ -28,7 +30,10 @@ classdef Presentation < handle
             obj.stimuli{end + 1} = stimulus;
         end
         
-        % Adds a controller to this presentation. A controller associates an object's property with a given function.
+        % Adds a controller to this presentation. A controller associates an object's property with a given function. 
+        % While the presentation plays the controller function is called and passed a struct containing information 
+        % about the current state of playback (the current number of frames presented, the time elapsed since the start 
+        % of the presentation, etc). The value returned by the function is assigned to the associated property.
         function addController(obj, handle, propertyName, funcHandle)
             if ~isprop(handle, propertyName)
                 error(['The handle does not contain a property named ''' propertyName '''']);

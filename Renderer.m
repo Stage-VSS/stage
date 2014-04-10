@@ -1,4 +1,4 @@
-% A Renderer is responsible for drawing primitives on a Canvas.
+% A renderer is responsible for drawing primitives on a canvas.
 
 classdef Renderer < handle
     

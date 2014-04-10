@@ -1,9 +1,9 @@
 classdef Window < handle
     
     properties (SetAccess = private)
-        monitor
-        size
-        handle
+        monitor     % Monitor containing the window
+        size        % Size [width, height] (pixels)
+        handle      % GLFW window handle
     end
     
     methods
@@ -61,15 +61,17 @@ classdef Window < handle
             s = [w, h];
         end
         
+        % Swaps the front and back buffers of this window. 
         function flip(obj)
             glfwSwapBuffers(obj.handle);
         end
         
+        % Processes keyboard and mouse events received by this window.
         function pollEvents(obj) %#ok<MANU>
             glfwPollEvents();
         end
         
-        % Gets the last polled state of the specified keyboard key while this window has focus. See GLFW.m for key codes. 
+        % Gets the last polled state of the specified keyboard key while this window had focus. See GLFW.m for key codes. 
         function s = getKeyState(obj, key)
             s = glfwGetKey(obj.handle, key);
         end

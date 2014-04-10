@@ -9,6 +9,7 @@ classdef Player < handle
     
     methods
         
+        % Constructs a player with a given presentation.
         function obj = Player(presentation)
             obj.presentation = presentation;
             obj.setCompositor(Compositor());

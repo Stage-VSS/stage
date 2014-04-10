@@ -12,9 +12,9 @@ classdef Canvas < handle
     end
     
     properties (Access = private)
-        defaultRenderer
-        framebufferBound
-        windowBeingDestroyed
+        defaultRenderer         % Renderer used when none is explicitly set
+        framebufferBound        % Is a framebuffer set? (true or false)
+        windowBeingDestroyed    % Listener for window being deleted
     end
     
     methods
