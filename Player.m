@@ -33,8 +33,11 @@ classdef Player < handle
             
             obj.compositor.setCanvas(canvas);
             
-            for i = 1:length(obj.presentation.stimuli)
-                obj.presentation.stimuli{i}.init(canvas);
+            stimuli = obj.presentation.stimuli;
+            controllers = obj.presentation.controllers;
+            
+            for i = 1:length(stimuli)
+                stimuli{i}.init(canvas);
             end
             
             frame = 0;
@@ -43,7 +46,7 @@ classdef Player < handle
             while time <= obj.presentation.duration
                 canvas.clear();
                 
-                obj.compositor.drawFrame(obj.presentation, frame, frameDuration, time);
+                obj.compositor.drawFrame(stimuli, controllers, frame, frameDuration, time);
                 
                 pixelData = canvas.getPixelData();
                 if writer.ColorChannels == 1

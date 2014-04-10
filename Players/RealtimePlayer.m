@@ -13,8 +13,11 @@ classdef RealtimePlayer < Player
             
             obj.compositor.setCanvas(canvas);
             
-            for i = 1:length(obj.presentation.stimuli)
-                obj.presentation.stimuli{i}.init(canvas);
+            stimuli = obj.presentation.stimuli;
+            controllers = obj.presentation.controllers;
+            
+            for i = 1:length(stimuli)
+                stimuli{i}.init(canvas);
             end
             
             try %#ok<TRYNC>
@@ -27,7 +30,7 @@ classdef RealtimePlayer < Player
             while time <= obj.presentation.duration
                 canvas.clear();
                 
-                obj.compositor.drawFrame(obj.presentation, frame, frameDuration, time);
+                obj.compositor.drawFrame(stimuli, controllers, frame, frameDuration, time);
                 
                 canvas.window.flip();
                 flipTimer.tick();

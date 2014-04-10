@@ -1,4 +1,5 @@
-% A Compositor is responsible for arranging frames of a presentation.
+% A compositor is responsible for compositing a collection of stimuli into a single image and drawing the result onto a
+% canvas.
 
 classdef Compositor < handle
     
@@ -16,14 +17,14 @@ classdef Compositor < handle
             obj.canvas = canvas;
         end
         
-        function drawFrame(obj, presentation, frame, frameDuration, time)
+        function drawFrame(obj, stimuli, controllers, frame, frameDuration, time)
             state.frame = frame;
             state.frameDuration = frameDuration;
             state.time = time;
             
-            obj.callControllers(presentation.controllers, state);
+            obj.callControllers(controllers, state);
             
-            obj.drawStimuli(presentation.stimuli);
+            obj.drawStimuli(stimuli);
         end
         
     end
