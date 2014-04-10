@@ -6,10 +6,6 @@ classdef Window < handle
         handle
     end
     
-    events
-        flipping
-    end
-    
     methods
         
         % Constructs a window with the optionally provided size. By default the window occupies the fullscreen of the
@@ -66,7 +62,6 @@ classdef Window < handle
         end
         
         function flip(obj)
-            notify(obj, 'flipping');
             glfwSwapBuffers(obj.handle);
         end
         
