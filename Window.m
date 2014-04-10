@@ -58,15 +58,6 @@ classdef Window < handle
             obj.monitor = monitor;
             
             glfwSetInputMode(obj.handle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
-            
-            % On Windows Vista+ the desktop window manager (DWM) must be disabled to avoid timing and performance issues.
-            v = java.lang.System.getProperty('os.version');
-            if ispc && str2double(v.charAt(0)) >= 6
-                DwmEnableComposition(DWM.DWM_EC_DISABLECOMPOSITION);
-                if DwmIsCompositionEnabled()
-                    warning('Unable to disable DWM. You will experience timing and performance issues.');
-                end
-            end
         end
         
         function s = get.size(obj)

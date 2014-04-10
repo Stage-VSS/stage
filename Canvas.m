@@ -34,6 +34,15 @@ classdef Canvas < handle
             obj.framebufferBound = false;
             obj.resetBlend();
             
+            % On Windows Vista+ the desktop window manager (DWM) must be disabled to avoid timing and performance issues.
+            v = java.lang.System.getProperty('os.version');
+            if ispc && str2double(v.charAt(0)) >= 6
+                DwmEnableComposition(DWM.DWM_EC_DISABLECOMPOSITION);
+                if DwmIsCompositionEnabled()
+                    warning('Unable to disable DWM. You will experience timing and performance issues.');
+                end
+            end
+            
             glfwSwapInterval(1);
         end
         
