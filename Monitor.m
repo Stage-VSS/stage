@@ -3,16 +3,16 @@
 classdef Monitor < handle
     
     properties (SetAccess = private)
-        refreshRate
-        resolution
-        name
-        handle
+        refreshRate     % Refresh rate (Hz)
+        resolution      % Resolution [width, height] (pixels)
+        name            % Human-readable monitor name
+        handle          % GLFW monitor handle
     end
     
     methods
         
         % Constructs a monitor for the display with the given display number. The primary display is number 1. Further
-        % displays increment from there (2, 3, 4, etc.).
+        % displays increment from there (2, 3, 4, etc).
         function obj = Monitor(number)
             if nargin < 1
                 number = 1;

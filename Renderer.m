@@ -4,8 +4,8 @@ classdef Renderer < handle
     
     properties (SetAccess = private)
         canvas
-        projection
-        modelView
+        projection  % Projection matrix stack
+        modelView   % Model/View matrix stack
     end
     
     properties (Access = protected)
@@ -23,6 +23,7 @@ classdef Renderer < handle
             obj.modelView = MatrixStack();
         end
         
+        % Sets the canvas drawn to by this renderer. The canvas must be set before calling drawArray().
         function setCanvas(obj, canvas)
             if canvas == obj.canvas
                 return;
@@ -34,6 +35,7 @@ classdef Renderer < handle
             obj.defaultMask.init(canvas);
         end
         
+        % Renders primitives from the vertex array object data. Mask, texture, and filter may be set to empty.
         function drawArray(obj, array, mode, first, count, color, mask, texture, filter)
             if isempty(mask)
                 mask = obj.defaultMask;

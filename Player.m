@@ -15,10 +15,14 @@ classdef Player < handle
             obj.setCompositor(Compositor());
         end
         
+        % Sets the compositor used to composite the presentation stimuli into frame images during playback.
         function setCompositor(obj, compositor)
             obj.compositor = compositor;
         end
         
+        % Exports the presentation to a movie file. The VideoWriter frame rate and profile may optionally be provided. 
+        % If the given profile specifies only one color channel, the red, green, and blue color channels of the 
+        % presentation are averaged to produce the output video data.
         function exportMovie(obj, canvas, filename, frameRate, profile)
             if nargin < 4
                 frameRate = canvas.window.monitor.refreshRate;
@@ -66,6 +70,7 @@ classdef Player < handle
     end
     
     methods (Abstract)
+        % Plays the presentation for its set duration.
         info = play(obj, canvas);
     end
     
