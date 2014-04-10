@@ -93,8 +93,6 @@ classdef Renderer < handle
                 glActiveTexture(GL.TEXTURE2);
                 glBindTexture(filter.texture.target, filter.texture.handle);
                 
-                program = obj.canvas.currentProgram;
-                
                 kernelSizeUniform = program.getUniformLocation('kernelSize');
                 program.setUniformfv(kernelSizeUniform, filter.texture.size);
                 
