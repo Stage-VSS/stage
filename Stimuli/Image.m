@@ -10,10 +10,10 @@ classdef Image < Stimulus
         opacity = 1         % Opacity (0 to 1)
         shiftX = 0          % Texture shift (scroll) on the x axes (real number; 0 being no shift, 1 being a complete shift)
         shiftY = 0          % Texture shift (scroll) on the y axes (real number; 0 being no shift, 1 being a complete shift)
+        imageMatrix         % Image data matrix (M-by-N grayscale, M-by-N-by-3 truecolor, M-by-N-by-4 truecolor with alpha)
     end
     
     properties (Access = private)
-        matrix                      % Original image matrix
         mask                        % Stimulus mask
         filter                      % Stimulus filter
         minFunction                 % Texture minifying function
@@ -24,6 +24,7 @@ classdef Image < Stimulus
         vao                         % Vertex array object
         texture                     % Image texture
         needToUpdateVertexBuffer
+        needToUpdateTexture
     end
     
     methods
@@ -39,7 +40,7 @@ classdef Image < Stimulus
                 error('Matrix must be of class uint8');
             end
             
-            obj.matrix = matrix;
+            obj.imageMatrix = matrix;
             obj.minFunction = GL.LINEAR_MIPMAP_LINEAR;
             obj.magFunction = GL.LINEAR;
             obj.wrapModeS = GL.REPEAT;
@@ -61,7 +62,7 @@ classdef Image < Stimulus
             obj.minFunction = func;
         end
         
-        % Sets the OpenGL magnification function for the image (GL.NEAREST or GL.LINEAR).
+        % Sets the OpenGL magnifying function for the image (GL.NEAREST or GL.LINEAR).
         function setMagFunction(obj, func)
             obj.magFunction = func;
         end
@@ -100,10 +101,9 @@ classdef Image < Stimulus
             obj.vao.setAttribute(obj.vbo, 1, 2, GL.FLOAT, GL.FALSE, 8*4, 4*4);
             obj.vao.setAttribute(obj.vbo, 2, 2, GL.FLOAT, GL.FALSE, 8*4, 6*4);
             
-            image = obj.matrix;
+            image = obj.imageMatrix;
             if size(image, 3) == 1
-                image(:, :, 2) = image(:, :, 1);
-                image(:, :, 3) = image(:, :, 1);
+                image = repmat(image, 1, 1, 3);
             end
             
             obj.texture = TextureObject(canvas, 2);
@@ -112,7 +112,15 @@ classdef Image < Stimulus
             obj.texture.setMinFunction(obj.minFunction);
             obj.texture.setMagFunction(obj.magFunction);
             obj.texture.setImage(image);
-            obj.texture.generateMipmap();
+            
+            minFunc = obj.minFunction;
+            if minFunc == GL.LINEAR_MIPMAP_LINEAR ...
+                || minFunc == GL.LINEAR_MIPMAP_NEAREST ...
+                || minFunc == GL.NEAREST_MIPMAP_NEAREST ...
+                || minFunc == GL.NEAREST_MIPMAP_LINEAR ...
+                
+                obj.texture.generateMipmap();
+            end
             
             obj.updateVertexBuffer();
         end
@@ -120,6 +128,10 @@ classdef Image < Stimulus
         function draw(obj)
             if obj.needToUpdateVertexBuffer
                 obj.updateVertexBuffer();
+            end
+            
+            if obj.needToUpdateTexture
+                obj.updateTexture();
             end
             
             modelView = obj.canvas.modelView;
@@ -150,6 +162,11 @@ classdef Image < Stimulus
             obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
         end
         
+        function set.imageMatrix(obj, matrix)
+            obj.imageMatrix = matrix;
+            obj.needToUpdateTexture = true; %#ok<MCSUP>
+        end
+        
     end
     
     methods (Access = private)
@@ -166,6 +183,26 @@ classdef Image < Stimulus
             obj.vbo.uploadData(single(vertexData));
             
             obj.needToUpdateVertexBuffer = false;
+        end
+        
+        function updateTexture(obj)
+            image = obj.imageMatrix;
+            if size(image, 3) == 1
+                image = repmat(image, 1, 1, 3);
+            end
+            
+            obj.texture.setSubImage(image);
+            
+            minFunc = obj.minFunction;
+            if minFunc == GL.LINEAR_MIPMAP_LINEAR ...
+                || minFunc == GL.LINEAR_MIPMAP_NEAREST ...
+                || minFunc == GL.NEAREST_MIPMAP_NEAREST ...
+                || minFunc == GL.NEAREST_MIPMAP_LINEAR ...
+                
+                obj.texture.generateMipmap();
+            end
+            
+            obj.needToUpdateTexture = false;
         end
         
     end
