@@ -16,19 +16,14 @@ classdef Renderer < handle
         
         function obj = Renderer(canvas)
             if nargin > 0
-                obj.setCanvas(canvas);
+                obj.init(canvas);
             end
             
             obj.projection = MatrixStack();
             obj.modelView = MatrixStack();
         end
         
-        % Sets the canvas drawn to by this renderer. The canvas must be set before calling drawArray().
-        function setCanvas(obj, canvas)
-            if canvas == obj.canvas
-                return;
-            end
-            
+        function init(obj, canvas)
             obj.canvas = canvas;
             
             obj.defaultMask = Mask(ones(2, 2, 'uint8') * 255);

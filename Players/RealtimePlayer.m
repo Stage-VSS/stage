@@ -11,7 +11,7 @@ classdef RealtimePlayer < Player
         function info = play(obj, canvas)
             flipTimer = FlipTimer();
             
-            obj.compositor.setCanvas(canvas);
+            obj.compositor.init(canvas);
             
             stimuli = obj.presentation.stimuli;
             controllers = obj.presentation.controllers;

@@ -4,6 +4,7 @@
 classdef Mask < handle
     
     properties (SetAccess = private)
+        canvas
         texture
     end
     
@@ -27,7 +28,9 @@ classdef Mask < handle
             obj.matrix = matrix;
         end
         
-        function init(obj, canvas)            
+        function init(obj, canvas)
+            obj.canvas = canvas;
+            
             obj.texture = TextureObject(canvas, 2);
             obj.texture.setImage(obj.matrix);
             obj.texture.generateMipmap();

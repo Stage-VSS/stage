@@ -23,7 +23,7 @@ classdef PrerenderedPlayer < Player
             
             obj.renderedFrames = cell(1, nFrames);
             
-            obj.compositor.setCanvas(canvas);
+            obj.compositor.init(canvas);
             
             stimuli = obj.presentation.stimuli;
             controllers = obj.presentation.controllers;

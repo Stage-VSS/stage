@@ -36,7 +36,7 @@ classdef Player < handle
             writer.FrameRate = frameRate;
             writer.open();
             
-            obj.compositor.setCanvas(canvas);
+            obj.compositor.init(canvas);
             
             stimuli = obj.presentation.stimuli;
             controllers = obj.presentation.controllers;

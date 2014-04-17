@@ -168,7 +168,7 @@ classdef Canvas < handle
         
         function setRenderer(obj, renderer)
             obj.currentRenderer = renderer;
-            obj.currentRenderer.setCanvas(obj);
+            obj.currentRenderer.init(obj);
         end
         
         function resetRenderer(obj)

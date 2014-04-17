@@ -4,6 +4,7 @@
 classdef Filter < handle
     
     properties (SetAccess = private)
+        canvas
         texture
     end
     
@@ -22,7 +23,9 @@ classdef Filter < handle
             obj.kernel = single(kernel);
         end
         
-        function init(obj, canvas)            
+        function init(obj, canvas)
+            obj.canvas = canvas;
+            
             obj.texture = TextureObject(canvas, 2);
             obj.texture.setMinFunction(GL.NEAREST);
             obj.texture.setMagFunction(GL.NEAREST);

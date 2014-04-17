@@ -8,11 +8,7 @@ classdef Compositor < handle
     
     methods
         
-        function setCanvas(obj, canvas)
-            if canvas == obj.canvas
-                return;
-            end
-            
+        function init(obj, canvas)
             obj.canvas = canvas;
         end
         
