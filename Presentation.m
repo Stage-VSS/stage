@@ -19,9 +19,7 @@ classdef Presentation < handle
             obj.duration = duration;
         end
         
-        % Adds a stimulus to this presentation. Stimuli are layered in the order with which they are added; the first 
-        % stimulus added is considered on the lowest layer (the layer farthest from the viewer) while the last stimulus 
-        % added is considered on the highest layer (the layer closest to the viewer).
+        % Adds a stimulus to this presentation. Stimuli are drawn in the order with which they are added.
         function addStimulus(obj, stimulus)
             if ~isempty(obj.stimuli) && any(cellfun(@(c)c == stimulus, obj.stimuli))
                 error('Presentation already contains the given stimulus');
@@ -30,15 +28,16 @@ classdef Presentation < handle
             obj.stimuli{end + 1} = stimulus;
         end
         
-        % Adds a controller to this presentation. A controller associates an object's property with a given function. 
-        % While the presentation plays the controller function is called and passed a struct containing information 
-        % about the current state of playback (the current number of frames presented, the time elapsed since the start 
-        % of the presentation, etc). The value returned by the function is assigned to the associated property.
+        % Adds a controller to this presentation.
         function addController(obj, controller)
+            if ~isempty(obj.controllers) && any(cellfun(@(c)c == controller, obj.controllers))
+                error('Presentation already contains the given controller');
+            end
+            
             obj.controllers{end + 1} = controller;
         end
         
-        % A convenience method to play this presentation with a RealtimePlayer.
+        % A convenience method to play this presentation.
         function info = play(obj, canvas)
             player = RealtimePlayer(obj);
             info = player.play(canvas);
