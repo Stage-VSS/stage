@@ -1,8 +1,6 @@
 function filters()
-    % Open a window in windowed-mode.
+    % Open a window in windowed-mode and create a canvas.
     window = Window([640, 480], false);
-    
-    % Create a canvas on the window.
     canvas = Canvas(window);
     
     % Get the full path of the Demos/Movies directory.
@@ -27,10 +25,8 @@ function filters()
     boxingMovie.setWrapModeS(GL.MIRRORED_REPEAT);
     boxingMovie.setWrapModeT(GL.MIRRORED_REPEAT);
     
-    % Create a 12 second presentation.
+    % Create a 12 second presentation and add the stimulus.
     presentation = Presentation(12);
-    
-    % Add the stimulus to the presentation.
     presentation.addStimulus(boxingMovie);
     
     % Play the presentation on the canvas!

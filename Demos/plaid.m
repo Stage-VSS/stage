@@ -1,8 +1,6 @@
 function plaid()
-    % Open a window in windowed-mode.
+    % Open a window in windowed-mode and create a canvas.
     window = Window([640, 480], false);
-    
-    % Create a canvas on the window.
     canvas = Canvas(window);
     
     % Set the canvas background color to gray.
@@ -27,17 +25,17 @@ function plaid()
     grating1.setMask(Mask.createCircularEnvelope());
     grating2.setMask(Mask.createCircularEnvelope());
     
-    % Create a 5 second presentation.
-    presentation = Presentation(5);
+    % Create controllers to change the grating phases as functions of time. The first grating will shift 360 degrees per
+    % second. The second grating will shift 180 degrees per second.
+    grating1PhaseController = PropertyController(grating1, 'phase', @(state)state.time * 360);
+    grating2PhaseController = PropertyController(grating2, 'phase', @(state)state.time * 180);
     
-    % Add the grating stimuli to the presentation.
+    % Create a 5 second presentation and add the stimuli and controllers.
+    presentation = Presentation(5);
     presentation.addStimulus(grating1);
     presentation.addStimulus(grating2);
-    
-    % Define the grating phases as functions of time. The first grating will shift 360 degrees per second. The second 
-    % grating will shift 180 degrees per second.
-    presentation.addController(grating1, 'phase', @(state)state.time * 360);
-    presentation.addController(grating2, 'phase', @(state)state.time * 180);
+    presentation.addController(grating1PhaseController);
+    presentation.addController(grating2PhaseController);
     
     % Play the presentation on the canvas!
     presentation.play(canvas);

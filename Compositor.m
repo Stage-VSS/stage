@@ -14,11 +14,12 @@ classdef Compositor < handle
         
         % Composites a single frame from a collection of stimuli.
         function drawFrame(obj, stimuli, controllers, frame, frameDuration, time)
+            state.canvas = obj.canvas;
             state.frame = frame;
             state.frameDuration = frameDuration;
             state.time = time;
             
-            obj.callControllers(controllers, state);
+            obj.evaluateControllers(controllers, state);
             
             obj.drawStimuli(stimuli);
         end
@@ -27,14 +28,9 @@ classdef Compositor < handle
     
     methods (Access = protected)
         
-        function callControllers(obj, controllers, state) %#ok<INUSL>
+        function evaluateControllers(obj, controllers, state) %#ok<INUSL>
             for i = 1:length(controllers)
-                c = controllers{i};
-                handle = c{1};
-                prop = c{2};
-                func = c{3};
-
-                handle.(prop) = func(state);
+                controllers{i}.evaluate(state);
             end
         end
         

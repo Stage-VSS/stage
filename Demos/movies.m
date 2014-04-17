@@ -1,8 +1,6 @@
 function movies()
-    % Open a window in windowed-mode.
+    % Open a window in windowed-mode and create a canvas.
     window = Window([640, 480], false);
-    
-    % Create a canvas on the window.
     canvas = Canvas(window);
     
     % Get the full path of the Demos/Movies directory.
@@ -19,10 +17,8 @@ function movies()
     skatingMovie.position = [canvas.width*3/4-30, canvas.height/2];
     skatingMovie.setMask(Mask.createGaussianEnvelope());
     
-    % Create a 12 second presentation.
+    % Create a 12 second presentation and add the stimuli.
     presentation = Presentation(12);
-    
-    % Add the stimuli to the presentation.
     presentation.addStimulus(boxingMovie);
     presentation.addStimulus(skatingMovie);
     

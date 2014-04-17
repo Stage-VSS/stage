@@ -1,8 +1,6 @@
 function images()
-    % Open a window in windowed-mode.
+    % Open a window in windowed-mode and create a canvas.
     window = Window([640, 480], false);
-    
-    % Create a canvas on the window.
     canvas = Canvas(window);
     
     % Read a few images from file.
@@ -28,17 +26,17 @@ function images()
     lightHorse.size = [-size(horseImage, 2)/2, size(horseImage, 1)/2];
     lightHorse.color = 1;
     
-    % Create a 6 second presentation.
-    presentation = Presentation(6);
+    % Create controllers to change the horse positions as functions of time.
+    lightHorsePositionController = PropertyController(lightHorse, 'position', @(state)[canvas.width-state.time*75-100, canvas.height/2]);
+    darkHorsePositionController = PropertyController(darkHorse, 'position', @(state)[state.time*100, canvas.height/2-50]);
     
-    % Add the stimuli to the presentation.
+    % Create a 6 second presentation and add the stimuli and controllers.
+    presentation = Presentation(6);
     presentation.addStimulus(lightHorse);
     presentation.addStimulus(butterfly);
     presentation.addStimulus(darkHorse);
-    
-    % Define the horse positions as functions of time.
-    presentation.addController(lightHorse, 'position', @(state)[canvas.width-state.time*75-100, canvas.height/2]);
-    presentation.addController(darkHorse, 'position', @(state)[state.time*100, canvas.height/2-50]);
+    presentation.addController(lightHorsePositionController);
+    presentation.addController(darkHorsePositionController);
     
     % Play the presentation on the canvas!
     presentation.play(canvas);

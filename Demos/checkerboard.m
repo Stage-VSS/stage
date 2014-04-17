@@ -1,8 +1,6 @@
 function checkerboard()
-    % Open a window in windowed-mode.
+    % Open a window in windowed-mode and create a canvas.
     window = Window([640, 480], false);
-    
-    % Create a canvas on the window.
     canvas = Canvas(window);
     
     % Create an initial checkerboard image matrix.
@@ -17,14 +15,13 @@ function checkerboard()
     checkerboard.setMinFunction(GL.NEAREST);
     checkerboard.setMagFunction(GL.NEAREST);
     
-    % Create a 3 second presentation.
+    % Create a controller to change the checkerboard image matrix every frame.
+    checkerboardImageController = PropertyController(checkerboard, 'imageMatrix', @(s)uint8(rand(10, 10) * 255));
+    
+    % Create a 3 second presentation and add the stimulus and controller.
     presentation = Presentation(3);
-    
-    % Add the checkerboard stimulus to the presentation.
     presentation.addStimulus(checkerboard);
-    
-    % Change the checkerboard image matrix every frame.
-    presentation.addController(checkerboard, 'imageMatrix', @(s)uint8(rand(10, 10) * 255));
+    presentation.addController(checkerboardImageController);
     
     % Play the presentation on the canvas!
     presentation.play(canvas);

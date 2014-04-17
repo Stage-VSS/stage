@@ -1,8 +1,6 @@
 function noise()
-    % Open a window in windowed-mode.
+    % Open a window in windowed-mode and create a canvas.
     window = Window([640, 480], false);
-    
-    % Create a canvas on the window.
     canvas = Canvas(window);
     
     % Create the noise image matrix.
@@ -13,15 +11,15 @@ function noise()
     noise.position = canvas.size / 2;
     noise.size = [200, 200];
     
-    % Create a 5 second presentation.
+    % Create controllers to change the noise's x and y texture shift properties as functions of time.
+    noiseShiftXController = PropertyController(noise, 'shiftX', @(state)state.time * 0.5);
+    noiseShiftYController = PropertyController(noise, 'shiftY', @(state)state.time * 0.5);
+    
+    % Create a 5 second presentation and add the stimulus and controllers.
     presentation = Presentation(5);
-    
-    % Add the noise stimulus to the presentation.
     presentation.addStimulus(noise);
-    
-    % Define the noise's x and y texture shift properties as functions of time.
-    presentation.addController(noise, 'shiftX', @(state)state.time * 0.5);
-    presentation.addController(noise, 'shiftY', @(state)state.time * 0.5);
+    presentation.addController(noiseShiftXController);
+    presentation.addController(noiseShiftYController);
     
     % Set the noise texture to repeat in the s (i.e. x) and t (i.e. y) coordinate as it is shifted.
     noise.setWrapModeS(GL.REPEAT); % x

@@ -34,16 +34,8 @@ classdef Presentation < handle
         % While the presentation plays the controller function is called and passed a struct containing information 
         % about the current state of playback (the current number of frames presented, the time elapsed since the start 
         % of the presentation, etc). The value returned by the function is assigned to the associated property.
-        function addController(obj, handle, propertyName, funcHandle)
-            if ~isprop(handle, propertyName)
-                error(['The handle does not contain a property named ''' propertyName '''']);
-            end
-            
-            if nargin(funcHandle) < 1
-                error('The given function must have at least 1 input argument');
-            end
-            
-            obj.controllers{end + 1} = {handle, propertyName, funcHandle};
+        function addController(obj, controller)
+            obj.controllers{end + 1} = controller;
         end
         
         % A convenience method to play this presentation with a RealtimePlayer.

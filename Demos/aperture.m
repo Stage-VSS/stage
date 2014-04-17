@@ -1,8 +1,6 @@
 function aperture()
-    % Open a window in windowed-mode.
+    % Open a window in windowed-mode and create a canvas.
     window = Window([640, 480], false);
-    
-    % Create a canvas on the window.
     canvas = Canvas(window);
     
     % Read an image from file.
@@ -21,17 +19,16 @@ function aperture()
     mask = Mask.createCircularAperture(0.4);
     aperture.setMask(mask);
     
-    % Create a 7 second presentation.
-    presentation = Presentation(7);
-    
-    % Add the stimuli to the presentation.
-    presentation.addStimulus(butterfly);
-    presentation.addStimulus(aperture);
-    
-    % Define the aperture's x and y position as a function of time.
+    % Create a controller to change the aperture's x and y position as a function of time.
     xFunc = @(state)canvas.width / 2 + cos(state.time) * 30;
     yFunc = @(state)canvas.height / 2 + sin(state.time) * 30;
-    presentation.addController(aperture, 'position', @(state)[xFunc(state), yFunc(state)]);
+    aperaturePositionController = PropertyController(aperture, 'position', @(state)[xFunc(state), yFunc(state)]);
+    
+    % Create a 7 second presentation and add the stimuli and controller.
+    presentation = Presentation(7);
+    presentation.addStimulus(butterfly);
+    presentation.addStimulus(aperture);
+    presentation.addController(aperaturePositionController);
     
     % Play the presentation on the canvas!
     presentation.play(canvas);
