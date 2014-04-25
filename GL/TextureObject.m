@@ -4,11 +4,7 @@ classdef TextureObject < handle
         size
         target
         handle
-    end
-    
-    properties (Access = private)
         canvas
-        canvasBeingDestroyed
     end
     
     methods
@@ -41,8 +37,6 @@ classdef TextureObject < handle
             glBindTexture(obj.target, 0);
             
             obj.handle = tex;
-            
-            obj.canvasBeingDestroyed = addlistener(canvas, 'ObjectBeingDestroyed', @(e,d)obj.delete());
         end
         
         function setImage(obj, image, level, permuteImage)
@@ -178,8 +172,10 @@ classdef TextureObject < handle
         end
         
         function delete(obj)
-            obj.canvas.makeCurrent();
-            glDeleteTextures(1, obj.handle);
+            if isvalid(obj.canvas)
+                obj.canvas.makeCurrent();
+                glDeleteTextures(1, obj.handle);
+            end
         end
         
     end

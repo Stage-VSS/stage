@@ -2,9 +2,6 @@ classdef ShaderObject < handle
     
     properties (SetAccess = private)
         handle
-    end
-    
-    properties (Access = private)
         canvas
     end
     
@@ -39,6 +36,13 @@ classdef ShaderObject < handle
             status = glGetShaderiv(obj.handle, GL.COMPILE_STATUS);
             if status == GL.FALSE
                 error('Error compiling shader');
+            end
+        end
+        
+        function delete(obj)
+            if isvalid(obj.canvas)
+                obj.canvas.makeCurrent();
+                glDeleteShader(obj.handle);
             end
         end
         

@@ -3,11 +3,7 @@ classdef VertexBufferObject < handle
     properties (SetAccess = private)
         target
         handle
-    end
-    
-    properties (Access = private)
         canvas
-        canvasBeingDestroyed
     end
     
     methods
@@ -24,8 +20,6 @@ classdef VertexBufferObject < handle
             
             obj.target = target;
             obj.handle = vbo;
-            
-            obj.canvasBeingDestroyed = addlistener(canvas, 'ObjectBeingDestroyed', @(e,d)obj.delete());
         end
         
         function uploadData(obj, data, offset)
@@ -41,8 +35,10 @@ classdef VertexBufferObject < handle
         end
         
         function delete(obj)
-            obj.canvas.makeCurrent();
-            glDeleteBuffers(1, obj.handle);
+            if isvalid(obj.canvas)
+                obj.canvas.makeCurrent();
+                glDeleteBuffers(1, obj.handle);
+            end
         end
         
     end

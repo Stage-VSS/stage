@@ -14,14 +14,12 @@ classdef Canvas < handle
     properties (Access = private)
         defaultRenderer         % Renderer used when none is explicitly set
         framebufferBound        % Is a framebuffer set? (true or false)
-        windowBeingDestroyed    % Listener for window being deleted
     end
     
     methods
         
         function obj = Canvas(window)
             obj.window = window;
-            obj.windowBeingDestroyed = addlistener(window, 'ObjectBeingDestroyed', @(e,d)obj.delete());
             
             obj.projection = MatrixStack();
             obj.projection.orthographic(0, window.size(1), 0, window.size(2));

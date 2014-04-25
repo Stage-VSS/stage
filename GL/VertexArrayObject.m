@@ -2,11 +2,7 @@ classdef VertexArrayObject < handle
     
     properties (SetAccess = private)
         handle
-    end
-    
-    properties (Access = private)
         canvas
-        canvasBeingDestroyed
     end
     
     methods
@@ -16,8 +12,6 @@ classdef VertexArrayObject < handle
             canvas.makeCurrent();
             
             obj.handle = glGenVertexArrays(1);
-            
-            obj.canvasBeingDestroyed = addlistener(canvas, 'ObjectBeingDestroyed', @(e,d)obj.delete());
         end
         
         function setAttribute(obj, buffer, index, size, type, normalized, stride, pointer)
@@ -34,8 +28,10 @@ classdef VertexArrayObject < handle
         end
         
         function delete(obj)
-            obj.canvas.makeCurrent();
-            glDeleteVertexArrays(1, obj.handle);
+            if isvalid(obj.canvas)
+                obj.canvas.makeCurrent();
+                glDeleteVertexArrays(1, obj.handle);
+            end
         end
         
     end

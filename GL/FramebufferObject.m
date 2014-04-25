@@ -7,10 +7,6 @@ classdef FramebufferObject < handle
         canvas
     end
     
-    properties (Access = private)
-        canvasBeingDestroyed
-    end
-    
     methods
         
         function obj = FramebufferObject(canvas)
@@ -19,8 +15,6 @@ classdef FramebufferObject < handle
             
             obj.target = GL.DRAW_FRAMEBUFFER;
             obj.handle = glGenFramebuffers(1);
-            
-            obj.canvasBeingDestroyed = addlistener(canvas, 'ObjectBeingDestroyed', @(e,d)obj.delete());
         end
         
         function setTarget(obj, target)
@@ -82,8 +76,10 @@ classdef FramebufferObject < handle
         end
         
         function delete(obj)
-            obj.canvas.makeCurrent();
-            glDeleteFramebuffers(1, obj.handle);
+            if isvalid(obj.canvas)
+                obj.canvas.makeCurrent();
+                glDeleteFramebuffers(1, obj.handle);
+            end
         end
         
     end

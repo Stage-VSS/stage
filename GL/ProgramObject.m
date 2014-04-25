@@ -2,10 +2,10 @@ classdef ProgramObject < handle
     
     properties (SetAccess = private)
         handle
+        canvas
     end
     
     properties (Access = private)
-        canvas
         uniformLocationCache
     end
     
@@ -83,6 +83,13 @@ classdef ProgramObject < handle
                     glUniform4fv(location, count, vector);
                 otherwise
                     error('Size too large');
+            end
+        end
+        
+        function delete(obj)
+            if isvalid(obj.canvas)
+                obj.canvas.makeCurrent();
+                glDeleteProgram(obj.handle);
             end
         end
         
