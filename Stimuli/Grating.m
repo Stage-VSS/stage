@@ -89,7 +89,31 @@ classdef Grating < Stimulus
             obj.updateTexture();
         end
         
-        function draw(obj)
+        function set.size(obj, size)
+            obj.size = size;
+            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
+        end
+        
+        function set.phase(obj, phase)
+            obj.phase = phase;
+            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
+        end
+        
+        function set.spatialFreq(obj, freq)
+            obj.spatialFreq = freq;
+            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
+        end
+        
+        function set.contrast(obj, contrast)
+            obj.contrast = contrast;
+            obj.needToUpdateTexture = true; %#ok<MCSUP>
+        end
+        
+    end
+    
+    methods (Access = protected)
+        
+        function performDraw(obj)
             if obj.needToUpdateVertexBuffer
                 obj.updateVertexBuffer();
             end
@@ -114,26 +138,6 @@ classdef Grating < Stimulus
             obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.mask, obj.texture, obj.filter);
             
             modelView.pop();
-        end
-        
-        function set.size(obj, size)
-            obj.size = size;
-            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
-        end
-        
-        function set.phase(obj, phase)
-            obj.phase = phase;
-            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
-        end
-        
-        function set.spatialFreq(obj, freq)
-            obj.spatialFreq = freq;
-            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
-        end
-        
-        function set.contrast(obj, contrast)
-            obj.contrast = contrast;
-            obj.needToUpdateTexture = true; %#ok<MCSUP>
         end
         
     end

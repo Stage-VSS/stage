@@ -121,7 +121,11 @@ classdef Movie < Stimulus
             obj.texture.setImage(zeros(source.size(2), source.size(1), 3, 'uint8'));
         end
         
-        function draw(obj)            
+    end
+    
+    methods (Access = protected)
+        
+        function performDraw(obj)            
             frame = obj.player.getImage();
             if ~isempty(frame)
                 obj.texture.setSubImage(frame);

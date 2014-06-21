@@ -43,7 +43,11 @@ classdef Rectangle < Stimulus
             obj.mask = mask;
         end
         
-        function draw(obj)
+    end
+    
+    methods (Access = protected)
+        
+        function performDraw(obj)
             modelView = obj.canvas.modelView;
             modelView.push();
             modelView.translate(obj.position(1), obj.position(2), 0);

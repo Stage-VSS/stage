@@ -7,6 +7,10 @@ classdef Stimulus < handle
     % assigned in the constructor or a set[PropertyName]() method. This convention allows a user to quickly determine 
     % which properties are suitable for use in controllers.
     
+    properties
+        visible = true  % Stimulus visibility (true or false)
+    end
+    
     properties (SetAccess = private)
         canvas
     end
@@ -18,11 +22,18 @@ classdef Stimulus < handle
             obj.canvas = canvas;
         end
         
+        % Draws a single instance of this stimulus onto the canvas.
+        function draw(obj)
+            if obj.visible
+                obj.performDraw();
+            end
+        end
+        
     end
         
-    methods (Abstract)
-        % Draws a single instance of this stimulus onto the canvas.
-        draw(obj);
+    methods (Abstract, Access = protected)
+        % The actual drawing implementation for the subclass.
+        performDraw(obj);
     end
     
 end

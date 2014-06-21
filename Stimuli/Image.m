@@ -125,7 +125,26 @@ classdef Image < Stimulus
             obj.updateVertexBuffer();
         end
         
-        function draw(obj)
+        function set.shiftX(obj, shiftX)
+            obj.shiftX = shiftX;
+            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
+        end
+        
+        function set.shiftY(obj, shiftY)
+            obj.shiftY = shiftY;
+            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
+        end
+        
+        function set.imageMatrix(obj, matrix)
+            obj.imageMatrix = matrix;
+            obj.needToUpdateTexture = true; %#ok<MCSUP>
+        end
+        
+    end
+    
+    methods (Access = protected)
+        
+        function performDraw(obj)
             if obj.needToUpdateVertexBuffer
                 obj.updateVertexBuffer();
             end
@@ -150,21 +169,6 @@ classdef Image < Stimulus
             obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.mask, obj.texture, obj.filter);
             
             modelView.pop();
-        end
-        
-        function set.shiftX(obj, shiftX)
-            obj.shiftX = shiftX;
-            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
-        end
-        
-        function set.shiftY(obj, shiftY)
-            obj.shiftY = shiftY;
-            obj.needToUpdateVertexBuffer = true; %#ok<MCSUP>
-        end
-        
-        function set.imageMatrix(obj, matrix)
-            obj.imageMatrix = matrix;
-            obj.needToUpdateTexture = true; %#ok<MCSUP>
         end
         
     end
