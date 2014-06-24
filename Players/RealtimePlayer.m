@@ -27,7 +27,7 @@ classdef RealtimePlayer < Player
             frame = 0;
             frameDuration = 1 / canvas.window.monitor.refreshRate;
             time = frame * frameDuration;
-            while time <= obj.presentation.duration
+            while time < obj.presentation.duration
                 canvas.clear();
                 
                 obj.compositor.drawFrame(stimuli, controllers, frame, frameDuration, time);
