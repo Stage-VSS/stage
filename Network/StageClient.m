@@ -48,6 +48,12 @@ classdef StageClient < handle
             obj.getResponse();
         end
         
+        % Gets the remote monitor refresh rate.
+        function r = getMonitorRefreshRate(obj)
+            obj.sendEvent(NetEvents.GET_MONITOR_REFRESH_RATE);
+            r = obj.getResponse();
+        end
+        
         % Plays a given presentation on the remote canvas. This method will return immediately. While the presentation 
         % plays remotely, further attempts to interface with the server will block until the presentation completes.
         function play(obj, presentation, prerender)

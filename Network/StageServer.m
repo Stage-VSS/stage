@@ -79,6 +79,8 @@ classdef StageServer < handle
                         obj.onEventGetCanvasSize(client, value);
                     case NetEvents.SET_CANVAS_COLOR
                         obj.onEventSetCanvasColor(client, value);
+                    case NetEvents.GET_MONITOR_REFRESH_RATE
+                        obj.onEventGetMonitorRefreshRate(client, value);
                     case NetEvents.PLAY
                         obj.onEventPlay(client, value);
                     case NetEvents.REPLAY
@@ -105,6 +107,11 @@ classdef StageServer < handle
             obj.canvas.clear();
             obj.canvas.window.flip();
             client.send(NetEvents.OK);
+        end
+        
+        function onEventGetMonitorRefreshRate(obj, client, value) %#ok<INUSD>
+            rate = obj.canvas.window.monitor.refreshRate;
+            client.send(NetEvents.OK, rate);
         end
         
         function onEventPlay(obj, client, value)

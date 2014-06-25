@@ -8,6 +8,9 @@ classdef NetEvents
         % Request a new canvas color.
         SET_CANVAS_COLOR = 'SET_CANVAS_COLOR'
         
+        % Requests the current monitor refresh rate.
+        GET_MONITOR_REFRESH_RATE = 'GET_MONITOR_REFRESH_RATE'
+        
         % Requests that a presentation be played.
         PLAY = 'PLAY'
         
