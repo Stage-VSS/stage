@@ -5,6 +5,7 @@ classdef Monitor < handle
     properties (SetAccess = private)
         refreshRate     % Refresh rate (Hz)
         resolution      % Resolution [width, height] (pixels)
+        physicalSize    % Physical size of display area [width, height] (mm)
         name            % Human-readable monitor name
         handle          % GLFW monitor handle
     end
@@ -31,6 +32,11 @@ classdef Monitor < handle
         function r = get.resolution(obj)
             mode = glfwGetVideoMode(obj.handle);
             r = [mode.width, mode.height];
+        end
+        
+        function s = get.physicalSize(obj)
+            [w, h] = glfwGetMonitorPhysicalSize(obj.handle);
+            s = [w, h];
         end
         
         function n = get.name(obj)
