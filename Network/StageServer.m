@@ -57,7 +57,10 @@ classdef StageServer < handle
         
         function onClientDisconnected(obj, src, data) %#ok<INUSD>
             disp('Client disconnected');
-            
+            obj.clearSessionData();
+        end
+        
+        function clearSessionData(obj)
             obj.sessionData = [];
             
             % Clear class definitions.
@@ -87,6 +90,8 @@ classdef StageServer < handle
                         obj.onEventReplay(client, value);
                     case NetEvents.GET_PLAY_INFO
                         obj.onEventGetPlayInfo(client, value);
+                    case NetEvents.CLEAR_SESSION_DATA
+                        obj.onEventClearSessionData(client, value);
                     otherwise
                         error('Unknown event');
                 end
@@ -157,6 +162,11 @@ classdef StageServer < handle
         function onEventGetPlayInfo(obj, client, value) %#ok<INUSD>
             info = obj.sessionData.playInfo;
             client.send(NetEvents.OK, info);
+        end
+        
+        function onEventClearSessionData(obj, client, value) %#ok<INUSD>
+            obj.clearSessionData();
+            client.send(NetEvents.OK);
         end
         
         function onTimedOut(obj, src, data) %#ok<INUSD>

@@ -77,6 +77,12 @@ classdef StageClient < handle
             i = obj.getResponse();
         end
         
+        % Clears the current session data and class definitions from the server.
+        function clearSessionData(obj)
+            obj.sendEvent(NetEvents.CLEAR_SESSION_DATA);
+            obj.getResponse();
+        end
+        
     end
     
     methods (Access = protected)

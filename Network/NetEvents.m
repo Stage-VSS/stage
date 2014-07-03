@@ -20,6 +20,9 @@ classdef NetEvents
         % Requests information about the last played presentation.
         GET_PLAY_INFO = 'GET_PLAY_INFO'
         
+        % Requests that the current session data be cleared out of the server memory.
+        CLEAR_SESSION_DATA = 'CLEAR_SESSION_DATA'
+        
         %% Server to client:
         % The request was completed successfully.
         OK = 'OK'
