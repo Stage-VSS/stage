@@ -48,6 +48,14 @@ classdef Monitor < handle
             glfwSetGamma(obj.handle, gamma);
         end
         
+        function [red, green, blue] = getGammaRamp(obj)
+            ramp = glfwGetGammaRamp(obj.handle);
+            
+            red = ramp.red;
+            green = ramp.green;
+            blue = ramp.blue;
+        end
+        
         % Sets a gamma ramp from the given red, green, and blue lookup tables. The tables should have length of 256 and
         % values that range from 0 to 65535.
         function setGammaRamp(obj, red, green, blue)
