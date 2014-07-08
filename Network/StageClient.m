@@ -8,6 +8,12 @@ classdef StageClient < handle
     
     methods
         
+        function obj = StageClient(stageClient)
+            if nargin >= 1 && ~isempty(stageClient)
+                obj.tcpClient = stageClient.tcpClient;
+            end
+        end
+        
         function connect(obj, host, port)
             if nargin < 2
                 host = 'localhost';

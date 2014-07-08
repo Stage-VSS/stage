@@ -107,7 +107,7 @@ classdef StageServer < handle
                     case NetEvents.GET_PLAY_INFO
                         obj.onEventGetPlayInfo(client, value);
                     otherwise
-                        error('Unknown event');
+                        error('Stage:UnknownEvent', 'Unknown event');
                 end
             catch x
                 client.send(NetEvents.ERROR, x);
