@@ -29,9 +29,9 @@ classdef StageServer < handle
         % Creates a window/canvas and starts serving clients. All arguments are passed through to the Window 
         % constructor. This method will block the current Matlab session until all clients are disconnected and the 
         % escape key is held while the window has focus.
-        function start(obj, varargin)            
-            obj.prepareToStart(varargin{:});
+        function start(obj, varargin)
             close = onCleanup(@()delete(obj.canvas));
+            obj.prepareToStart(varargin{:});
             
             disp(['Serving on port: ' num2str(obj.tcpServer.port)]);
             obj.tcpServer.start();
