@@ -30,20 +30,37 @@ classdef StageServer < handle
         % constructor. This method will block the current Matlab session until all clients are disconnected and the 
         % escape key is held while the window has focus.
         function start(obj, varargin)
-            close = onCleanup(@()delete(obj.canvas));
-            obj.prepareToStart(varargin{:});
+            stop = onCleanup(@()obj.stop());
+            
+            window = Window(varargin{:});
+            obj.canvas = Canvas(window);
+            
+            obj.willStart();
             
             disp(['Serving on port: ' num2str(obj.tcpServer.port)]);
             obj.tcpServer.start();
+        end
+        
+        % Automatically called when start completes.
+        function stop(obj)
+            obj.tcpServer.requestStop();
+            % TODO: Wait until tcpServer stops.
+            
+            delete(obj.canvas);
+            
+            obj.didStop();
         end
         
     end
     
     methods (Access = protected)
         
-        function prepareToStart(obj, varargin)
-            window = Window(varargin{:});
-            obj.canvas = Canvas(window);
+        function willStart(obj) %#ok<MANU>
+            % Available for subclasses.
+        end
+        
+        function didStop(obj) %#ok<MANU>
+            % Available for subclasses.
         end
         
         function onClientConnected(obj, src, data) %#ok<INUSL>
