@@ -98,6 +98,8 @@ classdef StageServer < handle
                         obj.onEventSetCanvasColor(client, value);
                     case NetEvents.GET_MONITOR_REFRESH_RATE
                         obj.onEventGetMonitorRefreshRate(client, value);
+                    case NetEvents.GET_MONITOR_RESOLUTION
+                        obj.onEventGetMonitorResolution(client, value);
                     case NetEvents.SET_MONITOR_GAMMA_RAMP
                         obj.onEventSetMonitorGammaRamp(client, value);
                     case NetEvents.PLAY
@@ -131,6 +133,11 @@ classdef StageServer < handle
         function onEventGetMonitorRefreshRate(obj, client, value) %#ok<INUSD>
             rate = obj.canvas.window.monitor.refreshRate;
             client.send(NetEvents.OK, rate);
+        end
+        
+        function onEventGetMonitorResolution(obj, client, value) %#ok<INUSD>
+            resolution = obj.canvas.window.monitor.resolution;
+            client.send(NetEvents.OK, resolution);
         end
         
         function onEventSetMonitorGammaRamp(obj, client, value)
