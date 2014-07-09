@@ -38,10 +38,6 @@ classdef StageClient < handle
             obj.tcpClient = [];
         end
         
-        function delete(obj)
-            obj.disconnect();
-        end
-        
         % Gets the remote canvas size.
         function s = getCanvasSize(obj)
             obj.sendEvent(NetEvents.GET_CANVAS_SIZE);
