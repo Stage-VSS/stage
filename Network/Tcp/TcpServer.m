@@ -33,7 +33,7 @@ classdef TcpServer < handle
             while ~obj.stopRequested
                 if isempty(socket) || socket.isClosed
                     socket = java.net.ServerSocket(obj.port);
-                    socket.setSoTimeout(1000);
+                    socket.setSoTimeout(10);
                     close = onCleanup(@()socket.close());
                 end
                 
