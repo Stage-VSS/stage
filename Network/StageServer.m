@@ -27,8 +27,8 @@ classdef StageServer < handle
         end
         
         % Creates a window/canvas and starts serving clients. All arguments are passed through to the Window 
-        % constructor. This method will block the current Matlab session until all clients are disconnected and the 
-        % escape key is held while the window has focus.
+        % constructor. This method will block the current Matlab session until the shift and escape key are held while 
+        % the window has focus.
         function start(obj, varargin)
             stop = onCleanup(@()obj.stop());
             
@@ -199,7 +199,8 @@ classdef StageServer < handle
             
             window.pollEvents();
             escState = window.getKeyState(GLFW.GLFW_KEY_ESCAPE);
-            if escState == GLFW.GLFW_PRESS
+            shiftState = window.getKeyState(GLFW.GLFW_KEY_LEFT_SHIFT);
+            if escState == GLFW.GLFW_PRESS && shiftState == GLFW.GLFW_PRESS
                 obj.tcpServer.requestStop();
             end
         end

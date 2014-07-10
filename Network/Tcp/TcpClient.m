@@ -6,6 +6,10 @@ classdef TcpClient < handle
         socket
     end
     
+    properties (Access = private)
+        receiveTimeout
+    end
+    
     methods
         
         function obj = TcpClient(socket)
@@ -18,6 +22,7 @@ classdef TcpClient < handle
             end
             
             obj.socket = socket;
+            obj.receiveTimeout = 10000;
         end
         
         % Connects to the specified host ip on the specified port.
@@ -36,12 +41,18 @@ classdef TcpClient < handle
         end
         
         function close(obj)
-            obj.socket.close();
+            if ~obj.socket.isClosed
+                try %#ok<TRYNC>
+                    % Disconnect message.
+                    obj.send(-1);
+                end
+                obj.socket.close();
+            end
         end
         
-        % Sets receive timeout in milliseconds. Default is infinite.
+        % Sets receive timeout in milliseconds.
         function setReceiveTimeout(obj, t)
-            obj.socket.setSoTimeout(t);
+            obj.receiveTimeout = t;
         end
         
         function send(obj, varargin)
@@ -57,7 +68,16 @@ classdef TcpClient < handle
         end
         
         function result = receive(obj)
-            stream = java.io.ObjectInputStream(obj.socket.getInputStream());
+            in = obj.socket.getInputStream();
+            
+            start = tic;
+            while in.available() == 0
+                if toc(start) >= obj.receiveTimeout / 1e3
+                    error('TcpClient:ReceiveTimeout', 'Receive timeout');
+                end
+            end
+            
+            stream = java.io.ObjectInputStream(in);
             
             result = stream.readObject();
             
