@@ -80,7 +80,7 @@ classdef TcpServer < handle
                     value = {value};
                 end
                 
-                if length(value) == 1 && value{1} == -1
+                if length(value) == 1 && isscalar(value{1}) && value{1} == -1
                     notify(obj, 'clientDisconnected', NetEventData(client));
                     break;
                 end
