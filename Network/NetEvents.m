@@ -5,11 +5,17 @@ classdef NetEvents
         % Requests the current canvas size.
         GET_CANVAS_SIZE = 'GET_CANVAS_SIZE'
         
-        % Request a new canvas color.
+        % Requests a new canvas color.
         SET_CANVAS_COLOR = 'SET_CANVAS_COLOR'
         
         % Requests the current monitor refresh rate.
         GET_MONITOR_REFRESH_RATE = 'GET_MONITOR_REFRESH_RATE'
+        
+        % Requests the current monitor resolution.
+        GET_MONITOR_RESOLUTION = 'GET_MONITOR_RESOLUTION'
+        
+        % Requests a new red, green, and blue gamma ramp.
+        SET_MONITOR_GAMMA_RAMP = 'SET_MONITOR_GAMMA_RAMP'
         
         % Requests that a presentation be played.
         PLAY = 'PLAY'

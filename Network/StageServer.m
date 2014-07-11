@@ -27,23 +27,40 @@ classdef StageServer < handle
         end
         
         % Creates a window/canvas and starts serving clients. All arguments are passed through to the Window 
-        % constructor. This method will block the current Matlab session until all clients are disconnected and the 
-        % escape key is held while the window has focus.
-        function start(obj, varargin)            
-            obj.prepareToStart(varargin{:});
-            close = onCleanup(@()delete(obj.canvas));
+        % constructor. This method will block the current Matlab session until the shift and escape key are held while 
+        % the window has focus.
+        function start(obj, varargin)
+            stop = onCleanup(@()obj.stop());
+            
+            window = Window(varargin{:});
+            obj.canvas = Canvas(window);
+            
+            obj.willStart();
             
             disp(['Serving on port: ' num2str(obj.tcpServer.port)]);
             obj.tcpServer.start();
+        end
+        
+        % Automatically called when start completes.
+        function stop(obj)
+            obj.tcpServer.requestStop();
+            % TODO: Wait until tcpServer stops.
+            
+            delete(obj.canvas);
+            
+            obj.didStop();
         end
         
     end
     
     methods (Access = protected)
         
-        function prepareToStart(obj, varargin)
-            window = Window(varargin{:});
-            obj.canvas = Canvas(window);
+        function willStart(obj) %#ok<MANU>
+            % Available for subclasses.
+        end
+        
+        function didStop(obj) %#ok<MANU>
+            % Available for subclasses.
         end
         
         function onClientConnected(obj, src, data) %#ok<INUSL>
@@ -84,6 +101,10 @@ classdef StageServer < handle
                         obj.onEventSetCanvasColor(client, value);
                     case NetEvents.GET_MONITOR_REFRESH_RATE
                         obj.onEventGetMonitorRefreshRate(client, value);
+                    case NetEvents.GET_MONITOR_RESOLUTION
+                        obj.onEventGetMonitorResolution(client, value);
+                    case NetEvents.SET_MONITOR_GAMMA_RAMP
+                        obj.onEventSetMonitorGammaRamp(client, value);
                     case NetEvents.PLAY
                         obj.onEventPlay(client, value);
                     case NetEvents.REPLAY
@@ -93,7 +114,7 @@ classdef StageServer < handle
                     case NetEvents.CLEAR_SESSION_DATA
                         obj.onEventClearSessionData(client, value);
                     otherwise
-                        error('Unknown event');
+                        error('Stage:UnknownEvent', 'Unknown event');
                 end
             catch x
                 client.send(NetEvents.ERROR, x);
@@ -117,6 +138,20 @@ classdef StageServer < handle
         function onEventGetMonitorRefreshRate(obj, client, value) %#ok<INUSD>
             rate = obj.canvas.window.monitor.refreshRate;
             client.send(NetEvents.OK, rate);
+        end
+        
+        function onEventGetMonitorResolution(obj, client, value) %#ok<INUSD>
+            resolution = obj.canvas.window.monitor.resolution;
+            client.send(NetEvents.OK, resolution);
+        end
+        
+        function onEventSetMonitorGammaRamp(obj, client, value)
+            red = value{2};
+            green = value{3};
+            blue = value{4};
+            
+            obj.canvas.window.monitor.setGammaRamp(red, green, blue);
+            client.send(NetEvents.OK);
         end
         
         function onEventPlay(obj, client, value)
@@ -174,7 +209,8 @@ classdef StageServer < handle
             
             window.pollEvents();
             escState = window.getKeyState(GLFW.GLFW_KEY_ESCAPE);
-            if escState == GLFW.GLFW_PRESS
+            shiftState = window.getKeyState(GLFW.GLFW_KEY_LEFT_SHIFT);
+            if escState == GLFW.GLFW_PRESS && shiftState == GLFW.GLFW_PRESS
                 obj.tcpServer.requestStop();
             end
         end

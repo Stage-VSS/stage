@@ -8,6 +8,12 @@ classdef StageClient < handle
     
     methods
         
+        function obj = StageClient(stageClient)
+            if nargin >= 1 && ~isempty(stageClient)
+                obj.tcpClient = stageClient.tcpClient;
+            end
+        end
+        
         function connect(obj, host, port)
             if nargin < 2
                 host = 'localhost';
@@ -32,10 +38,6 @@ classdef StageClient < handle
             obj.tcpClient = [];
         end
         
-        function delete(obj)
-            obj.disconnect();
-        end
-        
         % Gets the remote canvas size.
         function s = getCanvasSize(obj)
             obj.sendEvent(NetEvents.GET_CANVAS_SIZE);
@@ -52,6 +54,19 @@ classdef StageClient < handle
         function r = getMonitorRefreshRate(obj)
             obj.sendEvent(NetEvents.GET_MONITOR_REFRESH_RATE);
             r = obj.getResponse();
+        end
+        
+        % Gets the remote monitor resolution.
+        function r = getMonitorResolution(obj)
+            obj.sendEvent(NetEvents.GET_MONITOR_RESOLUTION);
+            r = obj.getResponse();
+        end
+        
+        % Sets the remote monitor gamma ramp from the given red, green, and blue lookup tables. The tables should have 
+        % length of 256 and values that range from 0 to 65535.
+        function setMonitorGammaRamp(obj, red, green, blue)
+            obj.sendEvent(NetEvents.SET_MONITOR_GAMMA_RAMP, red, green, blue);
+            obj.getResponse;
         end
         
         % Plays a given presentation on the remote canvas. This method will return immediately. While the presentation 

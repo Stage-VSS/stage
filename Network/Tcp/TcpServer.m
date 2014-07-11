@@ -33,8 +33,8 @@ classdef TcpServer < handle
             while ~obj.stopRequested
                 if isempty(socket) || socket.isClosed
                     socket = java.net.ServerSocket(obj.port);
-                    socket.setSoTimeout(1000);
-                    close = onCleanup(@()socket.close());
+                    socket.setSoTimeout(10);
+                    closeSocket = onCleanup(@()socket.close());
                 end
                 
                 try
@@ -48,7 +48,7 @@ classdef TcpServer < handle
                     end
                 end
                 
-                socket.close();
+                delete(closeSocket);
                 
                 notify(obj, 'clientConnected', NetEventData(client));
                 obj.serve(client);
@@ -62,16 +62,27 @@ classdef TcpServer < handle
         end
         
         function serve(obj, client)
+            client.setReceiveTimeout(10);
+            
             while ~obj.stopRequested
                 try
                     value = client.receive();
-                catch
-                    notify(obj, 'clientDisconnected', NetEventData(client));
-                    break;
+                catch x
+                    if strcmp(x.identifier, 'TcpClient:ReceiveTimeout')
+                        notify(obj, 'timedOut');
+                        continue;
+                    else
+                        rethrow(x);
+                    end
                 end
                 
-                if ~iscell(value)
+                if ~iscell(value)                    
                     value = {value};
+                end
+                
+                if length(value) == 1 && isscalar(value{1}) && value{1} == -1
+                    notify(obj, 'clientDisconnected', NetEventData(client));
+                    break;
                 end
                 
                 notify(obj, 'eventReceived', NetEventData(client, value));
