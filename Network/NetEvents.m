@@ -14,6 +14,9 @@ classdef NetEvents
         % Requests the current monitor resolution.
         GET_MONITOR_RESOLUTION = 'GET_MONITOR_RESOLUTION'
         
+        % Requests the current red, green, and blue gamma ramp.
+        GET_MONITOR_GAMMA_RAMP = 'GET_MONITOR_GAMMA_RAMP'
+        
         % Requests a new red, green, and blue gamma ramp.
         SET_MONITOR_GAMMA_RAMP = 'SET_MONITOR_GAMMA_RAMP'
         

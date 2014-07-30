@@ -62,6 +62,12 @@ classdef StageClient < handle
             r = obj.getResponse();
         end
         
+        % Gets the remote monitor red, green, and blue gamma ramp.
+        function [red, green, blue] = getMonitorGammaRamp(obj)
+            obj.sendEvent(NetEvents.GET_MONITOR_GAMMA_RAMP);
+            [red, green, blue] = obj.getResponse();
+        end
+        
         % Sets the remote monitor gamma ramp from the given red, green, and blue lookup tables. The tables should have 
         % length of 256 and values that range from 0 to 65535.
         function setMonitorGammaRamp(obj, red, green, blue)
