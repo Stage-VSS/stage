@@ -19,7 +19,7 @@ classdef PrerenderedPlayer < Player
         
         function prerender(obj, canvas)
             frameRate = canvas.window.monitor.refreshRate;
-            nFrames = floor(obj.presentation.duration * frameRate) + 1;
+            nFrames = floor(obj.presentation.duration * frameRate);
             
             obj.renderedFrames = cell(1, nFrames);
             
