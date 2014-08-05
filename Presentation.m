@@ -28,6 +28,15 @@ classdef Presentation < handle
             obj.stimuli{end + 1} = stimulus;
         end
         
+        % Inserts a stimulus into a given index position in the stimuli list.
+        function insertStimulus(obj, index, stimulus)
+            if ~isempty(obj.stimuli) && any(cellfun(@(c)c == stimulus, obj.stimuli))
+                error('Presentation already contains the given stimulus');
+            end
+            
+            obj.stimuli = [obj.stimuli(1:index-1) {stimulus} obj.stimuli(index:end)];
+        end
+        
         % Adds a controller to this presentation.
         function addController(obj, controller)
             if ~isempty(obj.controllers) && any(cellfun(@(c)c == controller, obj.controllers))
