@@ -22,7 +22,7 @@ classdef TcpClient < handle
             end
             
             obj.socket = socket;
-            obj.receiveTimeout = 10000;
+            obj.receiveTimeout = 0;
         end
         
         % Connects to the specified host ip on the specified port.
@@ -50,7 +50,7 @@ classdef TcpClient < handle
             end
         end
         
-        % Sets receive timeout in milliseconds.
+        % Sets receive timeout in milliseconds. A timeout less than or equal to zero is considered infinite.
         function setReceiveTimeout(obj, t)
             obj.receiveTimeout = t;
         end
@@ -72,7 +72,7 @@ classdef TcpClient < handle
             
             start = tic;
             while in.available() == 0
-                if toc(start) >= obj.receiveTimeout / 1e3
+                if obj.receiveTimeout > 0 && toc(start) >= obj.receiveTimeout / 1e3
                     error('TcpClient:ReceiveTimeout', 'Receive timeout');
                 end
             end
