@@ -1,4 +1,4 @@
-% A property controller that stores and uses it's own random number generator (rng) settings.
+% A property controller that stores and uses it's own random number generator stream.
 
 classdef RngPropertyController < PropertyController
     
@@ -8,8 +8,8 @@ classdef RngPropertyController < PropertyController
     end
     
     properties (Access = private)
-        rngSettings
-        needToUpdateRng
+        stream
+        needToUpdateStream
     end
     
     methods
@@ -17,43 +17,38 @@ classdef RngPropertyController < PropertyController
         function obj = RngPropertyController(handle, propertyName, funcHandle)
             obj = obj@PropertyController(handle, propertyName, funcHandle);
             obj.seed = 0;
-            obj.generator = 'twister';
-            obj.needToUpdateRng = true;
+            obj.generator = 'mt19937ar';
+            obj.needToUpdateStream = true;
         end
         
         function evaluate(obj, state)
-            scurr = rng;
-            if ~isempty(obj.rngSettings)
-                rng(obj.rngSettings);
+            if obj.needToUpdateStream
+                obj.updateStream();
             end
             
-            if obj.needToUpdateRng
-                obj.updateRng();
-            end
-            
+            s = RandStream.setGlobalStream(obj.stream);
+            reset = onCleanup(@()RandStream.setGlobalStream(s));
+
             evaluate@PropertyController(obj, state);
-            
-            obj.rngSettings = rng;
-            rng(scurr);
         end
         
         function set.seed(obj, s)
             obj.seed = s;
-            obj.needToUpdateRng = true; %#ok<MCSUP>
+            obj.needToUpdateStream = true; %#ok<MCSUP>
         end
         
         function set.generator(obj, g)
             obj.generator = g;
-            obj.needToUpdateRng = true; %#ok<MCSUP>
+            obj.needToUpdateStream = true; %#ok<MCSUP>
         end
         
     end
     
     methods (Access = private)
         
-        function updateRng(obj)
-            rng(obj.seed, obj.generator);
-            obj.needToUpdateRng = false;
+        function updateStream(obj)
+            obj.stream = RandStream(obj.generator, 'Seed', obj.seed);
+            obj.needToUpdateStream = false;
         end
         
     end
