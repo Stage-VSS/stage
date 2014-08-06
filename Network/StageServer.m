@@ -97,8 +97,8 @@ classdef StageServer < handle
                 switch value{1}
                     case NetEvents.GET_CANVAS_SIZE
                         obj.onEventGetCanvasSize(client, value);
-                    case NetEvents.SET_CANVAS_COLOR
-                        obj.onEventSetCanvasColor(client, value);
+                    case NetEvents.SET_CANVAS_CLEAR_COLOR
+                        obj.onEventSetCanvasClearColor(client, value);
                     case NetEvents.GET_MONITOR_REFRESH_RATE
                         obj.onEventGetMonitorRefreshRate(client, value);
                     case NetEvents.GET_MONITOR_RESOLUTION
@@ -128,12 +128,10 @@ classdef StageServer < handle
             client.send(NetEvents.OK, size);
         end
         
-        function onEventSetCanvasColor(obj, client, value)
+        function onEventSetCanvasClearColor(obj, client, value)
             color = value{2};
             
             obj.canvas.setClearColor(color);
-            obj.canvas.clear();
-            obj.canvas.window.flip();
             client.send(NetEvents.OK);
         end
         

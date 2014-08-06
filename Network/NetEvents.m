@@ -6,7 +6,7 @@ classdef NetEvents
         GET_CANVAS_SIZE = 'GET_CANVAS_SIZE'
         
         % Requests a new canvas color.
-        SET_CANVAS_COLOR = 'SET_CANVAS_COLOR'
+        SET_CANVAS_CLEAR_COLOR = 'SET_CANVAS_CLEAR_COLOR'
         
         % Requests the current monitor refresh rate.
         GET_MONITOR_REFRESH_RATE = 'GET_MONITOR_REFRESH_RATE'

@@ -44,9 +44,9 @@ classdef StageClient < handle
             s = obj.getResponse();
         end
         
-        % Sets the remote canvas color. 
-        function setCanvasColor(obj, color)
-            obj.sendEvent(NetEvents.SET_CANVAS_COLOR, color);
+        % Sets the remote canvas clear color. 
+        function setCanvasClearColor(obj, color)
+            obj.sendEvent(NetEvents.SET_CANVAS_CLEAR_COLOR, color);
             obj.getResponse();
         end
         
