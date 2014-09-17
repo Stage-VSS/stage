@@ -18,6 +18,13 @@ classdef RealtimePlayer < Player
             
             for i = 1:length(stimuli)
                 stimuli{i}.init(canvas);
+                
+                % HACK: This appears to preload stimulus array data onto the graphics card, making subsequent calls to
+                % draw() faster.
+                v = stimuli{i}.visible;
+                stimuli{i}.visible = true;
+                stimuli{i}.draw();
+                stimuli{i}.visible = v;
             end
             
             try %#ok<TRYNC>
