@@ -2,6 +2,9 @@ classdef NetEvents
     
     properties (Constant)
         %% Client to server:
+        % Requests the configuration map.
+        GET_CONFIGURATION = 'GET_CONFIGURATION'
+        
         % Requests the current canvas size.
         GET_CANVAS_SIZE = 'GET_CANVAS_SIZE'
         

@@ -38,6 +38,12 @@ classdef StageClient < handle
             obj.tcpClient = [];
         end
         
+        % Gets the remote configuration map (an arbitrary key/value map attach to the server).
+        function c = getConfiguration(obj)
+            obj.sendEvent(NetEvents.GET_CONFIGURATION);
+            c = obj.getResponse();
+        end
+        
         % Gets the remote canvas size.
         function s = getCanvasSize(obj)
             obj.sendEvent(NetEvents.GET_CANVAS_SIZE);

@@ -4,6 +4,7 @@ classdef StageServer < handle
     
     properties (Access = protected)
         canvas
+        configuration
         sessionData
     end
     
@@ -18,6 +19,7 @@ classdef StageServer < handle
                 port = 5678;
             end
             
+            obj.configuration = containers.Map();
             obj.tcpServer = TcpServer(port);
             
             addlistener(obj.tcpServer, 'clientConnected', @obj.onClientConnected);
@@ -38,6 +40,7 @@ classdef StageServer < handle
             obj.willStart();
             
             disp(['Serving on port: ' num2str(obj.tcpServer.port)]);
+            disp('To exit press shift + escape while the Stage window has focus');
             obj.tcpServer.start();
         end
         
@@ -49,6 +52,11 @@ classdef StageServer < handle
             delete(obj.canvas);
             
             obj.didStop();
+        end
+        
+        % Adds an arbitrary key/value pair to this server.
+        function addConfigurationValue(obj, key, value)
+            obj.configuration(key) = value;
         end
         
     end
@@ -95,6 +103,8 @@ classdef StageServer < handle
             
             try
                 switch value{1}
+                    case NetEvents.GET_CONFIGURATION
+                        obj.onEventGetConfiguration(client, value);
                     case NetEvents.GET_CANVAS_SIZE
                         obj.onEventGetCanvasSize(client, value);
                     case NetEvents.SET_CANVAS_CLEAR_COLOR
@@ -121,6 +131,11 @@ classdef StageServer < handle
             catch x
                 client.send(NetEvents.ERROR, x);
             end
+        end
+        
+        function onEventGetConfiguration(obj, client, value) %#ok<INUSD>
+            config = obj.configuration;
+            client.send(NetEvents.OK, config);
         end
         
         function onEventGetCanvasSize(obj, client, value) %#ok<INUSD>
