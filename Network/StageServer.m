@@ -18,7 +18,6 @@ classdef StageServer < handle
                 port = 5678;
             end
             
-            obj.configuration = containers.Map();
             obj.tcpServer = TcpServer(port);
             
             addlistener(obj.tcpServer, 'clientConnected', @obj.onClientConnected);
