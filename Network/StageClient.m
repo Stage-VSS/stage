@@ -24,7 +24,12 @@ classdef StageClient < handle
             
             obj.disconnect();
             client = TcpClient();
-            client.connect(host, port);
+            
+            try
+                client.connect(host, port);
+            catch x
+                error(['Unable to connect to Stage: ' x.message]);
+            end
             
             obj.tcpClient = client;
         end

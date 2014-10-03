@@ -34,6 +34,7 @@ classdef StageServer < handle
             
             window = Window(varargin{:});
             obj.canvas = Canvas(window);
+            obj.reset();
             
             obj.willStart();
             
@@ -75,7 +76,14 @@ classdef StageServer < handle
         
         function onClientDisconnected(obj, src, data) %#ok<INUSD>
             disp('Client disconnected');
+            obj.reset();
+        end
+        
+        function reset(obj)
             obj.clearSessionData();
+            obj.canvas.setClearColor(0);
+            obj.canvas.clear();
+            obj.canvas.window.flip();
         end
         
         function clearSessionData(obj)
