@@ -4,7 +4,6 @@ classdef StageServer < handle
     
     properties (Access = protected)
         canvas
-        configuration
         sessionData
     end
     
@@ -54,11 +53,6 @@ classdef StageServer < handle
             obj.didStop();
         end
         
-        % Adds an arbitrary key/value pair to this server.
-        function addConfigurationValue(obj, key, value)
-            obj.configuration(key) = value;
-        end
-        
     end
     
     methods (Access = protected)
@@ -103,8 +97,6 @@ classdef StageServer < handle
             
             try
                 switch value{1}
-                    case NetEvents.GET_CONFIGURATION
-                        obj.onEventGetConfiguration(client, value);
                     case NetEvents.GET_CANVAS_SIZE
                         obj.onEventGetCanvasSize(client, value);
                     case NetEvents.SET_CANVAS_CLEAR_COLOR
@@ -131,11 +123,6 @@ classdef StageServer < handle
             catch x
                 client.send(NetEvents.ERROR, x);
             end
-        end
-        
-        function onEventGetConfiguration(obj, client, value) %#ok<INUSD>
-            config = obj.configuration;
-            client.send(NetEvents.OK, config);
         end
         
         function onEventGetCanvasSize(obj, client, value) %#ok<INUSD>
