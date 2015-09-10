@@ -36,8 +36,8 @@ classdef Image < Stimulus
         % imageData = imread('my_cool_image.png');
         % image = Image(imageData);        
         function obj = Image(matrix)
-            if ~isa(matrix, 'uint8')
-                error('Matrix must be of class uint8');
+            if ~isa(matrix, 'uint8') && ~isa(matrix, 'single')
+                error('Matrix must be of class uint8 or single');
             end
             
             obj.imageMatrix = matrix;
