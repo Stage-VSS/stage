@@ -29,8 +29,8 @@ classdef Window < handle
                 monitor = Monitor(1);
             end
             ip = inputParser();
-            ip.addParameter('RefreshRate', 60);
-            ip.addParameter('Visible', GL.TRUE);
+            ip.addParameter('refreshRate', 60);
+            ip.addParameter('visible', GL.TRUE);
             ip.parse(varargin{:});
             
             glfwInit();
@@ -40,8 +40,8 @@ classdef Window < handle
             glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL.TRUE);
             glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
             glfwWindowHint(GLFW.GLFW_RESIZABLE, GL.FALSE);
-            glfwWindowHint(GLFW.GLFW_REFRESH_RATE, ip.Results.RefreshRate);
-            glfwWindowHint(GLFW.GLFW_VISIBLE, ip.Results.Visible);
+            glfwWindowHint(GLFW.GLFW_REFRESH_RATE, ip.Results.refreshRate);
+            glfwWindowHint(GLFW.GLFW_VISIBLE, ip.Results.visible);
             
             if fullscreen
                 obj.handle = glfwCreateWindow(size(1), size(2), 'Stage', monitor.handle, []);
