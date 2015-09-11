@@ -18,7 +18,11 @@ classdef Canvas < handle
     
     methods
         
-        function obj = Canvas(window)
+        function obj = Canvas(window, varargin)
+            ip = inputParser();
+            ip.addParameter('DisableDwm', true);
+            ip.parse(varargin{:});
+            
             obj.window = window;
             
             obj.projection = MatrixStack();
@@ -34,7 +38,7 @@ classdef Canvas < handle
             
             % On Windows Vista+ the desktop window manager (DWM) must be disabled to avoid timing and performance issues.
             v = java.lang.System.getProperty('os.version');
-            if ispc && str2double(v.charAt(0)) >= 6
+            if ispc && str2double(v.charAt(0)) >= 6 && ip.Results.DisableDwm
                 DwmEnableComposition(DWM.DWM_EC_DISABLECOMPOSITION);
                 if DwmIsCompositionEnabled()
                     warning('Unable to disable DWM. You will experience timing and performance issues.');

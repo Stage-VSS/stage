@@ -10,7 +10,7 @@ classdef Window < handle
         
         % Constructs a window with the optionally provided size. By default the window occupies the fullscreen of the
         % primary monitor but an optional fullscreen and monitor argument enable windowed mode and/or selection of a
-        % secondary monitor for the window. The optional refreshRate argument is ignored for windowed mode.
+        % secondary monitor for the window.
         %
         % Typical usage:
         % % Windowed mode
@@ -18,7 +18,7 @@ classdef Window < handle
         %
         % % Fullscreen mode on primary monitor
         % window = Window();
-        function obj = Window(size, fullscreen, monitor, refreshRate)
+        function obj = Window(size, fullscreen, monitor, varargin)
             if nargin < 1
                 size = [640, 480];
             end
@@ -28,9 +28,10 @@ classdef Window < handle
             if nargin < 3
                 monitor = Monitor(1);
             end
-            if nargin < 4
-                refreshRate = 60;
-            end
+            ip = inputParser();
+            ip.addParameter('RefreshRate', 60);
+            ip.addParameter('Visible', GL.TRUE);
+            ip.parse(varargin{:});
             
             glfwInit();
             
@@ -39,7 +40,8 @@ classdef Window < handle
             glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL.TRUE);
             glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
             glfwWindowHint(GLFW.GLFW_RESIZABLE, GL.FALSE);
-            glfwWindowHint(GLFW.GLFW_REFRESH_RATE, refreshRate);
+            glfwWindowHint(GLFW.GLFW_REFRESH_RATE, ip.Results.RefreshRate);
+            glfwWindowHint(GLFW.GLFW_VISIBLE, ip.Results.Visible);
             
             if fullscreen
                 obj.handle = glfwCreateWindow(size(1), size(2), 'Stage', monitor.handle, []);
