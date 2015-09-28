@@ -6,6 +6,7 @@
 
 # Binary
 *.mlappinstall
+*.mltbx
 target/
 
 # Logs
