@@ -1,15 +1,15 @@
 [submodule "lib/matlab-glfw3"]
-	path = Externals/matlab-glfw3
+	path = lib/matlab-glfw3
 	url = https://github.com/cafarm/matlab-glfw3
 [submodule "lib/MOGL"]
-	path = Externals/MOGL
+	path = lib/MOGL
 	url = https://github.com/cafarm/MOGL
 [submodule "lib/matlab-avbin"]
-	path = Externals/matlab-avbin
+	path = lib/matlab-avbin
 	url = https://github.com/cafarm/matlab-avbin.git
 [submodule "lib/matlab-dwm"]
-	path = Externals/matlab-dwm
+	path = lib/matlab-dwm
 	url = https://github.com/cafarm/matlab-dwm.git
 [submodule "lib/matlab-priority"]
-	path = Externals/matlab-priority
+	path = lib/matlab-priority
 	url = https://github.com/cafarm/matlab-priority.git
