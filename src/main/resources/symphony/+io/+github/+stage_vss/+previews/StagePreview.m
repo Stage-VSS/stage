@@ -26,6 +26,8 @@ classdef StagePreview < symphonyui.core.ProtocolPreview
         end
         
         function createUi(obj)
+            import stage.core.*;
+            
             window = Window([640, 480], false, Monitor(1), 'Visible', GL.FALSE);
             obj.canvas = Canvas(window, 'DisableDwm', false);
             obj.axes = axes( ...

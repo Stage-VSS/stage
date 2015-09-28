@@ -19,7 +19,7 @@ classdef SingleSpot < symphonyui.core.Protocol
     methods
         
         function p = getPreview(obj, panel)
-            p = symphonyui.builtin.previews.VisualStimuliPreview(panel, @()createPreviewStimuli(obj), @()obj.backgroundIntensity);
+            p = io.github.stage_vss.previews.StagePreview(panel, @()createPreviewStimuli(obj), @()obj.backgroundIntensity);
             function s = createPreviewStimuli(obj)
                 s = {obj.spotStimulus()};
             end
@@ -32,7 +32,7 @@ classdef SingleSpot < symphonyui.core.Protocol
         end
         
         function spot = spotStimulus(obj)
-            spot = Ellipse();
+            spot = stage.builtin.stimuli.Ellipse();
             spot.color = obj.spotIntensity;
             spot.radiusX = obj.spotDiameter/2;
             spot.radiusY = obj.spotDiameter/2;
