@@ -1,7 +1,9 @@
 function movingBar()
+    import stage.core.*;
+
     % Open a window in windowed-mode and create a canvas.
-    window = stage.core.Window([640, 480], false);
-    canvas = stage.core.Canvas(window);
+    window = Window([640, 480], false);
+    canvas = Canvas(window);
 
     % Create the bar stimulus.
     bar = stage.builtin.stimuli.Rectangle();
@@ -11,7 +13,7 @@ function movingBar()
     barPositionController = stage.builtin.controllers.PropertyController(bar, 'position', @(state)[state.time*200-50, canvas.height/2]);
 
     % Create a 4 second presentation and add the stimulus and controller.
-    presentation = stage.core.Presentation(4);
+    presentation = Presentation(4);
     presentation.addStimulus(bar);
     presentation.addController(barPositionController);
 

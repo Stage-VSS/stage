@@ -1,7 +1,9 @@
 function filters()
+    import stage.core.*;
+
     % Open a window in windowed-mode and create a canvas.
-    window = stage.core.Window([640, 480], false);
-    canvas = stage.core.Canvas(window);
+    window = Window([640, 480], false);
+    canvas = Canvas(window);
 
     % Get the full path of the Demos/Movies directory.
     moviesDir = fullfile(fileparts(mfilename('fullpath')), 'Movies');
@@ -16,7 +18,7 @@ function filters()
     kernel = [-1 -1 -1; ...
               -1  8 -1; ...
               -1 -1 -1];
-    filter = stage.core.Filter(kernel);
+    filter = Filter(kernel);
 
     % Assign the filter to the movie stimulus.
     boxingMovie.setFilter(filter);
@@ -26,7 +28,7 @@ function filters()
     boxingMovie.setWrapModeT(GL.MIRRORED_REPEAT);
 
     % Create a 12 second presentation and add the stimulus.
-    presentation = stage.core.Presentation(12);
+    presentation = Presentation(12);
     presentation.addStimulus(boxingMovie);
 
     % Play the presentation on the canvas!

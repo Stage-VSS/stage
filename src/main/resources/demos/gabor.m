@@ -1,7 +1,9 @@
 function gabor()
+    import stage.core.*;
+
     % Open a window in windowed-mode and create a canvas.
-    window = stage.core.Window([640, 480], false);
-    canvas = stage.core.Canvas(window);
+    window = Window([640, 480], false);
+    canvas = Canvas(window);
 
     % Set the canvas background color to gray.
     canvas.setClearColor(0.5);
@@ -14,7 +16,7 @@ function gabor()
     grating.spatialFreq = 1/100; % 1 cycle per 100 pixels
 
     % Assign a gaussian envelope mask to the grating.
-    mask = stage.core.Mask.createGaussianEnvelope();
+    mask = Mask.createGaussianEnvelope();
     grating.setMask(mask);
 
     % Create a controller to change the grating's phase property as a function of time. The phase will shift 360 degrees
@@ -22,7 +24,7 @@ function gabor()
     gaborPhaseController = stage.builtin.controllers.PropertyController(grating, 'phase', @(state)state.time * 360);
 
     % Create a 5 second presentation and add the stimulus and controller.
-    presentation = stage.core.Presentation(5);
+    presentation = Presentation(5);
     presentation.addStimulus(grating);
     presentation.addController(gaborPhaseController);
 

@@ -1,7 +1,9 @@
 function manual()
+    import stage.core.*;
+
     % Open a window in windowed-mode and create a canvas.
-    window = stage.core.Window([640, 480], false);
-    canvas = stage.core.Canvas(window);
+    window = Window([640, 480], false);
+    canvas = Canvas(window);
 
     % Create the spot stimulus.
     spot = stage.builtin.stimuli.Ellipse();

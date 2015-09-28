@@ -1,7 +1,9 @@
 function noise()
+    import stage.core.*;
+
     % Open a window in windowed-mode and create a canvas.
-    window = stage.core.Window([640, 480], false);
-    canvas = stage.core.Canvas(window);
+    window = Window([640, 480], false);
+    canvas = Canvas(window);
 
     % Create the noise image matrix.
     noiseMatrix = uint8(rand(200, 200) * 255);
@@ -16,7 +18,7 @@ function noise()
     noiseShiftYController = stage.builtin.controllers.PropertyController(noise, 'shiftY', @(state)state.time * 0.5);
 
     % Create a 5 second presentation and add the stimulus and controllers.
-    presentation = stage.core.Presentation(5);
+    presentation = Presentation(5);
     presentation.addStimulus(noise);
     presentation.addController(noiseShiftXController);
     presentation.addController(noiseShiftYController);

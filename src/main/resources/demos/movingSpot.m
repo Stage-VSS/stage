@@ -1,7 +1,9 @@
 function movingSpot()
+    import stage.core.*;
+
     % Open a window in windowed-mode and create a canvas.
-    window = stage.core.Window([640, 480], false);
-    canvas = stage.core.Canvas(window);
+    window = Window([640, 480], false);
+    canvas = Canvas(window);
 
     % Create the spot stimulus.
     spot = stage.builtin.stimuli.Ellipse();
@@ -28,7 +30,7 @@ function movingSpot()
     spotPositionController = stage.builtin.controllers.PropertyController(spot, 'position', @spotPosition);
 
     % Create a 10 second presentation and add the stimulus and controller.
-    presentation = stage.core.Presentation(10);
+    presentation = Presentation(10);
     presentation.addStimulus(spot);
     presentation.addController(spotPositionController);
 

@@ -1,7 +1,9 @@
 function images()
+    import stage.core.*;
+
     % Open a window in windowed-mode and create a canvas.
-    window = stage.core.Window([640, 480], false);
-    canvas = stage.core.Canvas(window);
+    window = Window([640, 480], false);
+    canvas = Canvas(window);
 
     % Read a few images from file.
     imagesDir = fullfile(fileparts(mfilename('fullpath')), 'Images');
@@ -15,7 +17,7 @@ function images()
     butterfly.size = [size(butterflyImage, 2), size(butterflyImage, 1)];
     butterfly.position = canvas.size / 2;
 
-    mask = stage.core.Mask.createGaussianEnvelope();
+    mask = Mask.createGaussianEnvelope();
     butterfly.setMask(mask);
 
     darkHorse = stage.builtin.stimuli.Image(horseImage);
@@ -31,7 +33,7 @@ function images()
     darkHorsePositionController = stage.builtin.controllers.PropertyController(darkHorse, 'position', @(state)[state.time*100, canvas.height/2-50]);
 
     % Create a 6 second presentation and add the stimuli and controllers.
-    presentation = stage.core.Presentation(6);
+    presentation = Presentation(6);
     presentation.addStimulus(lightHorse);
     presentation.addStimulus(butterfly);
     presentation.addStimulus(darkHorse);
