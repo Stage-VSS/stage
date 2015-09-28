@@ -3,3 +3,11 @@
 
 # OS X stores
 *.DS_Store
+
+# Binary
+*.mlappinstall
+target/
+
+# Logs
+*.log
+logs/

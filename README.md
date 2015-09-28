@@ -1,4 +1,4 @@
-# Stage
+# Stage version 2
 
 Stage is a MATLAB-based visual stimulus system for vision research.
 
@@ -9,30 +9,19 @@ Stage is a MATLAB-based visual stimulus system for vision research.
 - OpenGL 3.2+
 - [Visual C++ Redistributable for Visual Studio 2012](http://www.microsoft.com/en-us/download/details.aspx?id=30679) (Windows only)
 
-## Install
+## Build
 
-1. Run `git clone https://github.com/cafarm/Stage --recursive` in Terminal or Git Bash.
-2. Add the Stage folder and it's subfolders to the Matlab path.
+Matlab functions in the root directory are used to build the project. The scripts are named according to the build phase they execute. The phases include:
 
-## FAQ
+- `test`: run tests using the Matlab unit test framework
+- `package`: package the project into a .mlappinstall file
+- `install`: install the packaged product into Matlab
 
-**Why am I seeing odd timing behavior and/or screen tearing?**
+Similar to the [Maven Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html), each phase will execute all phases before it (i.e. running `install` will execute `test`, `package`, `install`)
 
-On Windows Vista and later you must use the Windows Basic or Classic theme. The Windows Aero theme is not supported by Stage and will cause performance and timing issues.
+## Directory Structure
 
-Some drivers also allow users to override an application's request to wait for vertical refresh (vsync). Ensure that your drivers do not override this setting or Stage will be unable to synchronize with your monitor's refresh interval.
-
-**Why do I receive an error claiming "Invalid MEX-file ... The specified module could not be found."?**
-
-Make sure you have installed the latest OS updates and the Visual C++ Redistributable Packages listed under requirements. If that fails to fix the issue open the problematic mex file with [Dependency Walker](http://www.dependencywalker.com) and look for any missing DLLs.
-
-**Why do I receive an error claiming "Undefined function or variable ..."**
-
-Make sure you are using a 64-bit version of MATLAB and that you included the `--recursive` flag when cloning the Stage repository during installation. If you recently updated Stage via `git pull` also ensure that you have run `git submodule init` and then `git submodule update` within the Stage directory.
-
-**How do I update Stage to the latest version?**
-
-In Terminal or Git Bash navigate to the Stage directory. Run `git pull` and then `git submodule init` followed by `git submodule update`.
+The project directory structure generally follows the [Maven Standard Directory Layout](https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html).
 
 ## License
 
