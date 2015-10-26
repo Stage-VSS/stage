@@ -40,6 +40,7 @@ classdef Window < handle
             glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL.TRUE);
             glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
             glfwWindowHint(GLFW.GLFW_RESIZABLE, GL.FALSE);
+            glfwWindowHint(GLFW.GLFW_AUTO_ICONIFY, GL.FALSE);
             glfwWindowHint(GLFW.GLFW_REFRESH_RATE, ip.Results.refreshRate);
             glfwWindowHint(GLFW.GLFW_VISIBLE, ip.Results.visible);
 
