@@ -1,9 +1,9 @@
 function movies()
     import stage.core.*;
 
-    % Open a window in windowed-mode and create a canvas.
+    % Open a window in windowed-mode and create a canvas. 'disableDwm' = false for demo only!
     window = Window([640, 480], false);
-    canvas = Canvas(window);
+    canvas = Canvas(window, 'disableDwm', false);
 
     % Get the full path of the Demos/Movies directory.
     moviesDir = fullfile(fileparts(mfilename('fullpath')), 'Movies');
