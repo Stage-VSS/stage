@@ -1,13 +1,13 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="393287705" file="C:\Users\Client Admin\Documents\src\stage2\Stage.prj" location="C:\Users\Client Admin\Documents\src\stage2" name="Stage" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="261710655" file="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2\Stage.prj" location="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2" name="Stage" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>Stage</param.appname>
     <param.authnamewatermark />
     <param.email />
-    <param.company>Rieke Lab</param.company>
+    <param.company>Stage-VSS</param.company>
     <param.summary />
     <param.description />
     <param.screenshot />
-    <param.version>2.0.0</param.version>
+    <param.version>2.0.1.1</param.version>
     <param.output>${PROJECT_ROOT}\Stage.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -16,7 +16,7 @@
       <item>1</item>
     </param.products.id>
     <param.products.version>
-      <item>8.5</item>
+      <item>8.6</item>
     </param.products.version>
     <param.platforms />
     <param.guid>62ca1e96-1ff4-40c6-9e00-1041c4d14015</param.guid>
@@ -65,7 +65,7 @@ install.m</param.exclude.filters>
       <param.docs />
     </unset>
     <fileset.rootdir>
-      <file>C:\Users\Client Admin\Documents\src\stage2</file>
+      <file>C:\Users\Client Admin\Documents\src\Stage-VSS\stage2</file>
     </fileset.rootdir>
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}\lib</file>
@@ -76,11 +76,11 @@ install.m</param.exclude.filters>
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="C:\Users\Client Admin\Documents\src\stage2" name="Stage.mltbx" optional="false">C:\Users\Client Admin\Documents\src\stage2\Stage.mltbx</file>
+      <file location="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2" name="Stage.mltbx" optional="false">C:\Users\Client Admin\Documents\src\Stage-VSS\stage2\Stage.mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2015a</root>
+      <root>C:\Program Files\MATLAB\R2015b</root>
       <toolboxes />
     </matlab>
     <platform>
