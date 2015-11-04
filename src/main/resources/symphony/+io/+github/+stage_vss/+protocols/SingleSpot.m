@@ -1,7 +1,7 @@
 classdef SingleSpot < symphonyui.core.Protocol
     
     properties
-        amp = 'Amp1'                    % Output amplifier
+        amp                             % Output amplifier
         preTime = 50                    % Spot leading duration (ms)
         stimTime = 500                  % Spot duration (ms)
         tailTime = 50                   % Spot trailing duration (ms)
@@ -10,13 +10,22 @@ classdef SingleSpot < symphonyui.core.Protocol
         backgroundIntensity = 0.5       % Background light intensity (0-1)
         centerOffset = [0, 0]           % Spot [x, y] center offset (pixels)
         numberOfAverages = uint16(5)    % Number of epochs
+        interpulseInterval = 0          % Duration between spots (s)
     end
     
     properties (Hidden)
-        ampType = symphonyui.core.PropertyType('char', 'row', {'Amp1', 'Amp2'});
+        ampType
     end
     
     methods
+        
+        function onSetRig(obj)
+            onSetRig@symphonyui.core.Protocol(obj);
+            
+            amps = symphonyui.core.util.firstNonEmpty(obj.rig.getDeviceNames('Amp'), {'(None)'});
+            obj.amp = amps{1};
+            obj.ampType = symphonyui.core.PropertyType('char', 'row', amps);
+        end
         
         function p = getPreview(obj, panel)
             p = io.github.stage_vss.previews.StagePreview(panel, @()createPreviewStimuli(obj), @()obj.backgroundIntensity);
@@ -28,7 +37,7 @@ classdef SingleSpot < symphonyui.core.Protocol
         function prepareRun(obj)
             prepareRun@symphonyui.core.Protocol(obj);
             
-            obj.openFigure(symphonyui.builtin.figures.ResponseFigure(obj.rig.getDevice(obj.amp)));
+            obj.showFigure('symphonyui.builtin.figures.ResponseFigure', obj.rig.getDevice(obj.amp));
         end
         
         function spot = spotStimulus(obj)
@@ -42,14 +51,26 @@ classdef SingleSpot < symphonyui.core.Protocol
         function prepareEpoch(obj, epoch)
             prepareEpoch@symphonyui.core.Protocol(obj, epoch);
             
-            epoch.addResponse(obj.rig.getDevice(obj.amp));
+            device = obj.rig.getDevice(obj.amp);
+            duration = (obj.preTime + obj.stimTime + obj.tailTime) / 1e3;
+            epoch.addDirectCurrentStimulus(device, device.background, duration, obj.sampleRate);
+            epoch.addResponse(device);
         end
         
-        function tf = continuePreparingEpochs(obj)
+        function prepareInterval(obj, interval)
+            prepareInterval@symphonyui.core.Protocol(obj, interval);
+            
+            if obj.interpulseInterval > 0
+                device = obj.rig.getDevice(obj.amp);
+                interval.addDirectCurrentStimulus(device, device.background, obj.interpulseInterval, obj.sampleRate);
+            end
+        end
+        
+        function tf = shouldContinuePreparingEpochs(obj)
             tf = obj.numEpochsPrepared < obj.numberOfAverages;
         end
         
-        function tf = continueRun(obj)
+        function tf = shouldContinueRun(obj)
             tf = obj.numEpochsCompleted < obj.numberOfAverages;
         end
         

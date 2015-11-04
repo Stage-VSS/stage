@@ -46,11 +46,14 @@
 *.git*
 test.m
 package.m
-install.m</param.exclude.filters>
+install.m
+apps</param.exclude.filters>
     <param.examples>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;examples/&gt;</param.examples>
     <param.demosxml />
-    <param.apps />
+    <param.apps>
+      <file>${PROJECT_ROOT}\Stage Server.mlappinstall</file>
+    </param.apps>
     <param.docs />
     <unset>
       <param.authnamewatermark />
@@ -61,7 +64,6 @@ install.m</param.exclude.filters>
       <param.output />
       <param.platforms />
       <param.demosxml />
-      <param.apps />
       <param.docs />
     </unset>
     <fileset.rootdir>
@@ -71,6 +73,7 @@ install.m</param.exclude.filters>
       <file>${PROJECT_ROOT}\lib</file>
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\src</file>
+      <file>${PROJECT_ROOT}\Stage Server.mlappinstall</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
     <fileset.depfun.excluded />

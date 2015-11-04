@@ -13,3 +13,6 @@
 [submodule "lib/matlab-priority"]
 	path = lib/matlab-priority
 	url = https://github.com/cafarm/matlab-priority.git
+[submodule "apps/stage2-server"]
+	path = apps/stage2-server
+	url = https://github.com/Stage-VSS/stage2-server.git
