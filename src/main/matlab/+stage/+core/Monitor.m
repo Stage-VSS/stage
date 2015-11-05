@@ -10,6 +10,20 @@ classdef Monitor < handle
         handle          % GLFW monitor handle
     end
     
+    methods (Static)
+        
+        function m = availableMonitors()
+            glfwInit();
+            
+            handles = glfwGetMonitors();
+            m = cell(1, numel(handles));
+            for i = 1:numel(handles)
+                m{i} = stage.core.Monitor(i);
+            end
+        end
+        
+    end
+    
     methods
         
         % Constructs a monitor for the display with the given display number. The primary display is number 1. Further
