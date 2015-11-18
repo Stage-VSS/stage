@@ -13,8 +13,9 @@ classdef TcpClient < handle
     methods
         
         function obj = TcpClient(socket)
-            if ~strncmpi(version('-java'), 'Java 1.7', 8)
-                error('Java 7 required');
+            v = version('-java');
+            if str2double(v(6:8)) < 1.7
+                error('Java 7+ required');
             end
             
             if nargin < 1

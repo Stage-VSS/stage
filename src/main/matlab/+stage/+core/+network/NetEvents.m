@@ -20,17 +20,14 @@ classdef NetEvents
         % Requests a new red, green, and blue gamma ramp.
         SET_MONITOR_GAMMA_RAMP = 'SET_MONITOR_GAMMA_RAMP'
         
-        % Requests that a presentation be played.
-        PLAY = 'PLAY'
-        
-        % Requests that the last played presentation be played again.
-        REPLAY = 'REPLAY'
+        % Requests that a presentation be played asynchronously.
+        PLAY_ASYNC = 'PLAY_ASYNC'
         
         % Requests information about the last played presentation.
         GET_PLAY_INFO = 'GET_PLAY_INFO'
         
-        % Requests that the current session data be cleared out of the server memory.
-        CLEAR_SESSION_DATA = 'CLEAR_SESSION_DATA'
+        % Requests that all current data be cleared out of the server memory.
+        CLEAR_DATA = 'CLEAR_DATA'
         
         %% Server to client:
         % The request was completed successfully.
