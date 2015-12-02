@@ -11,36 +11,36 @@ classdef BasicNetEventHandler < stage.core.network.NetEventHandler
         end
         
         function handleEvent(obj, event)
-            import stage.core.network.NetEvents;
+            import stage.builtin.network.BasicNetEvents;
             
             client = event.client;
             value = event.value;
             
             try
                 switch value{1}
-                    case NetEvents.GET_CANVAS_SIZE
+                    case BasicNetEvents.GET_CANVAS_SIZE
                         obj.onEventGetCanvasSize(client, value);
-                    case NetEvents.SET_CANVAS_CLEAR_COLOR
+                    case BasicNetEvents.SET_CANVAS_CLEAR_COLOR
                         obj.onEventSetCanvasClearColor(client, value);
-                    case NetEvents.GET_MONITOR_REFRESH_RATE
+                    case BasicNetEvents.GET_MONITOR_REFRESH_RATE
                         obj.onEventGetMonitorRefreshRate(client, value);
-                    case NetEvents.GET_MONITOR_RESOLUTION
+                    case BasicNetEvents.GET_MONITOR_RESOLUTION
                         obj.onEventGetMonitorResolution(client, value);
-                    case NetEvents.GET_MONITOR_GAMMA_RAMP
+                    case BasicNetEvents.GET_MONITOR_GAMMA_RAMP
                         obj.onEventGetMonitorGammaRamp(client, value);
-                    case NetEvents.SET_MONITOR_GAMMA_RAMP
+                    case BasicNetEvents.SET_MONITOR_GAMMA_RAMP
                         obj.onEventSetMonitorGammaRamp(client, value);
-                    case NetEvents.PLAY_ASYNC
+                    case BasicNetEvents.PLAY_ASYNC
                         obj.onEventPlayAsync(client, value);
-                    case NetEvents.GET_PLAY_INFO
+                    case BasicNetEvents.GET_PLAY_INFO
                         obj.onEventGetPlayInfo(client, value);
-                    case NetEvents.CLEAR_DATA
+                    case BasicNetEvents.CLEAR_DATA
                         obj.onEventClearData(client, value);
                     otherwise
                         error('Stage:UnknownEvent', 'Unknown event');
                 end
             catch x
-                client.send(NetEvents.ERROR, x);
+                client.send(stage.core.network.NetEvents.ERROR, x);
             end
         end
         

@@ -1,6 +1,6 @@
 classdef StageDevice < symphonyui.core.Device
     
-    properties (Access = private)
+    properties (SetAccess = private)
         client
     end
     
@@ -21,6 +21,10 @@ classdef StageDevice < symphonyui.core.Device
             
             obj.client = stage.core.network.StageClient();
             obj.client.connect(host, port);
+        end
+        
+        function close(obj)
+            obj.client.disconnect();
         end
         
     end
