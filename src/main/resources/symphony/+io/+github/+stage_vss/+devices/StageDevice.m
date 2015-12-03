@@ -24,7 +24,7 @@ classdef StageDevice < symphonyui.core.Device
         end
         
         function close(obj)
-            obj.client.disconnect();
+            obj.client.close();
         end
         
     end

@@ -42,7 +42,7 @@ classdef TcpServer < handle
 
                 delete(closeSocket);
 
-                notify(obj, 'ClientConnected', stage.core.network.NetEventData(client));
+                notify(obj, 'ClientConnected', stage.core.network.tcp.TcpEventData(client));
                 obj.serve(client);
 
                 client.close();
@@ -73,11 +73,11 @@ classdef TcpServer < handle
                 end
 
                 if length(value) == 1 && isscalar(value{1}) && value{1} == -1
-                    notify(obj, 'ClientDisconnected', stage.core.network.NetEventData(client));
+                    notify(obj, 'ClientDisconnected', stage.core.network.tcp.TcpEventData(client));
                     break;
                 end
 
-                notify(obj, 'EventReceived', stage.core.network.NetEventData(client, value));
+                notify(obj, 'EventReceived', stage.core.network.tcp.TcpEventData(client, value));
             end
         end
 

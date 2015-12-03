@@ -1,4 +1,4 @@
-classdef NetEventData < event.EventData
+classdef TcpEventData < event.EventData
     
     properties (SetAccess = private)
         client
@@ -7,7 +7,7 @@ classdef NetEventData < event.EventData
     
     methods
         
-        function obj = NetEventData(client, value)
+        function obj = TcpEventData(client, value)
             if nargin < 2
                 value = [];
             end
