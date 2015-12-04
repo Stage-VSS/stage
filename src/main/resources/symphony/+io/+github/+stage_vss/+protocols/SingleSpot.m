@@ -17,6 +17,10 @@ classdef SingleSpot < symphonyui.core.Protocol
         ampType
     end
     
+    properties (Access = private)
+        stage
+    end
+    
     methods
         
         function onSetRig(obj)
@@ -25,6 +29,9 @@ classdef SingleSpot < symphonyui.core.Protocol
             amps = appbox.firstNonEmpty(obj.rig.getDeviceNames('Amp'), {'(None)'});
             obj.amp = amps{1};
             obj.ampType = symphonyui.core.PropertyType('char', 'row', amps);
+            
+            stages = appbox.firstNonEmpty(obj.rig.getDeviceNames('Stage'), {[]});
+            obj.stage = stages{1};
         end
         
         function p = getPreview(obj, panel)
@@ -38,6 +45,9 @@ classdef SingleSpot < symphonyui.core.Protocol
             prepareRun@symphonyui.core.Protocol(obj);
             
             obj.showFigure('symphonyui.builtin.figures.ResponseFigure', obj.rig.getDevice(obj.amp));
+            
+            device = obj.rig.getDevice(obj.stage);
+            device.client.setCanvasClearColor(obj.backgroundIntensity);
         end
         
         function spot = spotStimulus(obj)
@@ -55,6 +65,11 @@ classdef SingleSpot < symphonyui.core.Protocol
             duration = (obj.preTime + obj.stimTime + obj.tailTime) / 1e3;
             epoch.addDirectCurrentStimulus(device, device.background, duration, obj.sampleRate);
             epoch.addResponse(device);
+            
+            device = obj.rig.getDevice(obj.stage);
+            presentation = stage.core.Presentation((obj.preTime + obj.stimTime + obj.tailTime) * 1e-3);
+            presentation.addStimulus(obj.spotStimulus());
+            device.client.play(presentation);
         end
         
         function prepareInterval(obj, interval)
@@ -72,6 +87,11 @@ classdef SingleSpot < symphonyui.core.Protocol
         
         function tf = shouldContinueRun(obj)
             tf = obj.numEpochsCompleted < obj.numberOfAverages;
+        end
+        
+        function [tf, msg] = isValid(obj)
+            tf = ~isempty(obj.stage);
+            msg = 'No stage';
         end
         
     end

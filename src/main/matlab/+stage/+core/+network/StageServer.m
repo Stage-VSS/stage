@@ -95,29 +95,29 @@ classdef StageServer < handle
 
         function onEventGetCanvasSize(obj, client, value) %#ok<INUSD>
             size = obj.canvas.size;
-            client.send(NetEvents.OK, size);
+            client.send(stage.core.network.StageEvents.OK, size);
         end
         
         function onEventSetCanvasClearColor(obj, client, value)
             color = value{2};
             
             obj.canvas.setClearColor(color);
-            client.send(NetEvents.OK);
+            client.send(stage.core.network.StageEvents.OK);
         end
         
         function onEventGetMonitorRefreshRate(obj, client, value) %#ok<INUSD>
             rate = obj.canvas.window.monitor.refreshRate;
-            client.send(NetEvents.OK, rate);
+            client.send(stage.core.network.StageEvents.OK, rate);
         end
         
         function onEventGetMonitorResolution(obj, client, value) %#ok<INUSD>
             resolution = obj.canvas.window.monitor.resolution;
-            client.send(NetEvents.OK, resolution);
+            client.send(stage.core.network.StageEvents.OK, resolution);
         end
         
         function onEventGetMonitorGammaRamp(obj, client, value) %#ok<INUSD>
             [red, green, blue] = obj.canvas.window.monitor.getGammaRamp();
-            client.send(NetEvents.OK, red, green, blue);
+            client.send(stage.core.network.StageEvents.OK, red, green, blue);
         end
         
         function onEventSetMonitorGammaRamp(obj, client, value)
@@ -126,7 +126,7 @@ classdef StageServer < handle
             blue = value{4};
             
             obj.canvas.window.monitor.setGammaRamp(red, green, blue);
-            client.send(NetEvents.OK);
+            client.send(stage.core.network.StageEvents.OK);
         end
         
         function onEventPlay(obj, client, value)
@@ -134,13 +134,13 @@ classdef StageServer < handle
             prerender = value{3};
             
             if prerender
-                obj.sessionData.player = PrerenderedPlayer(presentation);
+                obj.sessionData.player = stage.builtin.players.PrerenderedPlayer(presentation);
             else
-                obj.sessionData.player = RealtimePlayer(presentation);
+                obj.sessionData.player = stage.builtin.players.RealtimePlayer(presentation);
             end
             
             % Unlock client to allow async operations during play.
-            client.send(NetEvents.OK);
+            client.send(stage.core.network.StageEvents.OK);
             
             try
                 obj.sessionData.playInfo = obj.sessionData.player.play(obj.canvas);
@@ -155,7 +155,7 @@ classdef StageServer < handle
             end
             
             % Unlock client to allow async operations during play.
-            client.send(NetEvents.OK);
+            client.send(stage.core.network.StageEvents.OK);
             
             try
                 player = obj.sessionData.player;
@@ -171,7 +171,7 @@ classdef StageServer < handle
         
         function onEventGetPlayInfo(obj, client, value) %#ok<INUSD>
             info = obj.sessionData.playInfo;
-            client.send(NetEvents.OK, info);
+            client.send(stage.core.network.StageEvents.OK, info);
         end
         
         function onEventClearSessionData(obj, client, value) %#ok<INUSD>
@@ -185,7 +185,7 @@ classdef StageServer < handle
                 end
             end
             
-            client.send(NetEvents.OK);
+            client.send(stage.core.network.StageEvents.OK);
         end
         
         function onTimedOut(obj, src, event) %#ok<INUSD>
