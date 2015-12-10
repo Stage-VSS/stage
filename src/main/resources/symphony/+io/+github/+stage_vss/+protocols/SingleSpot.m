@@ -17,10 +17,6 @@ classdef SingleSpot < symphonyui.core.Protocol
         ampType
     end
     
-    properties (Access = private)
-        stage
-    end
-    
     methods
         
         function onSetRig(obj)
@@ -29,9 +25,6 @@ classdef SingleSpot < symphonyui.core.Protocol
             amps = appbox.firstNonEmpty(obj.rig.getDeviceNames('Amp'), {'(None)'});
             obj.amp = amps{1};
             obj.ampType = symphonyui.core.PropertyType('char', 'row', amps);
-            
-            stages = appbox.firstNonEmpty(obj.rig.getDeviceNames('Stage'), {[]});
-            obj.stage = stages{1};
         end
         
         function p = getPreview(obj, panel)
@@ -45,14 +38,15 @@ classdef SingleSpot < symphonyui.core.Protocol
             prepareRun@symphonyui.core.Protocol(obj);
             
             obj.showFigure('symphonyui.builtin.figures.ResponseFigure', obj.rig.getDevice(obj.amp));
+            obj.showFigure('io.github.stage_vss.figures.FrameTimingFigure', obj.rig.getDevice('Stage'));
             
-            device = obj.rig.getDevice(obj.stage);
+            device = obj.rig.getDevice('Stage');
             device.client.setCanvasClearColor(obj.backgroundIntensity);
         end
         
         function spot = spotStimulus(obj)
             spot = stage.builtin.stimuli.Ellipse();
-            spot.color = obj.spotIntensity;
+            spot.color = rand();
             spot.radiusX = obj.spotDiameter/2;
             spot.radiusY = obj.spotDiameter/2;
             spot.position = [640, 480]/2 + obj.centerOffset;
@@ -66,7 +60,7 @@ classdef SingleSpot < symphonyui.core.Protocol
             epoch.addDirectCurrentStimulus(device, device.background, duration, obj.sampleRate);
             epoch.addResponse(device);
             
-            device = obj.rig.getDevice(obj.stage);
+            device = obj.rig.getDevice('Stage');
             presentation = stage.core.Presentation((obj.preTime + obj.stimTime + obj.tailTime) * 1e-3);
             presentation.addStimulus(obj.spotStimulus());
             device.client.play(presentation);
@@ -81,6 +75,14 @@ classdef SingleSpot < symphonyui.core.Protocol
             end
         end
         
+        function tf = shouldContinuePreloadingEpochs(obj) %#ok<MANU>
+            tf = false;
+        end
+        
+        function tf = shouldWaitToContinuePreparingEpochs(obj)
+            tf = obj.numEpochsPrepared > obj.numEpochsCompleted || obj.numIntervalsPrepared > obj.numIntervalsCompleted;
+        end
+        
         function tf = shouldContinuePreparingEpochs(obj)
             tf = obj.numEpochsPrepared < obj.numberOfAverages;
         end
@@ -90,7 +92,7 @@ classdef SingleSpot < symphonyui.core.Protocol
         end
         
         function [tf, msg] = isValid(obj)
-            tf = ~isempty(obj.stage);
+            tf = ~isempty(obj.rig.getDevices('Stage'));
             msg = 'No stage';
         end
         
