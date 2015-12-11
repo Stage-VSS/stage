@@ -74,6 +74,12 @@ classdef PrerenderedPlayer < stage.core.Player
             try %#ok<TRYNC>
                 setMaxPriority();
             end
+            cleanup = onCleanup(@resetPriority);
+            function resetPriority()
+                try %#ok<TRYNC>
+                    setNormalPriority();
+                end
+            end
 
             nFrames = length(obj.renderedFrames);
             for frame = 1:nFrames
@@ -87,10 +93,6 @@ classdef PrerenderedPlayer < stage.core.Player
                 flipTimer.tick();
 
                 canvas.window.pollEvents();
-            end
-
-            try %#ok<TRYNC>
-                setNormalPriority();
             end
 
             info.flipDurations = flipTimer.flipDurations;

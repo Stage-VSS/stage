@@ -30,6 +30,12 @@ classdef RealtimePlayer < stage.core.Player
             try %#ok<TRYNC>
                 setMaxPriority();
             end
+            cleanup = onCleanup(@resetPriority);
+            function resetPriority()
+                try %#ok<TRYNC>
+                    setNormalPriority();
+                end
+            end
 
             frame = 0;
             frameDuration = 1 / canvas.window.monitor.refreshRate;
@@ -46,10 +52,6 @@ classdef RealtimePlayer < stage.core.Player
 
                 frame = frame + 1;
                 time = frame * frameDuration;
-            end
-
-            try %#ok<TRYNC>
-                setNormalPriority();
             end
 
             info.flipDurations = flipTimer.flipDurations;
