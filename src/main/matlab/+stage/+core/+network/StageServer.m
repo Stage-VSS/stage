@@ -177,9 +177,15 @@ classdef StageServer < handle
         function onEventClearMemory(obj, client, value) %#ok<INUSD>
             obj.sessionData = [];
             
-            memory = inmem;
+            memory = inmem('-completenames');
             for i = 1:length(memory)
-                clear(memory{i});
+                [package, name] = appbox.packageName(memory{i});
+                if ~isempty(package)
+                    package = [package '.']; %#ok<AGROW>
+                end
+                if exist([package name], 'class')
+                    clear(name);
+                end
             end
             
             client.send(stage.core.network.StageEvents.OK);

@@ -62,14 +62,28 @@ classdef TcpClient < handle
         end
         
         function send(obj, varargin)
-            stream = java.io.ObjectOutputStream(obj.socket.getOutputStream());
+            try
+                stream = java.io.ObjectOutputStream(obj.socket.getOutputStream());
+            catch x
+                if isa(x, 'matlab.exception.JavaException')
+                    error(char(x.ExceptionObject.getMessage()));
+                end
+                rethrow(x);
+            end
             
             % Serialize
             temp = [tempname '.mat'];
             save(temp, 'varargin');
             file = java.io.File(temp);
             
-            stream.writeObject(java.nio.file.Files.readAllBytes(file.toPath));
+            try
+                stream.writeObject(java.nio.file.Files.readAllBytes(file.toPath));
+            catch x
+                if isa(x, 'matlab.exception.JavaException')
+                    error(char(x.ExceptionObject.getMessage()));
+                end
+                rethrow(x);
+            end
             delete(temp);
         end
         
