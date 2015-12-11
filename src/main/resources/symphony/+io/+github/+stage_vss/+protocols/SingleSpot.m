@@ -52,6 +52,10 @@ classdef SingleSpot < symphonyui.core.Protocol
             spot.position = [640, 480]/2 + obj.centerOffset;
         end
         
+        function r = spotRadiusX(obj, state)
+            r = state.time * obj.stimTime;
+        end
+        
         function prepareEpoch(obj, epoch)
             prepareEpoch@symphonyui.core.Protocol(obj, epoch);
             
@@ -62,7 +66,10 @@ classdef SingleSpot < symphonyui.core.Protocol
             
             device = obj.rig.getDevice('Stage');
             presentation = stage.core.Presentation((obj.preTime + obj.stimTime + obj.tailTime) * 1e-3);
-            presentation.addStimulus(obj.spotStimulus());
+            spot = obj.spotStimulus();
+            spotRadiusX = stage.builtin.controllers.PropertyController(spot, 'radiusX', @(state)obj.spotRadiusX(state));
+            presentation.addStimulus(spot);
+            presentation.addController(spotRadiusX);
             device.client.play(presentation);
         end
         
@@ -89,6 +96,13 @@ classdef SingleSpot < symphonyui.core.Protocol
         
         function tf = shouldContinueRun(obj)
             tf = obj.numEpochsCompleted < obj.numberOfAverages;
+        end
+        
+        function completeRun(obj)
+            completeRun@symphonyui.core.Protocol(obj);
+            
+            device = obj.rig.getDevice('Stage');
+            device.client.clearSessionData();
         end
         
         function [tf, msg] = isValid(obj)
