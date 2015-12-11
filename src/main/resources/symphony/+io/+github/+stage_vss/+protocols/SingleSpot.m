@@ -102,7 +102,7 @@ classdef SingleSpot < symphonyui.core.Protocol
             completeRun@symphonyui.core.Protocol(obj);
             
             device = obj.rig.getDevice('Stage');
-            device.client.clearSessionData();
+            device.client.clearMemory();
         end
         
         function [tf, msg] = isValid(obj)

@@ -29,8 +29,8 @@ classdef StageEvents
         % Requests information about the last played presentation.
         GET_PLAY_INFO = 'GET_PLAY_INFO'
         
-        % Requests that the current session data be cleared out of the server memory.
-        CLEAR_SESSION_DATA = 'CLEAR_SESSION_DATA'
+        % Requests that the server memory (i.e. last play info and class definitions) be cleared.
+        CLEAR_MEMORY = 'CLEAR_MEMORY'
         
         %% Server to client:
         % The request was completed successfully.

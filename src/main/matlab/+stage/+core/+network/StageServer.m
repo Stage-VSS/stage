@@ -83,8 +83,8 @@ classdef StageServer < handle
                         obj.onEventReplay(client, value);
                     case StageEvents.GET_PLAY_INFO
                         obj.onEventGetPlayInfo(client, value);
-                    case StageEvents.CLEAR_SESSION_DATA
-                        obj.onEventClearSessionData(client, value);
+                    case StageEvents.CLEAR_MEMORY
+                        obj.onEventClearMemory(client, value);
                     otherwise
                         error('Stage:UnknownEvent', 'Unknown event');
                 end
@@ -174,15 +174,12 @@ classdef StageServer < handle
             client.send(stage.core.network.StageEvents.OK, info);
         end
         
-        function onEventClearSessionData(obj, client, value) %#ok<INUSD>
+        function onEventClearMemory(obj, client, value) %#ok<INUSD>
             obj.sessionData = [];
             
-            % Clear class definitions.
             memory = inmem;
             for i = 1:length(memory)
-                if exist(memory{i}, 'class')
-                    clear(memory{i});
-                end
+                clear(memory{i});
             end
             
             client.send(stage.core.network.StageEvents.OK);

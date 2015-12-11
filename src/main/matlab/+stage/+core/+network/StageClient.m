@@ -31,6 +31,7 @@ classdef StageClient < handle
             obj.netClient.close();
         end
         
+        % Gets the remote canvas size.
         function s = getCanvasSize(obj)
             obj.sendEvent(stage.core.network.StageEvents.GET_CANVAS_SIZE);
             s = obj.getResponse();
@@ -90,9 +91,9 @@ classdef StageClient < handle
             i = obj.getResponse();
         end
         
-        % Clears the current session data and class definitions from the server.
-        function clearSessionData(obj)
-            obj.sendEvent(stage.core.network.StageEvents.CLEAR_SESSION_DATA);
+        % Clears the server memory (i.e. last play info and class definitions).
+        function clearMemory(obj)
+            obj.sendEvent(stage.core.network.StageEvents.CLEAR_MEMORY);
             obj.getResponse();
         end
         
