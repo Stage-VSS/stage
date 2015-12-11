@@ -34,10 +34,9 @@ classdef FrameTimingFigure < symphonyui.core.FigureHandler
             title(obj.axesHandle, t);
         end
         
-        function handleEpoch(obj, epoch)
+        function handleEpoch(obj, epoch) %#ok<INUSD>
             info = obj.device.client.getPlayInfo();
             if isa(info, 'MException')
-                warning(getReport(info, 'extended'));
                 error(['Stage encountered an error during the presentation: ' info.message]);
             end
             durations = info.flipDurations;
