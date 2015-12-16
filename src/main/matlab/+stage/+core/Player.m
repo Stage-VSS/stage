@@ -24,20 +24,12 @@ classdef Player < handle
         % nearest frame, rounded down. The VideoWriter frame rate and profile may optionally be provided.
         % If the given profile specifies only one color channel, the red, green, and blue color channels of the
         % presentation are averaged to produce the output video data.
-        function exportMovie(obj, canvas, filename, startTime, endTime, frameRate, profile)
+        function exportMovie(obj, canvas, filename, frameRate, profile)
             if nargin < 4
-                startTime = 0;
-            end
-            
-            if nargin < 5
-                endTime = obj.presentation.duration;
-            end
-            
-            if nargin < 6
                 frameRate = canvas.window.monitor.refreshRate;
             end
 
-            if nargin < 7
+            if nargin < 5
                 profile = 'Uncompressed AVI';
             end
 
@@ -56,11 +48,9 @@ classdef Player < handle
                 stimuli{i}.init(canvas);
             end
             
-            startFrame = floor(startTime * frameRate);
-            
-            frame = startFrame;
+            frame = 0;
             time = frame / frameRate;
-            while time < endTime
+            while time < obj.presentation.duration
                 canvas.clear();
 
                 obj.compositor.drawFrame(stimuli, controllers, frame, time);
@@ -71,6 +61,8 @@ classdef Player < handle
                 end
 
                 writer.writeVideo(pixelData);
+                
+                canvas.window.pollEvents();
 
                 frame = frame + 1;
                 time = frame / frameRate;
@@ -121,7 +113,9 @@ classdef Player < handle
                 obj.compositor.drawFrame(stimuli, controllers, frame, time);
 
                 data(frame - startFrame + 1) = im2frame(canvas.getPixelData());
-
+                
+                canvas.window.pollEvents();
+                
                 frame = frame + 1;
                 time = frame / frameRate;
             end
