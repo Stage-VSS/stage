@@ -52,20 +52,6 @@ classdef Presentation < handle
             info = player.play(canvas);
         end
 
-        % A convenience method to export this presentation to a movie file.
-        function exportMovie(obj, canvas, filename, frameRate, profile)
-            if nargin < 4
-                frameRate = canvas.window.monitor.refreshRate;
-            end
-
-            if nargin < 5
-                profile = 'Uncompressed AVI';
-            end
-
-            player = stage.builtin.players.RealtimePlayer(obj);
-            player.exportMovie(canvas, filename, frameRate, profile);
-        end
-
     end
 
 end

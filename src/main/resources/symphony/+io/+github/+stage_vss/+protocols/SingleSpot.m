@@ -28,10 +28,7 @@ classdef SingleSpot < symphonyui.core.Protocol
         end
         
         function p = getPreview(obj, panel)
-            p = io.github.stage_vss.previews.StagePreview(panel, @()createPreviewStimuli(obj), @()obj.backgroundIntensity);
-            function s = createPreviewStimuli(obj)
-                s = {obj.spotStimulus()};
-            end
+            p = io.github.stage_vss.previews.StagePreview(panel, @()obj.spotPresentation(), @()obj.backgroundIntensity);
         end
         
         function prepareRun(obj)
@@ -44,16 +41,22 @@ classdef SingleSpot < symphonyui.core.Protocol
             device.client.setCanvasClearColor(obj.backgroundIntensity);
         end
         
-        function spot = spotStimulus(obj)
+        function p = spotPresentation(obj)
+            p = stage.core.Presentation((obj.preTime + obj.stimTime + obj.tailTime) * 1e-3);
+            
             spot = stage.builtin.stimuli.Ellipse();
             spot.color = rand();
             spot.radiusX = obj.spotDiameter/2;
             spot.radiusY = obj.spotDiameter/2;
             spot.position = [640, 480]/2 + obj.centerOffset;
-        end
-        
-        function r = spotRadiusX(obj, state)
-            r = state.time * obj.stimTime;
+            
+            spotRadiusX = stage.builtin.controllers.PropertyController(spot, 'radiusX', @(state)getSpotRadiusX(obj, state));
+            function r = getSpotRadiusX(obj, state)
+                r = state.time * obj.stimTime;
+            end
+            
+            p.addStimulus(spot);
+            p.addController(spotRadiusX);
         end
         
         function prepareEpoch(obj, epoch)
@@ -65,12 +68,7 @@ classdef SingleSpot < symphonyui.core.Protocol
             epoch.addResponse(device);
             
             device = obj.rig.getDevice('Stage');
-            presentation = stage.core.Presentation((obj.preTime + obj.stimTime + obj.tailTime) * 1e-3);
-            spot = obj.spotStimulus();
-            spotRadiusX = stage.builtin.controllers.PropertyController(spot, 'radiusX', @(state)obj.spotRadiusX(state));
-            presentation.addStimulus(spot);
-            presentation.addController(spotRadiusX);
-            device.client.play(presentation);
+            device.client.play(obj.spotPresentation());
         end
         
         function prepareInterval(obj, interval)

@@ -33,19 +33,18 @@ classdef PrerenderedPlayer < stage.core.Player
             end
 
             frame = 0;
-            frameDuration = 1 / canvas.window.monitor.refreshRate;
-            time = frame * frameDuration;
+            time = frame / frameRate;
             while time < obj.presentation.duration
                 canvas.clear();
 
-                obj.compositor.drawFrame(stimuli, controllers, frame, frameDuration, time);
+                obj.compositor.drawFrame(stimuli, controllers, frame, time);
 
                 obj.renderedFrames{frame + 1} = canvas.getPixelData(0, 0, canvas.size(1), canvas.size(2), false);
 
                 canvas.window.pollEvents();
 
                 frame = frame + 1;
-                time = frame * frameDuration;
+                time = frame / frameRate;
             end
         end
 

@@ -9,6 +9,7 @@ classdef RealtimePlayer < stage.core.Player
         end
 
         function info = play(obj, canvas)
+            frameRate = canvas.window.monitor.refreshRate;
             flipTimer = stage.core.FlipTimer();
 
             obj.compositor.init(canvas);
@@ -38,12 +39,11 @@ classdef RealtimePlayer < stage.core.Player
             end
 
             frame = 0;
-            frameDuration = 1 / canvas.window.monitor.refreshRate;
-            time = frame * frameDuration;
+            time = frame / frameRate;
             while time < obj.presentation.duration
                 canvas.clear();
 
-                obj.compositor.drawFrame(stimuli, controllers, frame, frameDuration, time);
+                obj.compositor.drawFrame(stimuli, controllers, frame, time);
 
                 canvas.window.flip();
                 flipTimer.tick();
@@ -51,7 +51,7 @@ classdef RealtimePlayer < stage.core.Player
                 canvas.window.pollEvents();
 
                 frame = frame + 1;
-                time = frame * frameDuration;
+                time = frame / frameRate;
             end
 
             info.flipDurations = flipTimer.flipDurations;

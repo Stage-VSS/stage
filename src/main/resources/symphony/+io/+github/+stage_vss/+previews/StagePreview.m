@@ -1,7 +1,7 @@
 classdef StagePreview < symphonyui.core.ProtocolPreview
     
     properties
-        createStimuliFcn
+        createPresentationFcn
         getClearColorFcn
     end
     
@@ -13,13 +13,13 @@ classdef StagePreview < symphonyui.core.ProtocolPreview
     
     methods
         
-        function obj = StagePreview(panel, createStimuliFcn, getClearColorFcn)
+        function obj = StagePreview(panel, createPresentationFcn, getClearColorFcn)
             if nargin < 3
                 getClearColorFcn = @()0;
             end
             
             obj@symphonyui.core.ProtocolPreview(panel);
-            obj.createStimuliFcn = createStimuliFcn;
+            obj.createPresentationFcn = createPresentationFcn;
             obj.getClearColorFcn = getClearColorFcn;
             obj.log = log4m.LogManager.getLogger(class(obj));
             obj.createUi();
@@ -53,9 +53,10 @@ classdef StagePreview < symphonyui.core.ProtocolPreview
             obj.canvas.clear();
             
             try
-                stimuli = obj.createStimuliFcn();
+                presentation = obj.createPresentationFcn();
             catch x
-                text(0.5, 0.5, 'Cannot create stimuli', ...
+                cla(obj.axes);
+                text(0.5, 0.5, 'Cannot create presentation', ...
                     'Parent', obj.axes, ...
                     'FontName', get(obj.panel, 'DefaultUicontrolFontName'), ...
                     'FontSize', get(obj.panel, 'DefaultUicontrolFontSize'), ...
@@ -64,14 +65,23 @@ classdef StagePreview < symphonyui.core.ProtocolPreview
                 return;
             end
             
-            for i = 1:numel(stimuli)
-                stimuli{i}.init(obj.canvas);
-                stimuli{i}.draw();
+            player = stage.builtin.players.RealtimePlayer(presentation);
+            
+            data = player.getMovie(obj.canvas, presentation.duration/2);
+            if isempty(data)
+                cla(obj.axes);
+                text(0.5, 0.5, 'Presentation has no frames', ...
+                    'Parent', obj.axes, ...
+                    'FontName', get(obj.panel, 'DefaultUicontrolFontName'), ...
+                    'FontSize', get(obj.panel, 'DefaultUicontrolFontSize'), ...
+                    'HorizontalAlignment', 'center', ...
+                    'Units', 'normalized');
+                return;
             end
             
-            data = obj.canvas.getPixelData();
-            imshow(data, 'Parent', obj.axes);
+            imshow(data(1).cdata, 'Parent', obj.axes);
             set(obj.axes, ...
+                'Position', [0 0 1 1], ...
                 'XColor', 'none', ...
                 'YColor', 'none', ...
                 'Color', 'none');
