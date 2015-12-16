@@ -8,6 +8,7 @@ classdef Presentation < handle
     end
 
     properties (SetAccess = private)
+        backgroundColor
         stimuli
         controllers
     end
@@ -17,6 +18,12 @@ classdef Presentation < handle
         % Constructs a presentation with a given duration in seconds.
         function obj = Presentation(duration)
             obj.duration = duration;
+            obj.backgroundColor = 0;
+        end
+        
+        % Sets the background color to use during the presentation as single intensity value or [R, G, B].
+        function setBackgroundColor(obj, color)
+            obj.backgroundColor = color;
         end
 
         % Adds a stimulus to this presentation. Stimuli are drawn in the order with which they are added.

@@ -5,10 +5,6 @@ function gabor()
     window = Window([640, 480], false);
     canvas = Canvas(window, 'disableDwm', false);
 
-    % Set the canvas background color to gray.
-    canvas.setClearColor(0.5);
-    canvas.clear();
-
     % Create the grating stimulus.
     grating = stage.builtin.stimuli.Grating();
     grating.position = canvas.size / 2;
@@ -25,6 +21,7 @@ function gabor()
 
     % Create a 5 second presentation and add the stimulus and controller.
     presentation = Presentation(5);
+    presentation.setBackgroundColor(0.5);
     presentation.addStimulus(grating);
     presentation.addController(gaborPhaseController);
 

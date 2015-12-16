@@ -5,10 +5,6 @@ function plaid()
     window = Window([640, 480], false);
     canvas = Canvas(window, 'disableDwm', false);
 
-    % Set the canvas background color to gray.
-    canvas.setClearColor(0.5);
-    canvas.clear();
-
     % Create two grating stimuli to layer on one another.
     grating1 = stage.builtin.stimuli.Grating();
     grating1.position = canvas.size / 2;
@@ -34,6 +30,7 @@ function plaid()
 
     % Create a 5 second presentation and add the stimuli and controllers.
     presentation = Presentation(5);
+    presentation.setBackgroundColor(0.5);
     presentation.addStimulus(grating1);
     presentation.addStimulus(grating2);
     presentation.addController(grating1PhaseController);

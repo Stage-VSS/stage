@@ -47,6 +47,8 @@ classdef Player < handle
 
             obj.compositor.init(canvas);
 
+            canvas.setClearColor(obj.presentation.backgroundColor);
+            
             stimuli = obj.presentation.stimuli;
             controllers = obj.presentation.controllers;
 
@@ -93,6 +95,8 @@ classdef Player < handle
             end
             
             obj.compositor.init(canvas);
+            
+            canvas.setClearColor(obj.presentation.backgroundColor);
 
             stimuli = obj.presentation.stimuli;
             controllers = obj.presentation.controllers;

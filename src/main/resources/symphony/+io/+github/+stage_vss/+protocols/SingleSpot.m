@@ -28,7 +28,7 @@ classdef SingleSpot < symphonyui.core.Protocol
         end
         
         function p = getPreview(obj, panel)
-            p = io.github.stage_vss.previews.StagePreview(panel, @()obj.spotPresentation(), @()obj.backgroundIntensity);
+            p = io.github.stage_vss.previews.StagePreview(panel, @()obj.spotPresentation());
         end
         
         function prepareRun(obj)
@@ -36,9 +36,6 @@ classdef SingleSpot < symphonyui.core.Protocol
             
             obj.showFigure('symphonyui.builtin.figures.ResponseFigure', obj.rig.getDevice(obj.amp));
             obj.showFigure('io.github.stage_vss.figures.FrameTimingFigure', obj.rig.getDevice('Stage'));
-            
-            device = obj.rig.getDevice('Stage');
-            device.client.setCanvasClearColor(obj.backgroundIntensity);
         end
         
         function p = spotPresentation(obj)
@@ -55,6 +52,7 @@ classdef SingleSpot < symphonyui.core.Protocol
                 r = state.time * obj.stimTime;
             end
             
+            p.setBackgroundColor(obj.backgroundIntensity);
             p.addStimulus(spot);
             p.addController(spotRadiusX);
         end

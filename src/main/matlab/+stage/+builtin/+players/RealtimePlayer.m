@@ -13,6 +13,8 @@ classdef RealtimePlayer < stage.core.Player
             flipTimer = stage.core.FlipTimer();
 
             obj.compositor.init(canvas);
+            
+            canvas.setClearColor(obj.presentation.backgroundColor);
 
             stimuli = obj.presentation.stimuli;
             controllers = obj.presentation.controllers;

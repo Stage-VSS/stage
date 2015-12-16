@@ -24,6 +24,8 @@ classdef PrerenderedPlayer < stage.core.Player
             obj.renderedFrames = cell(1, nFrames);
 
             obj.compositor.init(canvas);
+            
+            canvas.setClearColor(obj.presentation.backgroundColor);
 
             stimuli = obj.presentation.stimuli;
             controllers = obj.presentation.controllers;

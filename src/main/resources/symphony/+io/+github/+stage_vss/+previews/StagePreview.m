@@ -2,7 +2,6 @@ classdef StagePreview < symphonyui.core.ProtocolPreview
     
     properties
         createPresentationFcn
-        getClearColorFcn
     end
     
     properties (Access = private)
@@ -13,14 +12,9 @@ classdef StagePreview < symphonyui.core.ProtocolPreview
     
     methods
         
-        function obj = StagePreview(panel, createPresentationFcn, getClearColorFcn)
-            if nargin < 3
-                getClearColorFcn = @()0;
-            end
-            
+        function obj = StagePreview(panel, createPresentationFcn)
             obj@symphonyui.core.ProtocolPreview(panel);
             obj.createPresentationFcn = createPresentationFcn;
-            obj.getClearColorFcn = getClearColorFcn;
             obj.log = log4m.LogManager.getLogger(class(obj));
             obj.createUi();
         end
@@ -37,21 +31,7 @@ classdef StagePreview < symphonyui.core.ProtocolPreview
             obj.update();
         end
         
-        function update(obj)
-            try
-                obj.canvas.setClearColor(obj.getClearColorFcn());
-            catch x
-                text(0.5, 0.5, 'Cannot set clear color', ...
-                    'Parent', obj.axes, ...
-                    'FontName', get(obj.panel, 'DefaultUicontrolFontName'), ...
-                    'FontSize', get(obj.panel, 'DefaultUicontrolFontSize'), ...
-                    'HorizontalAlignment', 'center');
-                obj.log.debug(x.message, x);
-                return;
-            end
-            
-            obj.canvas.clear();
-            
+        function update(obj)            
             try
                 presentation = obj.createPresentationFcn();
             catch x
