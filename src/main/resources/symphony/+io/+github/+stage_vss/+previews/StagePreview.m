@@ -40,14 +40,15 @@ classdef StagePreview < symphonyui.core.ProtocolPreview
                     'Parent', obj.axes, ...
                     'FontName', get(obj.panel, 'DefaultUicontrolFontName'), ...
                     'FontSize', get(obj.panel, 'DefaultUicontrolFontSize'), ...
-                    'HorizontalAlignment', 'center');
+                    'HorizontalAlignment', 'center', ...
+                    'Units', 'normalized');
                 obj.log.debug(x.message, x);
                 return;
             end
             
-            player = stage.builtin.players.RealtimePlayer(presentation);
+            viewer = stage.core.Viewer(obj.canvas, presentation);
             
-            data = player.getMovie(obj.canvas, presentation.duration/2);
+            data = viewer.getImage(presentation.duration/2);
             if isempty(data)
                 cla(obj.axes);
                 text(0.5, 0.5, 'Presentation has no frames', ...
@@ -59,12 +60,24 @@ classdef StagePreview < symphonyui.core.ProtocolPreview
                 return;
             end
             
-            imshow(data(1).cdata, 'Parent', obj.axes);
-            set(obj.axes, ...
-                'Position', [0 0 1 1], ...
-                'XColor', 'none', ...
-                'YColor', 'none', ...
-                'Color', 'none');
+            img = imshow(data(1).cdata, 'Parent', obj.axes);
+            set(img, 'ButtonDownFcn', @(h,d)obj.onSelectedPlay(viewer, d));
+        end
+        
+        function onSelectedPlay(obj, viewer, ~)
+            viewer.seek(0);
+            img = viewer.nextImage();
+            front = imshow(img.cdata, 'Parent', obj.axes);
+            while ~isempty(img)
+                back = front;
+                front = image( ...
+                    'Parent', obj.axes, ...
+                    'CData', img.cdata);
+                delete(back);
+                drawnow('expose');
+                img = viewer.nextImage();
+            end
+            set(front, 'ButtonDownFcn', @(h,d)obj.onSelectedPlay(viewer, d));
         end
         
     end
