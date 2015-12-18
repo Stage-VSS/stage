@@ -1,7 +1,8 @@
 classdef StagePreview < symphonyui.core.ProtocolPreview
     
-    properties
+    properties (SetAccess = private)
         createPresentationFcn
+        windowSize
     end
     
     properties (Access = private)
@@ -12,15 +13,22 @@ classdef StagePreview < symphonyui.core.ProtocolPreview
     
     methods
         
-        function obj = StagePreview(panel, createPresentationFcn)
+        function obj = StagePreview(panel, createPresentationFcn, varargin)
             obj@symphonyui.core.ProtocolPreview(panel);
-            obj.createPresentationFcn = createPresentationFcn;
+            
+            ip = inputParser();
+            ip.addParameter('windowSize', [640, 480], @(x)isvector(x));
+            ip.parse(varargin{:});
+            
             obj.log = log4m.LogManager.getLogger(class(obj));
+            obj.createPresentationFcn = createPresentationFcn;
+            obj.windowSize = ip.Results.windowSize;
+            
             obj.createUi();
         end
         
         function createUi(obj)
-            window = stage.core.Window([640, 480], false, stage.core.Monitor(1), 'Visible', GL.FALSE);
+            window = stage.core.Window(obj.windowSize, false, stage.core.Monitor(1), 'Visible', GL.FALSE);
             obj.canvas = stage.core.Canvas(window, 'DisableDwm', false);
             obj.axes = axes( ...
                 'Parent', obj.panel, ...
