@@ -1,16 +1,14 @@
-classdef SingleSpot < symphonyui.core.Protocol
+classdef FullFieldNoise < symphonyui.core.Protocol
     
     properties
         amp                             % Output amplifier
-        preTime = 500                   % Spot leading duration (ms)
-        stimTime = 1000                 % Spot duration (ms)
-        tailTime = 500                  % Spot trailing duration (ms)
-        spotIntensity = 1.0             % Spot light intensity (0-1)
-        spotDiameter = 300              % Spot diameter size (pixels)
+        preTime = 500                   % Noise leading duration (ms)
+        stimTime = 1000                 % Noise duration (ms)
+        tailTime = 500                  % Noise trailing duration (ms)
         backgroundIntensity = 0.5       % Background light intensity (0-1)
-        centerOffset = [0, 0]           % Spot [x, y] center offset (pixels)
+        centerOffset = [0, 0]           % Noise [x, y] center offset (pixels)
         numberOfAverages = uint16(5)    % Number of epochs
-        interpulseInterval = 0          % Duration between spots (s)
+        interpulseInterval = 0          % Duration between noise (s)
     end
     
     properties (Hidden)
@@ -28,7 +26,7 @@ classdef SingleSpot < symphonyui.core.Protocol
         end
         
         function p = getPreview(obj, panel)
-            p = io.github.stage_vss.previews.StagePreview(panel, @()obj.spotPresentation());
+            p = io.github.stage_vss.previews.StagePreview(panel, @()obj.noisePresentation());
         end
         
         function prepareRun(obj)
@@ -38,20 +36,21 @@ classdef SingleSpot < symphonyui.core.Protocol
             obj.showFigure('io.github.stage_vss.figures.FrameTimingFigure', obj.rig.getDevice('Stage'));
         end
         
-        function p = spotPresentation(obj)
+        function p = noisePresentation(obj)
             p = stage.core.Presentation((obj.preTime + obj.stimTime + obj.tailTime) * 1e-3);
             
-            spot = stage.builtin.stimuli.Ellipse();
-            spot.color = obj.spotIntensity;
-            spot.radiusX = obj.spotDiameter/2;
-            spot.radiusY = obj.spotDiameter/2;
-            spot.position = [640, 480]/2 + obj.centerOffset;
+            noise = stage.builtin.stimuli.Rectangle();
+            noise.size = [640, 480]*2;
+            noise.position = [640, 480]/2 + obj.centerOffset;
+            
+            noiseColor = stage.builtin.controllers.PropertyController(noise, 'color', @(s)rand());
             
             p.setBackgroundColor(obj.backgroundIntensity);
-            p.addStimulus(spot);
+            p.addStimulus(noise);
+            p.addController(noiseColor);
             
-            spotVisible = stage.builtin.controllers.PropertyController(spot, 'visible', @(state)state.time >= obj.preTime * 1e-3 && state.time < (obj.preTime + obj.stimTime) * 1e-3);
-            p.addController(spotVisible);
+            noiseVisible = stage.builtin.controllers.PropertyController(noise, 'visible', @(state)state.time >= obj.preTime * 1e-3 && state.time < (obj.preTime + obj.stimTime) * 1e-3);
+            p.addController(noiseVisible);
         end
         
         function prepareEpoch(obj, epoch)
@@ -63,7 +62,7 @@ classdef SingleSpot < symphonyui.core.Protocol
             epoch.addResponse(device);
             
             device = obj.rig.getDevice('Stage');
-            device.client.play(obj.spotPresentation());
+            device.client.play(obj.noisePresentation());
         end
         
         function prepareInterval(obj, interval)
