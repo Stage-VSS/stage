@@ -49,6 +49,9 @@ classdef SingleSpot < symphonyui.core.Protocol
             
             p.setBackgroundColor(obj.backgroundIntensity);
             p.addStimulus(spot);
+            
+            spotVisible = stage.builtin.controllers.PropertyController(spot, 'visible', @(state)state.time >= obj.preTime * 1e-3 && state.time < (obj.preTime + obj.stimTime) * 1e-3);
+            p.addController(spotVisible);
         end
         
         function prepareEpoch(obj, epoch)

@@ -4,32 +4,40 @@
 classdef PropertyController < stage.core.Controller
 
     properties (Access = private)
-        handle
+        handles
         propertyName
         funcHandle
     end
 
     methods
 
-        function obj = PropertyController(handle, propertyName, funcHandle)
-            if ~isprop(handle, propertyName)
-                error(['The handle does not contain a property named ''' propertyName '''']);
+        function obj = PropertyController(handles, propertyName, funcHandle)
+            if ~iscell(handles)
+                handles = {handles};
+            end
+            
+            for i = 1:numel(handles)
+                if ~isprop(handles{i}, propertyName)
+                    error(['At least one handle does not contain a property named ''' propertyName '''']);
+                end
             end
 
             if nargin(funcHandle) < 1
                 error('The given function must have at least 1 input argument');
             end
 
-            obj.handle = handle;
+            obj.handles = handles;
             obj.propertyName = propertyName;
             obj.funcHandle = funcHandle;
         end
 
         function evaluate(obj, state)
             value = obj.funcHandle(state);
-
-            if ~isequal(value, obj.handle.(obj.propertyName))
-                obj.handle.(obj.propertyName) = value;
+            
+            for i = 1:numel(obj.handles)
+                if ~isequal(value, obj.handles{i}.(obj.propertyName))
+                    obj.handles{i}.(obj.propertyName) = value;
+                end
             end
         end
 
