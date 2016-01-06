@@ -16,3 +16,6 @@
 [submodule "apps/stage2-server"]
 	path = apps/stage2-server
 	url = https://github.com/Stage-VSS/stage2-server.git
+[submodule "lib/netbox"]
+	path = lib/netbox
+	url = https://github.com/cafarm/netbox.git
