@@ -37,6 +37,12 @@ classdef Client < handle
             i = obj.sendReceive(e);
         end
         
+        % Clears the current connection data and class definitions from the server.
+        function clearMemory(obj)
+            e = netbox.Event('clearMemory');
+            obj.sendReceive(e);
+        end
+        
     end
     
     methods (Access = protected)
