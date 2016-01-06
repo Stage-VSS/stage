@@ -14,19 +14,15 @@ classdef Server < handle
             obj.server.clientConnectedFcn = @obj.onClientConnected;
             obj.server.clientDisconnectedFcn = @obj.onClientDisconnected;
             obj.server.eventReceivedFcn = @obj.onEventReceived;
+            obj.server.interruptFcn = @obj.onInterrupt;
         end
         
         function start(obj, port)
             if nargin < 2
                 port = 5678;
-            end
-            
-            t = timer('TimerFcn', @(~,~)obj.canvas.window.pollEvents(), 'Period', 0.016, 'ExecutionMode', 'fixedRate');
-            start(t);
-            stopT = onCleanup(@()delete(t));
-            
-            disp('Serving...');
-            disp('To exit press ctrl + c');
+            end            
+            disp(['Serving on port: ' num2str(port)]);
+            disp('To exit press shift + escape while the Stage window has focus');
             obj.server.start(port);
         end
         
@@ -34,8 +30,8 @@ classdef Server < handle
     
     methods (Access = private)
         
-        function onClientConnected(obj, connection) %#ok<INUSD>
-            disp('Client connected');
+        function onClientConnected(obj, connection) %#ok<INUSL>
+            disp(['Client connected from ' connection.getHostName()]);
         end
         
         function onClientDisconnected(obj, connection) %#ok<INUSD>
@@ -47,6 +43,17 @@ classdef Server < handle
                 obj.dispatchEvent(connection, event);
             catch x
                 connection.sendEvent(netbox.Event('error', x));
+            end
+        end
+        
+        function onInterrupt(obj)
+            window = obj.canvas.window;
+            
+            window.pollEvents();
+            escState = window.getKeyState(GLFW.GLFW_KEY_ESCAPE);
+            shiftState = window.getKeyState(GLFW.GLFW_KEY_LEFT_SHIFT);
+            if escState == GLFW.GLFW_PRESS && shiftState == GLFW.GLFW_PRESS
+                obj.server.requestStop();
             end
         end
         
