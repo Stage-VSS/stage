@@ -10,11 +10,14 @@ classdef Client < handle
             obj.client = netbox.Client();
         end
         
-        function connect(obj, host)
+        function connect(obj, host, port)
             if nargin < 2
                 host = 'localhost';
             end
-            obj.client.connect(host);
+            if nargin < 3
+                port = 5678;
+            end
+            obj.client.connect(host, port);
         end
         
         function disconnect(obj)

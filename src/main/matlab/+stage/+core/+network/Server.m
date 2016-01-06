@@ -16,10 +16,18 @@ classdef Server < handle
             obj.server.eventReceivedFcn = @obj.onEventReceived;
         end
         
-        function start(obj)
+        function start(obj, port)
+            if nargin < 2
+                port = 5678;
+            end
+            
+            t = timer('TimerFcn', @(~,~)obj.canvas.window.pollEvents(), 'Period', 0.016, 'ExecutionMode', 'fixedRate');
+            start(t);
+            stopT = onCleanup(@()delete(t));
+            
             disp('Serving...');
             disp('To exit press ctrl + c');
-            obj.server.start();
+            obj.server.start(port);
         end
         
     end
