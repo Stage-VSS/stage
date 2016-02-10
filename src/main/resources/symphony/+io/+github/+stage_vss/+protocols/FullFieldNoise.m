@@ -20,13 +20,11 @@ classdef FullFieldNoise < symphonyui.core.Protocol
         function onSetRig(obj)
             onSetRig@symphonyui.core.Protocol(obj);
             
-            amps = appbox.firstNonEmpty(obj.rig.getDeviceNames('Amp'), {'(None)'});
-            obj.amp = amps{1};
-            obj.ampType = symphonyui.core.PropertyType('char', 'row', amps);
+            [obj.amp, obj.ampType] = obj.createDeviceNamesProperty('Amp');
         end
         
         function p = getPreview(obj, panel)
-            p = io.github.stage_vss.previews.StagePreview(panel, @()obj.noisePresentation());
+            p = io.github.stage_vss.previews.StagePreview(panel, @()obj.createNoisePresentation());
         end
         
         function prepareRun(obj)
@@ -36,7 +34,7 @@ classdef FullFieldNoise < symphonyui.core.Protocol
             obj.showFigure('io.github.stage_vss.figures.FrameTimingFigure', obj.rig.getDevice('Stage'));
         end
         
-        function p = noisePresentation(obj)
+        function p = createNoisePresentation(obj)
             p = stage.core.Presentation((obj.preTime + obj.stimTime + obj.tailTime) * 1e-3);
             
             noise = stage.builtin.stimuli.Rectangle();
@@ -62,16 +60,14 @@ classdef FullFieldNoise < symphonyui.core.Protocol
             epoch.addResponse(device);
             
             device = obj.rig.getDevice('Stage');
-            device.client.play(obj.noisePresentation());
+            device.client.play(obj.createNoisePresentation());
         end
         
         function prepareInterval(obj, interval)
             prepareInterval@symphonyui.core.Protocol(obj, interval);
             
-            if obj.interpulseInterval > 0
-                device = obj.rig.getDevice(obj.amp);
-                interval.addDirectCurrentStimulus(device, device.background, obj.interpulseInterval, obj.sampleRate);
-            end
+            device = obj.rig.getDevice(obj.amp);
+            interval.addDirectCurrentStimulus(device, device.background, obj.interpulseInterval, obj.sampleRate);
         end
         
         function tf = shouldContinuePreloadingEpochs(obj) %#ok<MANU>

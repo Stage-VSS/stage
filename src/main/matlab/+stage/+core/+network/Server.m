@@ -68,7 +68,7 @@ classdef Server < handle
                 case 'getPlayInfo'
                     obj.onEventGetPlayInfo(connection, event);
                 case 'clearMemory'
-                    obj.onEventClearMemory(connection, event);                    
+                    obj.onEventClearMemory(connection, event);
             end
         end
         
