@@ -13,7 +13,9 @@ classdef PrerenderedPlayer < stage.core.Player
         end
 
         function info = play(obj, canvas)
-            obj.prerender(canvas);
+            if isempty(obj.renderedFrames)
+                obj.prerender(canvas);
+            end
             info = obj.replay(canvas);
         end
 

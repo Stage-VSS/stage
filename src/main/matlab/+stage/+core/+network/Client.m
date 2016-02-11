@@ -24,7 +24,7 @@ classdef Client < handle
             obj.client.disconnect();
         end
         
-        function varargout = sendReceive(obj, event)
+        function varargout = sendReceiveEvent(obj, event)
             obj.client.sendEvent(event);
             e = obj.client.receiveEvent();
             
