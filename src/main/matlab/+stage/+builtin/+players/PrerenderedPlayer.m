@@ -40,8 +40,11 @@ classdef PrerenderedPlayer < stage.core.Player
             time = frame / frameRate;
             while time < obj.presentation.duration
                 canvas.clear();
-
-                obj.compositor.drawFrame(stimuli, controllers, frame, time);
+                
+                state.frame = frame;
+                state.frameRate = frameRate;
+                state.time = time;
+                obj.compositor.drawFrame(stimuli, controllers, state);
 
                 obj.renderedFrames{frame + 1} = canvas.getPixelData(0, 0, canvas.size(1), canvas.size(2), false);
 

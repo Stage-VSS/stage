@@ -51,8 +51,11 @@ classdef Player < handle
             time = frame / frameRate;
             while time < obj.presentation.duration
                 canvas.clear();
-
-                obj.compositor.drawFrame(stimuli, controllers, frame, time);
+                
+                state.frame = frame;
+                state.frameRate = frameRate;
+                state.time = time;
+                obj.compositor.drawFrame(stimuli, controllers, state);
 
                 pixelData = canvas.getPixelData();
                 if writer.ColorChannels == 1

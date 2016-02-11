@@ -44,8 +44,11 @@ classdef RealtimePlayer < stage.core.Player
             time = frame / frameRate;
             while time < obj.presentation.duration
                 canvas.clear();
-
-                obj.compositor.drawFrame(stimuli, controllers, frame, time);
+                
+                state.frame = frame;
+                state.frameRate = frameRate;
+                state.time = time;
+                obj.compositor.drawFrame(stimuli, controllers, state);
 
                 canvas.window.flip();
                 flipTimer.tick();

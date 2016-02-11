@@ -88,6 +88,17 @@ classdef Mask < handle
             aperture = uint8((grid > size) * 255);
             mask = stage.core.Mask(aperture);
         end
+        
+        % Creates a annulus mask with a given inner and outer size from 0 to 1.
+        function mask = createAnnulus(innerSize, outerSize, resolution)
+            if nargin < 3
+                resolution = 512;
+            end
+            
+            distanceMatrix = createDistanceMatrix(resolution);
+            annulus = uint8((distanceMatrix > innerSize & distanceMatrix < outerSize) * 255);
+            mask = Mask(annulus);
+        end
 
     end
 

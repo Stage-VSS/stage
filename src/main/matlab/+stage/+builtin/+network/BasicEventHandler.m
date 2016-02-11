@@ -32,6 +32,8 @@ classdef BasicEventHandler < stage.core.network.EventHandler
                     obj.onEventGetPlayInfo(connection, event);
                 case 'clearMemory'
                     obj.onEventClearMemory(connection, event);
+                otherwise
+                    error('Unknown event');
             end
         end
         

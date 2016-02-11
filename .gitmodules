@@ -19,3 +19,6 @@
 [submodule "lib/netbox"]
 	path = lib/netbox
 	url = https://github.com/cafarm/netbox.git
+[submodule "lib/matlab-lcr"]
+	path = lib/matlab-lcr
+	url = https://github.com/Stage-VSS/matlab-lcr.git
