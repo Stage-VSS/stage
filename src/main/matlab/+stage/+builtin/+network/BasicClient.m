@@ -10,6 +10,10 @@ classdef BasicClient < handle
             obj.client = client;
         end
         
+        function disconnect(obj)
+            obj.client.disconnect();
+        end
+        
         % Plays a given presentation on the remote canvas. This method will return immediately. While the presentation 
         % plays remotely, further attempts to interface with the server will block until the presentation completes.
         function play(obj, presentation)
