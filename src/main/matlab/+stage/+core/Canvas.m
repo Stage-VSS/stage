@@ -132,7 +132,7 @@ classdef Canvas < handle
             d = glReadPixels(x, y, width, height, GL.RGB, GL.UNSIGNED_BYTE);
 
             if permuteImage
-                d = flipdim(permute(d, [3, 2, 1]), 1);
+                d = flip(permute(d, [3, 2, 1]), 1);
             end
         end
 
