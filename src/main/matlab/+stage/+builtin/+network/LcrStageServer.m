@@ -47,6 +47,34 @@ classdef LcrStageServer < stage.builtin.network.StageServer
 
             obj.lightCrafter.disconnect();
         end
+        
+        function onEventReceived(obj, source, eventData)
+            connection = eventData.connection;
+            event = eventData.event;
+            
+            try
+                switch event.name
+                    case 'getLcrPatternAttributes'
+                        obj.onEventGetLcrPatternAttributes(connection, value);
+                    case 'setLcrPatternAttributes'
+                        obj.onEventSetLcrPatternAttributes(connection, value);
+                    case 'getLcrLedCurrents'
+                        obj.onEventGetLcrLedCurrents(connection, value);
+                    case 'setLcrLedCurrents'
+                        obj.onEventSetLcrLedCurrents(connection, value);
+                    case 'getLcrLedEnables'
+                        obj.onEventGetLcrLedEnables(connection, value);
+                    case 'setLcrLedEnables'
+                        obj.onEventSetLcrLedEnables(connection, value);
+                    case 'getLcrCurrentPatternRate'
+                        obj.onEventGetLcrCurrentPatternRate(connection, value);
+                    otherwise
+                        onEventReceived@stage.builtin.network.StageServer(obj, source, eventData);
+                end
+            catch x
+                connection.sendEvent(netbox.NetEvent('error', x));
+            end
+        end
 
         function onEventGetLcrPatternAttributes(obj, connection, event) %#ok<INUSD>
             [bitDepth, color, numPatterns] = obj.lightCrafter.getPatternAttributes();
