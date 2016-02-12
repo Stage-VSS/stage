@@ -59,7 +59,7 @@ classdef Viewer < handle
             obj.canvas.setClearColor(obj.presentation.backgroundColor);
             obj.canvas.clear();
 
-            state.frame = frame;
+            state.frame = obj.frame;
             state.frameRate = obj.frameRate;
             state.time = obj.timestamp;
             obj.compositor.drawFrame(obj.presentation.stimuli, obj.presentation.controllers, state);
