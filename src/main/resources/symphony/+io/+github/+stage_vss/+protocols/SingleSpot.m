@@ -26,7 +26,8 @@ classdef SingleSpot < symphonyui.core.Protocol
         end
         
         function p = getPreview(obj, panel)
-            p = io.github.stage_vss.previews.StagePreview(panel, @()obj.createSpotPresentation());
+            p = io.github.stage_vss.previews.StagePreview(panel, @()obj.createSpotPresentation(), ...
+                'windowSize', obj.rig.getDevice('Stage').getCanvasSize());
         end
         
         function prepareRun(obj)
@@ -37,13 +38,15 @@ classdef SingleSpot < symphonyui.core.Protocol
         end
         
         function p = createSpotPresentation(obj)
+            canvasSize = obj.rig.getDevice('Stage').getCanvasSize();
+            
             p = stage.core.Presentation((obj.preTime + obj.stimTime + obj.tailTime) * 1e-3);
             
             spot = stage.builtin.stimuli.Ellipse();
             spot.color = obj.spotIntensity;
             spot.radiusX = obj.spotDiameter/2;
             spot.radiusY = obj.spotDiameter/2;
-            spot.position = [640, 480]/2 + obj.centerOffset;
+            spot.position = canvasSize/2 + obj.centerOffset;
             
             p.setBackgroundColor(obj.backgroundIntensity);
             p.addStimulus(spot);
@@ -60,8 +63,7 @@ classdef SingleSpot < symphonyui.core.Protocol
             epoch.addDirectCurrentStimulus(device, device.background, duration, obj.sampleRate);
             epoch.addResponse(device);
             
-            device = obj.rig.getDevice('Stage');
-            device.client.play(obj.createSpotPresentation());
+            obj.rig.getDevice('Stage').play(obj.createSpotPresentation());
         end
         
         function prepareInterval(obj, interval)
@@ -90,8 +92,7 @@ classdef SingleSpot < symphonyui.core.Protocol
         function completeRun(obj)
             completeRun@symphonyui.core.Protocol(obj);
             
-            device = obj.rig.getDevice('Stage');
-            device.client.clearMemory();
+            obj.rig.getDevice('Stage').clearMemory();
         end
         
         function [tf, msg] = isValid(obj)

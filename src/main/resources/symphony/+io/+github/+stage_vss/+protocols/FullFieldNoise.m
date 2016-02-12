@@ -24,7 +24,8 @@ classdef FullFieldNoise < symphonyui.core.Protocol
         end
         
         function p = getPreview(obj, panel)
-            p = io.github.stage_vss.previews.StagePreview(panel, @()obj.createNoisePresentation());
+            p = io.github.stage_vss.previews.StagePreview(panel, @()obj.createNoisePresentation(), ...
+                'windowSize', obj.rig.getDevice('Stage').getCanvasSize());
         end
         
         function prepareRun(obj)
@@ -35,11 +36,13 @@ classdef FullFieldNoise < symphonyui.core.Protocol
         end
         
         function p = createNoisePresentation(obj)
+            canvasSize = obj.rig.getDevice('Stage').getCanvasSize();
+            
             p = stage.core.Presentation((obj.preTime + obj.stimTime + obj.tailTime) * 1e-3);
             
             noise = stage.builtin.stimuli.Rectangle();
-            noise.size = [640, 480]*2;
-            noise.position = [640, 480]/2 + obj.centerOffset;
+            noise.size = canvasSize*2;
+            noise.position = canvasSize/2 + obj.centerOffset;
             
             noiseColor = stage.builtin.controllers.PropertyController(noise, 'color', @(s)rand());
             
@@ -59,8 +62,7 @@ classdef FullFieldNoise < symphonyui.core.Protocol
             epoch.addDirectCurrentStimulus(device, device.background, duration, obj.sampleRate);
             epoch.addResponse(device);
             
-            device = obj.rig.getDevice('Stage');
-            device.client.play(obj.createNoisePresentation());
+            obj.rig.getDevice('Stage').play(obj.createNoisePresentation());
         end
         
         function prepareInterval(obj, interval)
@@ -89,8 +91,7 @@ classdef FullFieldNoise < symphonyui.core.Protocol
         function completeRun(obj)
             completeRun@symphonyui.core.Protocol(obj);
             
-            device = obj.rig.getDevice('Stage');
-            device.client.clearMemory();
+            obj.rig.getDevice('Stage').clearMemory();
         end
         
         function [tf, msg] = isValid(obj)
