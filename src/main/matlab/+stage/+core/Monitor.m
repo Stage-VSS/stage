@@ -10,6 +10,10 @@ classdef Monitor < handle
         handle          % GLFW monitor handle
     end
     
+    properties
+        getRefreshRateFcn   % Allows users to specify a non-default refresh rate function
+    end
+    
     methods (Static)
         
         function m = availableMonitors()
@@ -37,10 +41,17 @@ classdef Monitor < handle
             
             monitors = glfwGetMonitors();
             obj.handle = monitors(number);
+            
+            obj.getRefreshRateFcn = @defaultGetRefreshRateFcn;
         end
         
         function r = get.refreshRate(obj)
-            r = obj.getRefreshRate();
+            r = obj.getRefreshRateFcn(obj);
+        end
+
+        function r = defaultGetRefreshRateFcn(obj)
+            mode = glfwGetVideoMode(obj.handle);
+            r = mode.refreshRate;
         end
         
         function r = get.resolution(obj)
@@ -82,16 +93,6 @@ classdef Monitor < handle
             ramp.green = green;
             ramp.blue = blue;
             glfwSetGammaRamp(obj.handle, ramp);
-        end
-        
-    end
-    
-    methods (Access = protected)
-        
-        % Allows overriding refresh rate getter.
-        function r = getRefreshRate(obj)
-            mode = glfwGetVideoMode(obj.handle);
-            r = mode.refreshRate;
         end
         
     end

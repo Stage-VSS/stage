@@ -1,13 +1,23 @@
-classdef BasicClient < handle
+classdef StageClient < handle
     
-    properties (SetAccess = private)
+    properties (Access = private)
         client
     end
     
     methods
         
-        function obj = BasicClient(client)
-            obj.client = client;
+        function obj = StageClient()
+            obj.client = netbox.Client();
+        end
+        
+        function connect(obj, host, port)
+            if nargin < 2
+                host = 'localhost';
+            end
+            if nargin < 3
+                port = 5678;
+            end
+            obj.client.connect(host, port);
         end
         
         function disconnect(obj)
@@ -16,39 +26,33 @@ classdef BasicClient < handle
         
         % Gets the remote canvas size.
         function s = getCanvasSize(obj)
-            e = netbox.Event('getCanvasSize');
-            s = obj.client.sendReceiveEvent(e);
-        end
-        
-        % Sets the remote canvas clear color. 
-        function setCanvasClearColor(obj, color)
-            e = netbox.Event('setCanvasClearColor', color);
-            obj.client.sendReceiveEvent(e);
+            e = netbox.NetEvent('getCanvasSize');
+            s = obj.sendReceive(e);
         end
         
         % Gets the remote monitor refresh rate.
         function r = getMonitorRefreshRate(obj)
-            e = netbox.Event('getMonitorRefreshRate');
-            r = obj.client.sendReceiveEvent(e);
+            e = netbox.NetEvent('getMonitorRefreshRate');
+            r = obj.sendReceive(e);
         end
         
         % Gets the remote monitor resolution.
         function r = getMonitorResolution(obj)
-            e = netbox.Event('getMonitorResolution');
-            r = obj.client.sendReceiveEvent(e);
+            e = netbox.NetEvent('getMonitorResolution');
+            r = obj.sendReceive(e);
         end
         
         % Gets the remote monitor red, green, and blue gamma ramp.
         function [red, green, blue] = getMonitorGammaRamp(obj)
-            e = netbox.Event('getMonitorGammaRamp');
-            [red, green, blue] = obj.client.sendReceiveEvent(e);
+            e = netbox.NetEvent('getMonitorGammaRamp');
+            [red, green, blue] = obj.sendReceive(e);
         end
         
         % Sets the remote monitor gamma ramp from the given red, green, and blue lookup tables. The tables should have 
         % length of 256 and values that range from 0 to 65535.
         function setMonitorGammaRamp(obj, red, green, blue)
-            e = netbox.Event('setMonitorGammaRamp', {red, green, blue});
-            obj.client.sendReceiveEvent(e);
+            e = netbox.NetEvent('setMonitorGammaRamp', {red, green, blue});
+            obj.sendReceive(e);
         end
         
         % Plays a given presentation on the remote canvas. This method will return immediately. While the presentation 
@@ -57,26 +61,44 @@ classdef BasicClient < handle
             if nargin < 3
                 prerender = false;
             end
-            e = netbox.Event('play', {presentation, prerender});
-            obj.client.sendReceiveEvent(e);
+            e = netbox.NetEvent('play', {presentation, prerender});
+            obj.sendReceive(e);
         end
         
         % Replays the last played presentation on the remote canvas.
         function replay(obj)
-            e = netbox.Event('replay');
-            obj.client.sendReceiveEvent(e);
+            e = netbox.NetEvent('replay');
+            obj.sendReceive(e);
         end
         
         % Gets information about the last remotely played (or replayed) presentation.
         function i = getPlayInfo(obj)
-            e = netbox.Event('getPlayInfo');
-            i = obj.client.sendReceiveEvent(e);
+            e = netbox.NetEvent('getPlayInfo');
+            i = obj.sendReceive(e);
         end
         
         % Clears the current connection data and class definitions from the server.
         function clearMemory(obj)
-            e = netbox.Event('clearMemory');
-            obj.client.sendReceiveEvent(e);
+            e = netbox.NetEvent('clearMemory');
+            obj.sendReceive(e);
+        end
+        
+    end
+    
+    methods (Access = protected)
+        
+        function varargout = sendReceive(obj, event)
+            obj.client.sendEvent(event);
+            e = obj.client.receiveEvent();
+            
+            switch e.name
+                case 'ok'
+                    varargout = e.arguments;
+                case 'error'
+                    rethrow(e.arguments{1});
+                otherwise
+                    error('Unknown response');
+            end
         end
         
     end
