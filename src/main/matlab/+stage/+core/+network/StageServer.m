@@ -49,8 +49,6 @@ classdef StageServer < handle
             obj.canvas.clear();
             obj.canvas.window.flip();
             
-            obj.willStart();
-            
             disp(['Serving on port: ' num2str(obj.port)]);
             disp('To exit press shift + escape while the Stage window has focus');
             obj.server.start(obj.port);
@@ -62,21 +60,11 @@ classdef StageServer < handle
             % TODO: Wait until tcpServer stops.
             
             delete(obj.canvas);
-            
-            obj.didStop();
         end
         
     end
     
     methods (Access = protected)
-        
-        function willStart(obj) %#ok<MANU>
-            % Available for subclasses.
-        end
-        
-        function didStop(obj) %#ok<MANU>
-            % Available for subclasses.
-        end
         
         function onClientConnected(obj, ~, eventData) %#ok<INUSL>
             disp(['Client connected from ' eventData.connection.getHostName()]);
