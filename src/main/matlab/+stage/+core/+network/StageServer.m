@@ -25,9 +25,8 @@ classdef StageServer < handle
             addlistener(obj.server, 'Interrupt', @obj.onInterrupt);
         end
         
-        % Creates a window/canvas and starts serving clients. All arguments are passed through to the Window 
-        % constructor. This method will block the current Matlab session until the shift and escape key are held while 
-        % the window has focus.
+        % Creates a window/canvas and starts serving clients. This method will block the current Matlab session until 
+        % the shift and escape key are held while the window has focus.
         function start(obj, size, fullscreen, monitor, varargin)
             if nargin < 2
                 size = [640, 480];

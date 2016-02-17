@@ -19,7 +19,7 @@ classdef StageDevice < symphonyui.core.Device
             
             obj.cobj.MeasurementConversionTarget = symphonyui.core.Measurement.NORMALIZED;
             
-            obj.client = stage.builtin.network.StageClient();
+            obj.client = stage.core.network.StageClient();
             obj.client.connect(host, port);
         end
         
