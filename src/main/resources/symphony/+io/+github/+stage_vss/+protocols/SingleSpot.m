@@ -63,7 +63,7 @@ classdef SingleSpot < symphonyui.core.Protocol
             epoch.addDirectCurrentStimulus(device, device.background, duration, obj.sampleRate);
             epoch.addResponse(device);
             
-            obj.rig.getDevice('Stage').play(obj.createSpotPresentation());
+            epoch.shouldWaitForTrigger = true;
         end
         
         function prepareInterval(obj, interval)
@@ -71,6 +71,12 @@ classdef SingleSpot < symphonyui.core.Protocol
             
             device = obj.rig.getDevice(obj.amp);
             interval.addDirectCurrentStimulus(device, device.background, obj.interpulseInterval, obj.sampleRate);
+        end
+        
+        function onDaqControllerStartedHardware(obj)
+            onDaqControllerStartedHardware@symphonyui.core.Protocol(obj);
+            
+            obj.rig.getDevice('Stage').play(obj.createSpotPresentation());
         end
         
         function tf = shouldContinuePreloadingEpochs(obj) %#ok<MANU>
