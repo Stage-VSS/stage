@@ -17,8 +17,8 @@ classdef FullFieldNoise < symphonyui.core.Protocol
     
     methods
         
-        function onSetRig(obj)
-            onSetRig@symphonyui.core.Protocol(obj);
+        function didSetRig(obj)
+            didSetRig@symphonyui.core.Protocol(obj);
             
             [obj.amp, obj.ampType] = obj.createDeviceNamesProperty('Amp');
         end
@@ -61,8 +61,6 @@ classdef FullFieldNoise < symphonyui.core.Protocol
             duration = (obj.preTime + obj.stimTime + obj.tailTime) / 1e3;
             epoch.addDirectCurrentStimulus(device, device.background, duration, obj.sampleRate);
             epoch.addResponse(device);
-            
-            epoch.shouldWaitForTrigger = true;
         end
         
         function prepareInterval(obj, interval)
@@ -72,8 +70,8 @@ classdef FullFieldNoise < symphonyui.core.Protocol
             interval.addDirectCurrentStimulus(device, device.background, obj.interpulseInterval, obj.sampleRate);
         end
         
-        function onDaqControllerStartedHardware(obj)
-            onDaqControllerStartedHardware@symphonyui.core.Protocol(obj);
+        function controllerDidStartHardware(obj)
+            controllerDidStartHardware@symphonyui.core.Protocol(obj);
             
             obj.rig.getDevice('Stage').play(obj.createNoisePresentation());
         end

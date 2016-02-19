@@ -1,7 +1,7 @@
 classdef StageDevice < symphonyui.core.Device
     
-    properties (SetAccess = private)
-        client
+    properties (Access = private)
+        stage
     end
     
     methods
@@ -19,51 +19,51 @@ classdef StageDevice < symphonyui.core.Device
             
             obj.cobj.MeasurementConversionTarget = symphonyui.core.Measurement.NORMALIZED;
             
-            obj.client = stage.core.network.StageClient();
-            obj.client.connect(host, port);
+            obj.stage = stage.core.network.StageClient();
+            obj.stage.connect(host, port);
         end
         
         function close(obj)
-            obj.client.disconnect();
+            obj.stage.disconnect();
         end
         
         function s = getCanvasSize(obj)
-            s = obj.client.getCanvasSize();
+            s = obj.stage.getCanvasSize();
         end
         
         function r = getMonitorRefreshRate(obj)
-            r = obj.client.getMonitorRefreshRate();
+            r = obj.stage.getMonitorRefreshRate();
         end
         
         function r = getMonitorResolution(obj)
-            r = obj.client.getMonitorResolution();
+            r = obj.stage.getMonitorResolution();
         end
         
         function [red, green, blue] = getMonitorGammaRamp(obj)
-            [red, green, blue] = obj.client.getMonitorGammaRamp();
+            [red, green, blue] = obj.stage.getMonitorGammaRamp();
         end
         
         function setMonitorGammaRamp(obj, red, green, blue)
-            obj.client.setMonitorGammaRamp(red, green, blue);
+            obj.stage.setMonitorGammaRamp(red, green, blue);
         end
         
         function play(obj, presentation, prerender)
             if nargin < 3
                 prerender = false;
             end
-            obj.client.play(presentation, prerender);
+            obj.stage.play(presentation, prerender);
         end
         
         function replay(obj)
-            obj.client.replay();
+            obj.stage.replay();
         end
         
         function i = getPlayInfo(obj)
-            i = obj.client.getPlayInfo();
+            i = obj.stage.getPlayInfo();
         end
         
         function clearMemory(obj)
-           obj.client.clearMemory();
+           obj.stage.clearMemory();
         end
         
     end
