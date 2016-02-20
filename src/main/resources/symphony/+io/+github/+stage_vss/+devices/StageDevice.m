@@ -1,7 +1,7 @@
 classdef StageDevice < symphonyui.core.Device
     
     properties (Access = private)
-        stage
+        stageClient
     end
     
     methods
@@ -19,51 +19,55 @@ classdef StageDevice < symphonyui.core.Device
             
             obj.cobj.MeasurementConversionTarget = symphonyui.core.Measurement.NORMALIZED;
             
-            obj.stage = stage.core.network.StageClient();
-            obj.stage.connect(host, port);
+            obj.stageClient = stage.core.network.StageClient();
+            obj.stageClient.connect(host, port);
+            
+            obj.addConfigurationSetting('canvasSize', obj.stageClient.getCanvasSize(), 'isReadOnly', true);
+            obj.addConfigurationSetting('monitorRefreshRate', obj.stageClient.getMonitorRefreshRate(), 'isReadOnly', true);
+            obj.addConfigurationSetting('monitorResolution', obj.stageClient.getMonitorResolution(), 'isReadOnly', true);
         end
         
         function close(obj)
-            obj.stage.disconnect();
+            obj.stageClient.disconnect();
         end
         
         function s = getCanvasSize(obj)
-            s = obj.stage.getCanvasSize();
+            s = obj.getConfigurationSetting('canvasSize');
         end
         
         function r = getMonitorRefreshRate(obj)
-            r = obj.stage.getMonitorRefreshRate();
+            r = obj.getConfigurationSetting('monitorRefreshRate');
         end
         
         function r = getMonitorResolution(obj)
-            r = obj.stage.getMonitorResolution();
+            r = obj.getConfigurationSetting('monitorResolution');
         end
         
         function [red, green, blue] = getMonitorGammaRamp(obj)
-            [red, green, blue] = obj.stage.getMonitorGammaRamp();
+            [red, green, blue] = obj.stageClient.getMonitorGammaRamp();
         end
         
         function setMonitorGammaRamp(obj, red, green, blue)
-            obj.stage.setMonitorGammaRamp(red, green, blue);
+            obj.stageClient.setMonitorGammaRamp(red, green, blue);
         end
         
         function play(obj, presentation, prerender)
             if nargin < 3
                 prerender = false;
             end
-            obj.stage.play(presentation, prerender);
+            obj.stageClient.play(presentation, prerender);
         end
         
         function replay(obj)
-            obj.stage.replay();
+            obj.stageClient.replay();
         end
         
         function i = getPlayInfo(obj)
-            i = obj.stage.getPlayInfo();
+            i = obj.stageClient.getPlayInfo();
         end
         
         function clearMemory(obj)
-           obj.stage.clearMemory();
+           obj.stageClient.clearMemory();
         end
         
     end
