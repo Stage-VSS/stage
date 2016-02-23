@@ -1,6 +1,6 @@
 classdef StageDevice < symphonyui.core.Device
     
-    properties (Access = private)
+    properties (Access = protected)
         stageClient
     end
     
@@ -14,17 +14,16 @@ classdef StageDevice < symphonyui.core.Device
                 port = 5678;
             end
             
-            cobj = Symphony.Core.UnitConvertingExternalDevice(['Stage@' host], 'Unspecified', Symphony.Core.Measurement(0, symphonyui.core.Measurement.NORMALIZED));
+            cobj = Symphony.Core.UnitConvertingExternalDevice(['Stage@' host], 'Unspecified', Symphony.Core.Measurement(0, symphonyui.core.Measurement.UNITLESS));
             obj@symphonyui.core.Device(cobj);
             
-            obj.cobj.MeasurementConversionTarget = symphonyui.core.Measurement.NORMALIZED;
+            obj.cobj.MeasurementConversionTarget = symphonyui.core.Measurement.UNITLESS;
             
             obj.stageClient = stage.core.network.StageClient();
             obj.stageClient.connect(host, port);
             
             obj.addConfigurationSetting('canvasSize', obj.stageClient.getCanvasSize(), 'isReadOnly', true);
             obj.addConfigurationSetting('monitorRefreshRate', obj.stageClient.getMonitorRefreshRate(), 'isReadOnly', true);
-            obj.addConfigurationSetting('monitorResolution', obj.stageClient.getMonitorResolution(), 'isReadOnly', true);
         end
         
         function close(obj)
@@ -37,18 +36,6 @@ classdef StageDevice < symphonyui.core.Device
         
         function r = getMonitorRefreshRate(obj)
             r = obj.getConfigurationSetting('monitorRefreshRate');
-        end
-        
-        function r = getMonitorResolution(obj)
-            r = obj.getConfigurationSetting('monitorResolution');
-        end
-        
-        function [red, green, blue] = getMonitorGammaRamp(obj)
-            [red, green, blue] = obj.stageClient.getMonitorGammaRamp();
-        end
-        
-        function setMonitorGammaRamp(obj, red, green, blue)
-            obj.stageClient.setMonitorGammaRamp(red, green, blue);
         end
         
         function play(obj, presentation, prerender)
