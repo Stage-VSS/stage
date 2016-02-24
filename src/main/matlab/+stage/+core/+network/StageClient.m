@@ -30,10 +30,34 @@ classdef StageClient < handle
             s = obj.sendReceive(e);
         end
         
+        % Sets the remote canvas projection to identity matrix.
+        function setCanvasProjectionIdentity(obj)
+            e = netbox.NetEvent('setCanvasProjectionIdentity');
+            obj.sendReceive(e);
+        end
+        
+        % Sets the remote canvas projection orthographic.
+        function setCanvasProjectionOrthographic(obj, left, right, bottom, top)
+            e = netbox.NetEvent('setCanvasProjectionOrthographic', {left, right, bottom, top});
+            obj.sendReceive(e);
+        end
+        
+        % Sets the remote canvas renderer.
+        function setCanvasRenderer(obj, renderer)
+            e = netbox.NetEvent('setCanvasRenderer', renderer);
+            obj.sendReceive(e);
+        end
+        
         % Gets the remote monitor refresh rate.
         function r = getMonitorRefreshRate(obj)
             e = netbox.NetEvent('getMonitorRefreshRate');
             r = obj.sendReceive(e);
+        end
+        
+        % Sets the remote monitor gamma ramp from the given gamma exponent.
+        function setMonitorGamma(obj, gamma)
+            e = netbox.NetEvent('setMonitorGamma', gamma);
+            obj.sendReceive(e);
         end
         
         % Gets the remote monitor resolution.

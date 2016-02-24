@@ -6,7 +6,7 @@ classdef StageDevice < symphonyui.core.Device
     
     methods
         
-        function obj = StageDevice(host, port)
+        function obj = StageDevice(host, port, varargin)
             if nargin < 1
                 host = 'localhost';
             end
@@ -14,7 +14,12 @@ classdef StageDevice < symphonyui.core.Device
                 port = 5678;
             end
             
-            cobj = Symphony.Core.UnitConvertingExternalDevice(['Stage@' host], 'Unspecified', Symphony.Core.Measurement(0, symphonyui.core.Measurement.UNITLESS));
+            ip = inputParser();
+            ip.addParameter('name', ['Stage@' host]);
+            ip.addParameter('manufacturer', 'Unspecified');
+            ip.parse(varargin{:});
+            
+            cobj = Symphony.Core.UnitConvertingExternalDevice(ip.Results.name, ip.Results.manufacturer, Symphony.Core.Measurement(0, symphonyui.core.Measurement.UNITLESS));
             obj@symphonyui.core.Device(cobj);
             
             obj.cobj.MeasurementConversionTarget = symphonyui.core.Measurement.UNITLESS;

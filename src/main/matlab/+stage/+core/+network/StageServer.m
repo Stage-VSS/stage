@@ -92,10 +92,18 @@ classdef StageServer < handle
                 switch event.name
                     case 'getCanvasSize'
                         obj.onEventGetCanvasSize(connection, event);
+                    case 'setCanvasProjectionIdentity'
+                        obj.onEventSetCanvasProjectionIdentity(connection, event);
+                    case 'setCanvasProjectionOrthographic'
+                        obj.onEventSetCanvasProjectionOrthographic(connection, event);
+                    case 'setCanvasRenderer'
+                        obj.onEventSetCanvasRenderer(connection, event);
                     case 'getMonitorRefreshRate'
                         obj.onEventGetMonitorRefreshRate(connection, event);
                     case 'getMonitorResolution'
                         obj.onEventGetMonitorResolution(connection, event);
+                    case 'setMonitorGamma'
+                        obj.onEventSetMonitorGamma(connection, event);
                     case 'getMonitorGammaRamp'
                         obj.onEventGetMonitorGammaRamp(connection, event);
                     case 'setMonitorGammaRamp'
@@ -121,6 +129,28 @@ classdef StageServer < handle
             connection.sendEvent(netbox.NetEvent('ok', size));
         end
         
+        function onEventSetCanvasProjectionIdentity(obj, connection, event) %#ok<INUSD>
+            obj.canvas.projection.setIdentity();
+            connection.sendEvent(netbox.NetEvent('ok'));
+        end
+        
+        function onEventSetCanvasProjectionOrthographic(obj, connection, event)
+            left = event.arguments{1};
+            right = event.arguments{2};
+            bottom = event.arguments{3};
+            top = event.arguments{4};
+            
+            obj.canvas.projection.orthographic(left, right, bottom, top);
+            connection.sendEvent(netbox.NetEvent('ok'));
+        end
+        
+        function onEventSetCanvasRenderer(obj, connection, event)
+            renderer = event.arguments{1};
+            
+            obj.canvas.setRenderer(renderer);
+            connection.sendEvent(netbox.NetEvent('ok'));
+        end
+        
         function onEventGetMonitorRefreshRate(obj, connection, event) %#ok<INUSD>
             rate = obj.canvas.window.monitor.refreshRate;
             connection.sendEvent(netbox.NetEvent('ok', rate));
@@ -129,6 +159,13 @@ classdef StageServer < handle
         function onEventGetMonitorResolution(obj, connection, event) %#ok<INUSD>
             resolution = obj.canvas.window.monitor.resolution;
             connection.sendEvent(netbox.NetEvent('ok', resolution));
+        end
+        
+        function onEventSetMonitorGamma(obj, connection, event)
+            gamma = event.arguments{1};
+            
+            obj.canvas.window.monitor.setGamma(gamma);
+            connection.sendEvent(netbox.NetEvent('ok'));
         end
         
         function onEventGetMonitorGammaRamp(obj, connection, event) %#ok<INUSD>
