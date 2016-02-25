@@ -41,14 +41,13 @@ classdef SingleSpot < symphonyui.core.Protocol
             canvasSize = obj.rig.getDevice('Stage').getCanvasSize();
             
             p = stage.core.Presentation((obj.preTime + obj.stimTime + obj.tailTime) * 1e-3);
+            p.setBackgroundColor(obj.backgroundIntensity);
             
             spot = stage.builtin.stimuli.Ellipse();
             spot.color = obj.spotIntensity;
             spot.radiusX = obj.spotDiameter/2;
             spot.radiusY = obj.spotDiameter/2;
             spot.position = canvasSize/2 + obj.centerOffset;
-            
-            p.setBackgroundColor(obj.backgroundIntensity);
             p.addStimulus(spot);
             
             spotVisible = stage.builtin.controllers.PropertyController(spot, 'visible', @(state)state.time >= obj.preTime * 1e-3 && state.time < (obj.preTime + obj.stimTime) * 1e-3);
