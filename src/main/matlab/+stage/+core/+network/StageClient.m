@@ -1,5 +1,9 @@
 classdef StageClient < handle
     
+    properties (SetAccess = private)
+        isConnected
+    end
+    
     properties (Access = private)
         client
     end
@@ -22,6 +26,10 @@ classdef StageClient < handle
         
         function disconnect(obj)
             obj.client.disconnect();
+        end
+        
+        function tf = get.isConnected(obj)
+            tf = obj.client.isConnected;
         end
         
         % Gets the remote canvas size.
