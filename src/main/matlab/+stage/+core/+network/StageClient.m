@@ -42,9 +42,21 @@ classdef StageClient < handle
             obj.sendReceive(e);
         end
         
+        % Resets the remote canvas projection matrix.
+        function resetCanvasProjection(obj)
+            e = netbox.NetEvent('resetCanvasProjection');
+            obj.sendReceive(e);
+        end
+        
         % Sets the remote canvas renderer.
         function setCanvasRenderer(obj, renderer)
             e = netbox.NetEvent('setCanvasRenderer', renderer);
+            obj.sendReceive(e);
+        end
+        
+        % Resets the remote canvas renderer.
+        function resetCanvasRenderer(obj)
+            e = netbox.NetEvent('resetCanvasRenderer');
             obj.sendReceive(e);
         end
         

@@ -80,6 +80,11 @@ classdef Canvas < handle
             obj.makeCurrent();
             glClear(GL.COLOR_BUFFER_BIT);
         end
+        
+        function resetProjection(obj)
+            obj.projection = stage.core.gl.MatrixStack();
+            obj.projection.orthographic(0, obj.window.size(1), 0, obj.window.size(2));
+        end
 
         function setProgram(obj, program)
             obj.makeCurrent();
