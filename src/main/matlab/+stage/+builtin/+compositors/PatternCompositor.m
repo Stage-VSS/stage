@@ -3,7 +3,6 @@
 classdef PatternCompositor < stage.core.Compositor
     
     properties
-        patternRenderer
         vbo
         vao
         texture
@@ -12,10 +11,6 @@ classdef PatternCompositor < stage.core.Compositor
     end
     
     methods
-        
-        function bindPatternRenderer(obj, renderer)
-            obj.patternRenderer = renderer;
-        end
         
         function init(obj, canvas)
             import stage.core.gl.*;
@@ -45,9 +40,15 @@ classdef PatternCompositor < stage.core.Compositor
         end
         
         function drawFrame(obj, stimuli, controllers, state)
+            patternRenderer = obj.canvas.currentRenderer;
+            if ~isa(patternRenderer, 'stage.builtin.renderers.PatternRenderer')
+                error('The current canvas renderer must be a PatternRenderer to use PatternCompositor');
+            end
+            
             time = state.time;
             
-            nPatterns = obj.patternRenderer.numPatterns;
+            patternRenderer.resetPatternIndex();
+            nPatterns = patternRenderer.numPatterns;
             state.patternRate = state.frameRate * nPatterns;
             
             for pattern = 0:nPatterns-1
@@ -67,7 +68,7 @@ classdef PatternCompositor < stage.core.Compositor
                 obj.renderer.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, [1, 1, 1, 1], [], obj.texture, []);
                 obj.canvas.resetBlend();
                 
-                obj.patternRenderer.incrementPatternIndex();
+                patternRenderer.incrementPatternIndex();
             end
         end
         

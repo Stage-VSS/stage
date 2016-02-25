@@ -197,14 +197,8 @@ classdef StageServer < handle
         end
         
         function onEventPlay(obj, connection, event)
-            presentation = event.arguments{1};
-            prerender = event.arguments{2};
+            player = event.arguments{1};
             
-            if prerender
-                player = stage.builtin.players.PrerenderedPlayer(presentation);
-            else
-                player = stage.builtin.players.RealtimePlayer(presentation);
-            end
             connection.setData('player', player);
             
             % Unlock client to allow async operations during play.

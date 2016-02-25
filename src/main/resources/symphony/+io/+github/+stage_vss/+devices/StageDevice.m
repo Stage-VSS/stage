@@ -41,7 +41,12 @@ classdef StageDevice < symphonyui.core.Device
             if nargin < 3
                 prerender = false;
             end
-            obj.stageClient.play(presentation, prerender);
+            if prerender
+                player = stage.builtin.players.PrerenderedPlayer(presentation);
+            else
+                player = stage.builtin.players.RealtimePlayer(presentation);
+            end
+            obj.stageClient.play(player);
         end
         
         function replay(obj)

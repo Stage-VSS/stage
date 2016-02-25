@@ -56,6 +56,10 @@ classdef PatternRenderer < stage.core.Renderer
             drawArray@stage.core.Renderer(obj, array, mode, first, count, color, texture, mask, filter);
         end
         
+        function resetPatternIndex(obj)
+            obj.patternIndex = 0;
+        end
+        
         function incrementPatternIndex(obj)
             obj.patternIndex = rem(obj.patternIndex + 1, obj.numPatterns);
         end

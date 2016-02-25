@@ -99,17 +99,14 @@ classdef StageClient < handle
             obj.sendReceive(e);
         end
         
-        % Plays a given presentation on the remote canvas. This method will return immediately. While the presentation 
-        % plays remotely, further attempts to interface with the server will block until the presentation completes.
-        function play(obj, presentation, prerender)
-            if nargin < 3
-                prerender = false;
-            end
-            e = netbox.NetEvent('play', {presentation, prerender});
+        % Plays a given player on the remote canvas. This method will return immediately. While the player plays 
+        % remotely, further attempts to interface with the server will block until the presentation completes.
+        function play(obj, player)
+            e = netbox.NetEvent('play', player);
             obj.sendReceive(e);
         end
         
-        % Replays the last played presentation on the remote canvas.
+        % Replays the last played player on the remote canvas.
         function replay(obj)
             e = netbox.NetEvent('replay');
             obj.sendReceive(e);
