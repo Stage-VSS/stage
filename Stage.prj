@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="396859293" file="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2\Stage.prj" location="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2" name="Stage" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="2914767134" file="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2\Stage.prj" location="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2" name="Stage" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>Stage</param.appname>
     <param.authnamewatermark />
     <param.email />
@@ -9,17 +9,11 @@
     <param.screenshot>${PROJECT_ROOT}\src\main\resources\screenshot.png</param.screenshot>
     <param.version>2.0.1.2</param.version>
     <param.output>${PROJECT_ROOT}\Stage.mltbx</param.output>
-    <param.products.name>
-      <item>MATLAB</item>
-    </param.products.name>
-    <param.products.id>
-      <item>1</item>
-    </param.products.id>
-    <param.products.version>
-      <item>8.6</item>
-    </param.products.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
     <param.platforms />
-    <param.guid>62ca1e96-1ff4-40c6-9e00-1041c4d14015</param.guid>
+    <param.guid>94c4c99f-16ed-4cb5-bded-4b9b802f7f71</param.guid>
     <param.exclude.filters>% List files contained in your toolbox folder that you would like to exclude
 % from packaging.  Excludes should be listed relative to the toolbox folder.
 % Some examples of how to specify excludes are provided below:
@@ -39,15 +33,10 @@
 % All files matching a pattern in all subfolders of the toolbox folder:
 % **/*.bak
 %
-
-.git
-*.git*
-.git/*
-test.m
-package.m
-install.m
 apps
-apps/*</param.exclude.filters>
+*.git*
+package.m
+test.m</param.exclude.filters>
     <param.examples>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;examples/&gt;</param.examples>
     <param.demosxml />
@@ -61,6 +50,9 @@ apps/*</param.exclude.filters>
       <param.summary />
       <param.description />
       <param.output />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
       <param.platforms />
       <param.demosxml />
     </unset>
