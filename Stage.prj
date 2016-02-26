@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="261710655" file="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2\Stage.prj" location="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2" name="Stage" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="396859293" file="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2\Stage.prj" location="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2" name="Stage" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>Stage</param.appname>
     <param.authnamewatermark />
     <param.email />
@@ -41,20 +41,20 @@
 %
 
 .git
-.git/*
-**/.git
 *.git*
+.git/*
 test.m
 package.m
 install.m
-apps</param.exclude.filters>
+apps
+apps/*</param.exclude.filters>
     <param.examples>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;examples/&gt;</param.examples>
     <param.demosxml />
     <param.apps>
       <file>${PROJECT_ROOT}\Stage Server.mlappinstall</file>
     </param.apps>
-    <param.docs />
+    <param.docs>C:\Users\Client Admin\Documents\MATLAB</param.docs>
     <unset>
       <param.authnamewatermark />
       <param.email />
@@ -63,7 +63,6 @@ apps</param.exclude.filters>
       <param.output />
       <param.platforms />
       <param.demosxml />
-      <param.docs />
     </unset>
     <fileset.rootdir>
       <file>C:\Users\Client Admin\Documents\src\Stage-VSS\stage2</file>
