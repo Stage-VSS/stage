@@ -6,8 +6,8 @@
     <param.company>Stage-VSS</param.company>
     <param.summary />
     <param.description />
-    <param.screenshot />
-    <param.version>2.0.1.1</param.version>
+    <param.screenshot>${PROJECT_ROOT}\src\main\resources\screenshot.png</param.screenshot>
+    <param.version>2.0.1.2</param.version>
     <param.output>${PROJECT_ROOT}\Stage.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -60,7 +60,6 @@ apps</param.exclude.filters>
       <param.email />
       <param.summary />
       <param.description />
-      <param.screenshot />
       <param.output />
       <param.platforms />
       <param.demosxml />
