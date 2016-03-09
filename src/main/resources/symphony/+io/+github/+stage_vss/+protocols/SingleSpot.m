@@ -1,4 +1,4 @@
-classdef SingleSpot < symphonyui.core.Protocol
+classdef SingleSpot < io.github.stage_vss.protocols.StageProtocol
     
     properties
         amp                             % Output amplifier
@@ -20,24 +20,24 @@ classdef SingleSpot < symphonyui.core.Protocol
     methods
         
         function didSetRig(obj)
-            didSetRig@symphonyui.core.Protocol(obj);
+            didSetRig@io.github.stage_vss.protocols.StageProtocol(obj);
             
             [obj.amp, obj.ampType] = obj.createDeviceNamesProperty('Amp');
         end
         
         function p = getPreview(obj, panel)
-            p = io.github.stage_vss.previews.StagePreview(panel, @()obj.createSpotPresentation(), ...
+            p = io.github.stage_vss.previews.StagePreview(panel, @()obj.createPresentation(), ...
                 'windowSize', obj.rig.getDevice('Stage').getCanvasSize());
         end
         
         function prepareRun(obj)
-            prepareRun@symphonyui.core.Protocol(obj);
+            prepareRun@io.github.stage_vss.protocols.StageProtocol(obj);
             
             obj.showFigure('symphonyui.builtin.figures.ResponseFigure', obj.rig.getDevice(obj.amp));
             obj.showFigure('io.github.stage_vss.figures.FrameTimingFigure', obj.rig.getDevice('Stage'));
         end
         
-        function p = createSpotPresentation(obj)
+        function p = createPresentation(obj)
             canvasSize = obj.rig.getDevice('Stage').getCanvasSize();
             
             p = stage.core.Presentation((obj.preTime + obj.stimTime + obj.tailTime) * 1e-3);
@@ -55,7 +55,7 @@ classdef SingleSpot < symphonyui.core.Protocol
         end
         
         function prepareEpoch(obj, epoch)
-            prepareEpoch@symphonyui.core.Protocol(obj, epoch);
+            prepareEpoch@io.github.stage_vss.protocols.StageProtocol(obj, epoch);
             
             device = obj.rig.getDevice(obj.amp);
             duration = (obj.preTime + obj.stimTime + obj.tailTime) / 1e3;
@@ -64,24 +64,10 @@ classdef SingleSpot < symphonyui.core.Protocol
         end
         
         function prepareInterval(obj, interval)
-            prepareInterval@symphonyui.core.Protocol(obj, interval);
+            prepareInterval@io.github.stage_vss.protocols.StageProtocol(obj, interval);
             
             device = obj.rig.getDevice(obj.amp);
             interval.addDirectCurrentStimulus(device, device.background, obj.interpulseInterval, obj.sampleRate);
-        end
-        
-        function controllerDidStartHardware(obj)
-            controllerDidStartHardware@symphonyui.core.Protocol(obj);
-            
-            obj.rig.getDevice('Stage').play(obj.createSpotPresentation());
-        end
-        
-        function tf = shouldContinuePreloadingEpochs(obj) %#ok<MANU>
-            tf = false;
-        end
-        
-        function tf = shouldWaitToContinuePreparingEpochs(obj)
-            tf = obj.numEpochsPrepared > obj.numEpochsCompleted || obj.numIntervalsPrepared > obj.numIntervalsCompleted;
         end
         
         function tf = shouldContinuePreparingEpochs(obj)
@@ -90,17 +76,6 @@ classdef SingleSpot < symphonyui.core.Protocol
         
         function tf = shouldContinueRun(obj)
             tf = obj.numEpochsCompleted < obj.numberOfAverages;
-        end
-        
-        function completeRun(obj)
-            completeRun@symphonyui.core.Protocol(obj);
-            
-            obj.rig.getDevice('Stage').clearMemory();
-        end
-        
-        function [tf, msg] = isValid(obj)
-            tf = ~isempty(obj.rig.getDevices('Stage'));
-            msg = 'No stage';
         end
         
     end
