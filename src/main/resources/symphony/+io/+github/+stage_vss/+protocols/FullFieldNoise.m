@@ -24,6 +24,10 @@ classdef FullFieldNoise < io.github.stage_vss.protocols.StageProtocol
         end
         
         function p = getPreview(obj, panel)
+            if isempty(obj.rig.getDevices('Stage'))
+                p = [];
+                return;
+            end
             p = io.github.stage_vss.previews.StagePreview(panel, @()obj.createPresentation(), ...
                 'windowSize', obj.rig.getDevice('Stage').getCanvasSize());
         end
