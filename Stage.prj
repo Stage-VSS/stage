@@ -7,7 +7,7 @@
     <param.summary />
     <param.description />
     <param.screenshot>${PROJECT_ROOT}\src\main\resources\screenshot.png</param.screenshot>
-    <param.version>2.0.1.3</param.version>
+    <param.version>2.0.1.4</param.version>
     <param.output>${PROJECT_ROOT}\Stage.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -44,6 +44,7 @@ test.m</param.exclude.filters>
       <file>${PROJECT_ROOT}\Stage Server.mlappinstall</file>
     </param.apps>
     <param.docs>C:\Users\Client Admin\Documents\MATLAB</param.docs>
+    <param.matlabpath.excludes />
     <unset>
       <param.authnamewatermark />
       <param.email />
@@ -55,6 +56,7 @@ test.m</param.exclude.filters>
       <param.products.version />
       <param.platforms />
       <param.demosxml />
+      <param.matlabpath.excludes />
     </unset>
     <fileset.rootdir>
       <file>C:\Users\Client Admin\Documents\src\Stage-VSS\stage2</file>
@@ -73,7 +75,7 @@ test.m</param.exclude.filters>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2015b</root>
+      <root>C:\Program Files\MATLAB\R2016a</root>
       <toolboxes />
     </matlab>
     <platform>
