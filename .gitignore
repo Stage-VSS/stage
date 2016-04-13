@@ -12,3 +12,6 @@ target/
 # Logs
 *.log
 logs/
+
+# Generated docs
+/src/main/resources/docs/
