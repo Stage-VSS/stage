@@ -1,14 +1,14 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="2914767134" file="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2\Stage.prj" location="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2" name="Stage" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="2746373419" file="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2\Stage.prj" location="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2" name="Stage" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>Stage</param.appname>
-    <param.authnamewatermark />
-    <param.email />
+    <param.authnamewatermark>Stage-VSS</param.authnamewatermark>
+    <param.email>symphony-das@googlegroups.com</param.email>
     <param.company>Stage-VSS</param.company>
-    <param.summary />
-    <param.description />
+    <param.summary>MATLAB-based visual stimulus system</param.summary>
+    <param.description>Stage is a MATLAB-based visual stimulus system for vision research.</param.description>
     <param.screenshot>${PROJECT_ROOT}\src\main\resources\screenshot.png</param.screenshot>
-    <param.version>2.0.1.4</param.version>
-    <param.output>${PROJECT_ROOT}\Stage.mltbx</param.output>
+    <param.version>2.0.2.1</param.version>
+    <param.output>${PROJECT_ROOT}\target</param.output>
     <param.products.name />
     <param.products.id />
     <param.products.version />
@@ -34,36 +34,72 @@
 % **/*.bak
 %
 apps
+target
+src/site
+src/test
 *.git*
+test.m
 package.m
-test.m</param.exclude.filters>
-    <param.examples>&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;examples/&gt;</param.examples>
+install.m
+site.m
+README.md</param.exclude.filters>
+    <param.examples />
     <param.demosxml />
     <param.apps>
       <file>${PROJECT_ROOT}\Stage Server.mlappinstall</file>
     </param.apps>
-    <param.docs>C:\Users\Client Admin\Documents\MATLAB</param.docs>
-    <param.matlabpath.excludes />
+    <param.docs>${PROJECT_ROOT}\src\main\resources\docs</param.docs>
+    <param.matlabpath.excludes>
+      <item>/apps/stage2-server/src</item>
+      <item>/apps/stage2-server/src/main</item>
+      <item>/apps/stage2-server/src/main/matlab</item>
+      <item>/apps/stage2-server/src/test</item>
+      <item>/apps/stage2-server/src/test/matlab</item>
+      <item>/apps/stage2-server/lib</item>
+      <item>/apps/stage2-server/lib/appbox</item>
+      <item>/apps/stage2-server/lib/appbox/lib</item>
+      <item>/apps/stage2-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1</item>
+      <item>/apps/stage2-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layout</item>
+      <item>/apps/stage2-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc</item>
+      <item>/apps/stage2-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/Examples</item>
+      <item>/apps/stage2-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/Images</item>
+      <item>/apps/stage2-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/helpsearch-v2</item>
+      <item>/apps/stage2-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/helpsearch-v3</item>
+      <item>/apps/stage2-server/lib/appbox/lib/UIExtrasComboBox</item>
+      <item>/apps/stage2-server/lib/appbox/lib/UIExtrasComboBox/java_src</item>
+      <item>/apps/stage2-server/lib/appbox/lib/UIExtrasComboBox/java_src/.idea</item>
+      <item>/apps/stage2-server/lib/appbox/lib/UIExtrasComboBox/java_src/.idea/artifacts</item>
+      <item>/apps/stage2-server/lib/appbox/lib/UIExtrasComboBox/java_src/.idea/copyright</item>
+      <item>/apps/stage2-server/lib/appbox/lib/UIExtrasComboBox/java_src/src</item>
+      <item>/apps/stage2-server/lib/appbox/lib/UIExtrasComboBox/java_src/src/UIExtrasComboBox</item>
+      <item>/apps/stage2-server/lib/appbox/lib/findjobj</item>
+      <item>/apps/stage2-server/lib/appbox/src</item>
+      <item>/apps/stage2-server/lib/appbox/src/main</item>
+      <item>/apps/stage2-server/lib/appbox/src/main/matlab</item>
+      <item>/src/site</item>
+      <item>/src/site/resources</item>
+      <item>/src/site/resources/css</item>
+      <item>/src/site/wiki</item>
+      <item>/src/site/wiki/images</item>
+      <item>/src/test</item>
+      <item>/src/test/matlab</item>
+      <item>/apps</item>
+      <item>/apps/stage2-server</item>
+      <item>/apps/stage2-server/target</item>
+    </param.matlabpath.excludes>
     <unset>
-      <param.authnamewatermark />
-      <param.email />
-      <param.summary />
-      <param.description />
-      <param.output />
       <param.products.name />
       <param.products.id />
       <param.products.version />
       <param.platforms />
+      <param.examples />
       <param.demosxml />
-      <param.matlabpath.excludes />
     </unset>
     <fileset.rootdir>
       <file>C:\Users\Client Admin\Documents\src\Stage-VSS\stage2</file>
     </fileset.rootdir>
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}\lib</file>
-      <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\src</file>
       <file>${PROJECT_ROOT}\Stage Server.mlappinstall</file>
     </fileset.rootfiles>
@@ -71,7 +107,7 @@ test.m</param.exclude.filters>
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2" name="Stage.mltbx" optional="false">C:\Users\Client Admin\Documents\src\Stage-VSS\stage2\Stage.mltbx</file>
+      <file location="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2" name="target" optional="false">C:\Users\Client Admin\Documents\src\Stage-VSS\stage2\target</file>
     </build-deliverables>
     <workflow />
     <matlab>
