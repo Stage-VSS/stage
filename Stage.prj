@@ -86,6 +86,8 @@ README.md</param.exclude.filters>
       <item>/apps</item>
       <item>/apps/stage2-server</item>
       <item>/apps/stage2-server/target</item>
+      <item>/apps/stage2-server/src/main/resources</item>
+      <item>/apps/stage2-server/src/main/resources/icons</item>
     </param.matlabpath.excludes>
     <unset>
       <param.products.name />
