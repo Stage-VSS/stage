@@ -2,7 +2,15 @@
 <toc version="2.0">
 
     <tocitem target="Home.html">Stage
-        <tocitem target="Installation.html">Installation</tocitem>
+        <tocitem target="Getting-Started.html">Getting Started
+            <tocitem target="Stage-Product-Description.html">Stage Product Description</tocitem>
+            <tocitem target="System-Requirements.html">System Requirements</tocitem>
+            <tocitem target="Installation.html">Installation</tocitem>
+        </tocitem>
+        <tocitem target="Stage-Development.html">Stage Development
+            <tocitem target="Release-Instructions.html">Release Instructions</tocitem>
+            <tocitem target="Style-Guide.html">Style Guide</tocitem>
+        </tocitem>
     </tocitem>
 
 </toc>

@@ -10,16 +10,18 @@ function centerSurround()
     surround.position = canvas.size/2;
     surround.radiusX = 200;
     surround.radiusY = 200;
-    surround.color = 0;
+    surround.color = [170/255, 117/255, 159/255];
     
     % Create the center stimulus.
     center = stage.builtin.stimuli.Ellipse(2048);
     center.position = canvas.size/2;
+    center.radiusX = surround.radiusX/2;
+    center.radiusY = surround.radiusY/2;
     center.color = 1;
 
     % Create a 5 second presentation and add the stimulus and controller.
     presentation = Presentation(5);
-    presentation.setBackgroundColor(0.5);
+    presentation.setBackgroundColor(1);
     presentation.addStimulus(surround);
     presentation.addStimulus(center);
 
