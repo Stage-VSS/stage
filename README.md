@@ -1,19 +1,12 @@
-# Stage version 2
+# Stage
 
-Stage is a MATLAB-based visual stimulus system for vision research.
+Stage is a MATLAB-based visual stimulus system for vision research. It provides a toolbox for writing visual stimulus routines.
 
 ## Clone
 
 `git clone https://github.com/Stage-VSS/stage2.git --recursive`
 
 **Note:** You must use the `--recursive` option to recursively clone all submodules.
-
-## Requirements
-
-- OS X 10.8+ or Windows 7 64-bit
-- MATLAB 2013b+ 64-bit
-- OpenGL 3.2+
-- [Visual C++ Redistributable for Visual Studio 2012](http://www.microsoft.com/en-us/download/details.aspx?id=30679) (Windows only)
 
 ## Build
 
