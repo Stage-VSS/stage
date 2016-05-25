@@ -6,14 +6,14 @@ function centerSurround()
     canvas = Canvas(window, 'disableDwm', false);
 
     % Create the surround stimulus.
-    surround = stage.builtin.stimuli.Ellipse(2048);
+    surround = stage.builtin.stimuli.Ellipse(4096);
     surround.position = canvas.size/2;
     surround.radiusX = 200;
     surround.radiusY = 200;
-    surround.color = [170/255, 117/255, 159/255];
+    surround.color = [130/255, 48/255, 139/255];
     
     % Create the center stimulus.
-    center = stage.builtin.stimuli.Ellipse(2048);
+    center = stage.builtin.stimuli.Ellipse(4096);
     center.position = canvas.size/2;
     center.radiusX = surround.radiusX/2;
     center.radiusY = surround.radiusY/2;
