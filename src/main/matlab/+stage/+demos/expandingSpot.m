@@ -10,8 +10,8 @@ function expandingSpot()
     spot.position = canvas.size/2;
 
     % Create a controller to change the spot's radius property as a function of time.
-    spotRadiusXController = stage.builtin.controllers.PropertyController(spot, 'radiusX', @(state)state.time * 50 + 20);
-    spotRadiusYController = stage.builtin.controllers.PropertyController(spot, 'radiusY', @(state)state.time * 50 + 20);
+    spotRadiusXController = stage.builtin.controllers.PropertyController(spot, 'radiusX', @(state)state.time * 30 + 100);
+    spotRadiusYController = stage.builtin.controllers.PropertyController(spot, 'radiusY', @(state)state.time * 30 + 100);
 
     % Create a 4 second presentation and add the stimulus and controller.
     presentation = Presentation(4);
