@@ -32,6 +32,7 @@ classdef PropertyController < stage.core.Controller
         end
 
         function evaluate(obj, state)
+            state.handles = obj.handles;
             value = obj.funcHandle(state);
             
             for i = 1:numel(obj.handles)
