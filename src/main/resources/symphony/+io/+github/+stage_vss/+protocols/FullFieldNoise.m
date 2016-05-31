@@ -51,7 +51,7 @@ classdef FullFieldNoise < io.github.stage_vss.protocols.StageProtocol
             noise.position = canvasSize/2 + obj.centerOffset;
             p.addStimulus(noise);
             
-            noiseColor = stage.builtin.controllers.PropertyController(noise, 'color', @(s)rand());
+            noiseColor = stage.builtin.controllers.PropertyController(noise, 'color', @(state)rand());
             p.addController(noiseColor);
             
             noiseVisible = stage.builtin.controllers.PropertyController(noise, 'visible', @(state)state.time >= obj.preTime * 1e-3 && state.time < (obj.preTime + obj.stimTime) * 1e-3);

@@ -41,6 +41,7 @@ classdef PrerenderedPlayer < stage.core.Player
             while time < obj.presentation.duration
                 canvas.clear();
                 
+                state.canvas = canvas;
                 state.frame = frame;
                 state.frameRate = frameRate;
                 state.time = time;

@@ -14,7 +14,6 @@ classdef Compositor < handle
 
         % Composites a single frame from a collection of stimuli.
         function drawFrame(obj, stimuli, controllers, state)
-            state.canvas = obj.canvas;
             obj.evaluateControllers(controllers, state);
             obj.drawStimuli(stimuli);
         end
