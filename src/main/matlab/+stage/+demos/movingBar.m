@@ -10,7 +10,7 @@ function movingBar()
     bar.size = [100, canvas.height];
 
     % Create a controller to change the bar's position property as a function of time.
-    barPositionController = stage.builtin.controllers.PropertyController(bar, 'position', @(state)[state.time*200-50, canvas.height/2]);
+    barPositionController = stage.builtin.controllers.PropertyController(bar, 'position', @(state)[state.time*160, canvas.height/2]);
 
     % Create a 4 second presentation and add the stimulus and controller.
     presentation = Presentation(4);
