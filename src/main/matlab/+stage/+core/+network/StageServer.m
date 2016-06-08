@@ -239,7 +239,15 @@ classdef StageServer < handle
             
             memory = inmem('-completenames');
             for i = 1:length(memory)
+                % Don't bother clearing anything under the MATLAB root directory
+                if strncmp(memory{i}, matlabroot, length(matlabroot))
+                    continue;
+                end
                 [package, name] = appbox.packageName(memory{i});
+                % Don't bother clearning anything under the stage package
+                if strncmp(package, 'stage.', length('stage.'))
+                    continue;
+                end
                 if ~isempty(package)
                     package = [package '.']; %#ok<AGROW>
                 end
