@@ -1,7 +1,6 @@
-% An arbitrary image stimulus.
-
 classdef Image < stage.core.Stimulus
-
+    % An arbitrary image stimulus.
+    
     properties
         position = [0, 0]   % Center position on the canvas [x, y] (pixels)
         size = [100, 100]   % Size [width, height] (pixels)
@@ -28,14 +27,15 @@ classdef Image < stage.core.Stimulus
     end
 
     methods
-
-        % Constructs an image stimulus with the specified image matrix data. The image data must be provided as an
-        % M-by-N (grayscale), M-by-N-by-3 (truecolor), or M-by-N-by-4 (truecolor with alpha) matrix.
-        %
-        % Typical usage:
-        % imageData = imread('my_cool_image.png');
-        % image = Image(imageData);
+        
         function obj = Image(matrix)
+            % Constructs an image stimulus with the specified image matrix data. The image data must be provided as an
+            % M-by-N (grayscale), M-by-N-by-3 (truecolor), or M-by-N-by-4 (truecolor with alpha) matrix.
+            %
+            % Typical usage:
+            % imageData = imread('my_cool_image.png');
+            % image = Image(imageData);
+            
             if ~isa(matrix, 'uint8') && ~isa(matrix, 'single')
                 error('Matrix must be of class uint8 or single');
             end
@@ -46,34 +46,34 @@ classdef Image < stage.core.Stimulus
             obj.wrapModeS = GL.REPEAT;
             obj.wrapModeT = GL.REPEAT;
         end
-
-        % Assigns a mask to the stimulus.
+        
         function setMask(obj, mask)
+            % Assigns a mask to the stimulus.
             obj.mask = mask;
         end
-
-        % Assigns a filter to the stimulus.
+        
         function setFilter(obj, filter)
+            % Assigns a filter to the stimulus.
             obj.filter = filter;
         end
-
-        % Sets the OpenGL minifying function for the image (GL.NEAREST, GL.LINEAR, GL.NEAREST_MIPMAP_NEAREST, etc).
+        
         function setMinFunction(obj, func)
+            % Sets the OpenGL minifying function for the image (GL.NEAREST, GL.LINEAR, GL.NEAREST_MIPMAP_NEAREST, etc).
             obj.minFunction = func;
         end
-
-        % Sets the OpenGL magnifying function for the image (GL.NEAREST or GL.LINEAR).
+        
         function setMagFunction(obj, func)
+            % Sets the OpenGL magnifying function for the image (GL.NEAREST or GL.LINEAR).
             obj.magFunction = func;
         end
-
-        % Sets the OpenGL S (i.e. X) coordinate wrap mode for the image (GL.CLAMP_TO_EDGE, GL.MIRRORED_REPEAT, GL.REPEAT, etc).
+        
         function setWrapModeS(obj, mode)
+            % Sets the OpenGL S (i.e. X) coordinate wrap mode for the image (GL.CLAMP_TO_EDGE, GL.MIRRORED_REPEAT, GL.REPEAT, etc).
             obj.wrapModeS = mode;
         end
-
-        % Sets the OpenGL T (i.e. Y) coordinate wrap mode for the image (GL.CLAMP_TO_EDGE, GL.MIRRORED_REPEAT, GL.REPEAT, etc).
+        
         function setWrapModeT(obj, mode)
+            % Sets the OpenGL T (i.e. Y) coordinate wrap mode for the image (GL.CLAMP_TO_EDGE, GL.MIRRORED_REPEAT, GL.REPEAT, etc).
             obj.wrapModeT = mode;
         end
 

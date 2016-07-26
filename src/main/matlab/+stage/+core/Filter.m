@@ -1,8 +1,7 @@
-% A convolution filter. Filters are generally applied to stimuli that support them via the setFilter() method of the
-% Stimulus. Edge handling is determined by the wrap mode of the stimulus.
-
 classdef Filter < handle
-
+    % A convolution filter. Filters are generally applied to stimuli that support them via the setFilter() method of the
+    % Stimulus. Edge handling is determined by the wrap mode of the stimulus.
+    
     properties (SetAccess = private)
         canvas
         texture
@@ -13,9 +12,10 @@ classdef Filter < handle
     end
 
     methods
-
-        % Constructs a filter from an M-by-N-by-1 convolution matrix (kernel).
+        
         function obj = Filter(kernel)
+            % Constructs a filter from an M-by-N-by-1 convolution matrix (kernel).
+            
             if ~ismatrix(kernel)
                 error('Kernel must be a matrix');
             end

@@ -1,29 +1,29 @@
-% Abstract class for all presentation players.
-
 classdef Player < handle
-
+    % Abstract class for all presentation players.
+    
     properties (SetAccess = private)
         presentation
         compositor
     end
 
     methods
-
-        % Constructs a player with a given presentation.
+        
         function obj = Player(presentation)
+            % Constructs a player with a given presentation.
             obj.presentation = presentation;
             obj.setCompositor(stage.core.Compositor());
         end
-
-        % Sets the compositor used to composite the presentation stimuli into frame images during playback.
+        
         function setCompositor(obj, compositor)
+            % Sets the compositor used to composite the presentation stimuli into frame images during playback.
             obj.compositor = compositor;
         end
-
-        % Exports the presentation to a movie file. The VideoWriter frame rate and profile may optionally be provided.
-        % If the given profile specifies only one color channel, the red, green, and blue color channels of the
-        % presentation are averaged to produce the output video data.
+        
         function exportMovie(obj, canvas, filename, frameRate, profile)
+            % Exports the presentation to a movie file. The VideoWriter frame rate and profile may optionally be 
+            % provided. If the given profile specifies only one color channel, the red, green, and blue color channels 
+            % of the presentation are averaged to produce the output video data.
+            
             if nargin < 4
                 frameRate = canvas.window.monitor.refreshRate;
             end

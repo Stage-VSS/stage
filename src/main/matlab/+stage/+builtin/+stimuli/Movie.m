@@ -1,7 +1,6 @@
-% A movie player stimulus capable of playing a wide variety of video formats (see libavcodec). Sound is not supported.
-
 classdef Movie < stage.core.Stimulus
-
+    % A movie player stimulus capable of playing a wide variety of video formats (see libavcodec). Sound is not supported.
+    
     properties
         position = [0, 0]       % Center position on the canvas [x, y] (pixels)
         size = [100, 100]       % Size [width, height] (pixels)
@@ -27,10 +26,11 @@ classdef Movie < stage.core.Stimulus
     end
 
     methods
-
-        % Constructs a movie stimulus using the movie with the specified filename. The filename should contain a
-        % relative or complete file path if the movie is not in the current working directory.
+        
         function obj = Movie(filename)
+            % Constructs a movie stimulus using the movie with the specified filename. The filename should contain a
+            % relative or complete file path if the movie is not in the current working directory.
+            
             obj.filename = filename;
             obj.preloading = false;
             obj.playbackSpeed = PlaybackSpeed.NORMAL;
@@ -39,46 +39,47 @@ classdef Movie < stage.core.Stimulus
             obj.wrapModeS = GL.REPEAT;
             obj.wrapModeT = GL.REPEAT;
         end
-
-        % Specifies if the entire movie should be loaded into memory during initialization. Preloading can improve
-        % playback performance at the cost of increased initialization time and RAM usage.
+        
         function setPreloading(obj, tf)
+            % Specifies if the entire movie should be loaded into memory during initialization. Preloading can improve
+            % playback performance at the cost of increased initialization time and RAM usage.
             obj.preloading = tf;
         end
-
-        % Specifies a multiplier of the movie's normal playback speed (e.g. 0.5 plays the movie at half speed, 2.0 plays
-        % the movie at double speed). A value of PlaybackSpeed.FRAME_BY_FRAME will advance the movie one frame per draw.
+        
         function setPlaybackSpeed(obj, speed)
+            % Specifies a multiplier of the movie's normal playback speed (e.g. 0.5 plays the movie at half speed, 2.0 
+            % plays the movie at double speed). A value of PlaybackSpeed.FRAME_BY_FRAME will advance the movie one 
+            % frame per draw.
             obj.playbackSpeed = speed;
         end
-
-        % Assigns a mask to the stimulus.
+        
         function setMask(obj, mask)
+            % Assigns a mask to the stimulus.
             obj.mask = mask;
         end
-
-        % Assigns a filter to the stimulus.
+        
         function setFilter(obj, filter)
+            % Assigns a filter to the stimulus.
             obj.filter = filter;
         end
-
-        % Sets the OpenGL minifying function for the movie (GL.NEAREST, GL.LINEAR, GL.NEAREST_MIPMAP_NEAREST, etc).
+        
         function setMinFunction(obj, func)
+            % Sets the OpenGL minifying function for the movie (GL.NEAREST, GL.LINEAR, GL.NEAREST_MIPMAP_NEAREST, etc).
             obj.minFunction = func;
         end
-
-        % Sets the OpenGL magnification function for the movie (GL.NEAREST or GL.LINEAR).
+        
         function setMagFunction(obj, func)
+            % Sets the OpenGL magnification function for the movie (GL.NEAREST or GL.LINEAR).
             obj.magFunction = func;
         end
-
-        % Sets the OpenGL S (i.e. X) coordinate wrap mode for the movie (GL.CLAMP_TO_EDGE, GL.MIRRORED_REPEAT, GL.REPEAT, etc).
+        
         function setWrapModeS(obj, mode)
+            % Sets the OpenGL S (i.e. X) coordinate wrap mode for the movie (GL.CLAMP_TO_EDGE, GL.MIRRORED_REPEAT, GL.REPEAT, etc).
             obj.wrapModeS = mode;
         end
-
-        % Sets the OpenGL T (i.e. Y) coordinate wrap mode for the movie (GL.CLAMP_TO_EDGE, GL.MIRRORED_REPEAT, GL.REPEAT, etc).
+        
         function setWrapModeT(obj, mode)
+            % Sets the OpenGL T (i.e. Y) coordinate wrap mode for the movie (GL.CLAMP_TO_EDGE, GL.MIRRORED_REPEAT, GL.REPEAT, etc).
             obj.wrapModeT = mode;
         end
 

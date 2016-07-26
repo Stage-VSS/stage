@@ -1,7 +1,6 @@
-% A player that draws all frames to memory prior to playback.
-
 classdef PrerenderedPlayer < stage.core.Player
-
+    % A player that draws all frames to memory prior to playback.
+    
     properties (Access = private)
         renderedFrames
     end

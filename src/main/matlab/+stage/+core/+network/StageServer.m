@@ -25,9 +25,10 @@ classdef StageServer < handle
             addlistener(obj.server, 'Interrupt', @obj.onInterrupt);
         end
         
-        % Creates a window/canvas and starts serving clients. This method will block the current Matlab session until 
-        % the shift and escape key are held while the window has focus.
         function start(obj, size, fullscreen, monitor, varargin)
+            % Creates a window/canvas and starts serving clients. This method will block the current Matlab session 
+            % until the shift and escape key are held while the window has focus.
+            
             if nargin < 2
                 size = [640, 480];
             end
@@ -53,8 +54,9 @@ classdef StageServer < handle
             obj.server.start(obj.port);
         end
         
-        % Automatically called when start completes.
         function stop(obj)
+            % Automatically called when start completes.
+            
             obj.server.requestStop();
             % TODO: Wait until tcpServer stops.
             

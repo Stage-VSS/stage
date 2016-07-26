@@ -1,7 +1,6 @@
-% A player that draws each frame during the inter-frame interval.
-
 classdef RealtimePlayer < stage.core.Player
-
+    % A player that draws each frame during the inter-frame interval.
+    
     methods
 
         function obj = RealtimePlayer(presentation)

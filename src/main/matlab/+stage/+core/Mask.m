@@ -1,7 +1,6 @@
-% A transparency (alpha) mask. Masks are generally applied to stimuli that support them via the setMask() method of the
-% Stimulus.
-
 classdef Mask < handle
+    % A transparency (alpha) mask. Masks are generally applied to stimuli that support them via the setMask() method of 
+    % the Stimulus.
 
     properties (SetAccess = private)
         canvas
@@ -13,10 +12,11 @@ classdef Mask < handle
     end
 
     methods
-
-        % Constructs a mask from an M-by-N-by-1 matrix. A value of 0 is completely transparent. A value of 255 is
-        % completely opaque.
+        
         function obj = Mask(matrix)
+            % Constructs a mask from an M-by-N-by-1 matrix. A value of 0 is completely transparent. A value of 255 is
+            % completely opaque.
+            
             if ~isa(matrix, 'uint8')
                 error('Matrix must be of class uint8');
             end
@@ -39,9 +39,10 @@ classdef Mask < handle
     end
 
     methods (Static)
-
-        % Creates a circular envelope mask.
+        
         function mask = createCircularEnvelope(resolution)
+            % Creates a circular envelope mask.
+            
             if nargin < 1
                 resolution = 512;
             end
@@ -51,9 +52,10 @@ classdef Mask < handle
             circle = uint8((distanceMatrix <= 1) * 255);
             mask = stage.core.Mask(circle);
         end
-
-        % Creates a gaussian envelope mask.
+        
         function mask = createGaussianEnvelope(resolution)
+            % Creates a gaussian envelope mask.
+            
             if nargin < 1
                 resolution = 512;
             end
@@ -64,9 +66,10 @@ classdef Mask < handle
             gaussian = uint8(exp(-distanceMatrix.^2 / (2 * sigma^2)) * 255);
             mask = stage.core.Mask(gaussian);
         end
-
-        % Creates a circular aperture mask with a given aperture size from 0 to 1.
+        
         function mask = createCircularAperture(size, resolution)
+            % Creates a circular aperture mask with a given aperture size from 0 to 1.
+            
             if nargin < 2
                 resolution = 512;
             end
@@ -75,9 +78,10 @@ classdef Mask < handle
             aperture = uint8((distanceMatrix > size) * 255);
             mask = stage.core.Mask(aperture);
         end
-
-        % Creates a square aperture mask with a given aperture size from 0 to 1.
+        
         function mask = createSquareAperture(size, resolution)
+            % Creates a square aperture mask with a given aperture size from 0 to 1.
+            
             if nargin < 2
                 resolution = 512;
             end
@@ -89,8 +93,9 @@ classdef Mask < handle
             mask = stage.core.Mask(aperture);
         end
         
-        % Creates a annulus mask with a given inner and outer size from 0 to 1.
         function mask = createAnnulus(innerSize, outerSize, resolution)
+            % Creates a annulus mask with a given inner and outer size from 0 to 1.
+            
             if nargin < 3
                 resolution = 512;
             end

@@ -1,6 +1,5 @@
-% A compositor that arranges a frame by packing a sequence of patterns. 
-
 classdef PatternCompositor < stage.core.Compositor
+    % A compositor that arranges a frame by packing a sequence of patterns. 
     
     properties
         vbo

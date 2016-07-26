@@ -7,18 +7,19 @@ classdef Window < handle
     end
 
     methods
-
-        % Constructs a window with the optionally provided size. By default the window occupies the fullscreen of the
-        % primary monitor but an optional fullscreen and monitor argument enable windowed mode and/or selection of a
-        % secondary monitor for the window.
-        %
-        % Typical usage:
-        % % Windowed mode
-        % window = Window([640, 480], false);
-        %
-        % % Fullscreen mode on primary monitor
-        % window = Window();
+        
         function obj = Window(size, fullscreen, monitor, varargin)
+            % Constructs a window with the optionally provided size. By default the window occupies the fullscreen of 
+            % the primary monitor but an optional fullscreen and monitor argument enable windowed mode and/or selection 
+            % of a secondary monitor for the window.
+            %
+            % Typical usage:
+            % % Windowed mode
+            % window = Window([640, 480], false);
+            %
+            % % Fullscreen mode on primary monitor
+            % window = Window();
+            
             if nargin < 1
                 size = [640, 480];
             end
@@ -63,19 +64,20 @@ classdef Window < handle
             [w, h] = glfwGetWindowSize(obj.handle);
             s = [w, h];
         end
-
-        % Swaps the front and back buffers of this window.
+        
         function flip(obj)
+            % Swaps the front and back buffers of this window.
             glfwSwapBuffers(obj.handle);
         end
-
-        % Processes keyboard and mouse events received by this window.
+        
         function pollEvents(obj) %#ok<MANU>
+            % Processes keyboard and mouse events received by this window.
             glfwPollEvents();
         end
-
-        % Gets the last polled state of the specified keyboard key while this window had focus. See GLFW.m for key codes.
+        
         function s = getKeyState(obj, key)
+            % Gets the last polled state of the specified keyboard key while this window had focus. See GLFW.m for key 
+            % codes.
             s = glfwGetKey(obj.handle, key);
         end
 

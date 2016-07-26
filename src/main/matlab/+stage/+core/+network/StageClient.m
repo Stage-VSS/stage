@@ -32,94 +32,94 @@ classdef StageClient < handle
             tf = obj.client.isConnected;
         end
         
-        % Gets the remote canvas size.
         function s = getCanvasSize(obj)
+            % Gets the remote canvas size.
             e = netbox.NetEvent('getCanvasSize');
             s = obj.sendReceive(e);
         end
         
-        % Sets the remote canvas projection to identity matrix.
         function setCanvasProjectionIdentity(obj)
+            % Sets the remote canvas projection to identity matrix.
             e = netbox.NetEvent('setCanvasProjectionIdentity');
             obj.sendReceive(e);
         end
         
-        % Sets the remote canvas projection orthographic.
         function setCanvasProjectionOrthographic(obj, left, right, bottom, top)
+            % Sets the remote canvas projection orthographic.
             e = netbox.NetEvent('setCanvasProjectionOrthographic', {left, right, bottom, top});
             obj.sendReceive(e);
         end
         
-        % Resets the remote canvas projection matrix.
         function resetCanvasProjection(obj)
+            % Resets the remote canvas projection matrix.
             e = netbox.NetEvent('resetCanvasProjection');
             obj.sendReceive(e);
         end
         
-        % Sets the remote canvas renderer.
         function setCanvasRenderer(obj, renderer)
+            % Sets the remote canvas renderer.
             e = netbox.NetEvent('setCanvasRenderer', renderer);
             obj.sendReceive(e);
         end
         
-        % Resets the remote canvas renderer.
         function resetCanvasRenderer(obj)
+            % Resets the remote canvas renderer.
             e = netbox.NetEvent('resetCanvasRenderer');
             obj.sendReceive(e);
         end
         
-        % Gets the remote monitor refresh rate.
         function r = getMonitorRefreshRate(obj)
+            % Gets the remote monitor refresh rate.
             e = netbox.NetEvent('getMonitorRefreshRate');
             r = obj.sendReceive(e);
         end
         
-        % Sets the remote monitor gamma ramp from the given gamma exponent.
         function setMonitorGamma(obj, gamma)
+            % Sets the remote monitor gamma ramp from the given gamma exponent.
             e = netbox.NetEvent('setMonitorGamma', gamma);
             obj.sendReceive(e);
         end
         
-        % Gets the remote monitor resolution.
         function r = getMonitorResolution(obj)
+            % Gets the remote monitor resolution.
             e = netbox.NetEvent('getMonitorResolution');
             r = obj.sendReceive(e);
         end
         
-        % Gets the remote monitor red, green, and blue gamma ramp.
         function [red, green, blue] = getMonitorGammaRamp(obj)
+            % Gets the remote monitor red, green, and blue gamma ramp.
             e = netbox.NetEvent('getMonitorGammaRamp');
             [red, green, blue] = obj.sendReceive(e);
         end
         
-        % Sets the remote monitor gamma ramp from the given red, green, and blue lookup tables. The tables should have 
-        % length of 256 and values that range from 0 to 65535.
         function setMonitorGammaRamp(obj, red, green, blue)
+            % Sets the remote monitor gamma ramp from the given red, green, and blue lookup tables. The tables should 
+            % have length of 256 and values that range from 0 to 65535.
             e = netbox.NetEvent('setMonitorGammaRamp', {red, green, blue});
             obj.sendReceive(e);
         end
         
-        % Plays a given player on the remote canvas. This method will return immediately. While the player plays 
-        % remotely, further attempts to interface with the server will block until the presentation completes.
         function play(obj, player)
+            % Plays a given player on the remote canvas. This method will return immediately. While the player plays 
+            % remotely, further attempts to interface with the server will block until the presentation completes.
             e = netbox.NetEvent('play', player);
             obj.sendReceive(e);
         end
         
-        % Replays the last played player on the remote canvas.
         function replay(obj)
+            % Replays the last played player on the remote canvas.
             e = netbox.NetEvent('replay');
             obj.sendReceive(e);
         end
         
-        % Gets information about the last remotely played (or replayed) presentation.
         function i = getPlayInfo(obj)
+            % Gets information about the last remotely played (or replayed) presentation.
             e = netbox.NetEvent('getPlayInfo');
             i = obj.sendReceive(e);
         end
         
-        % Clears the current connection data and class definitions from the server.
         function clearMemory(obj)
+            % Clears the current connection data and class definitions from the server.
             e = netbox.NetEvent('clearMemory');
             obj.sendReceive(e);
         end

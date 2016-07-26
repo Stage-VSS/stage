@@ -1,8 +1,7 @@
-% A stimulus for monitoring the presentation frame rate with a photodiode. The stimulus will display a rectangle of
-% specified color every even frame and a rectangle of black every odd frame.
-
 classdef FrameTracker < stage.core.Stimulus
-
+    % A stimulus for monitoring the presentation frame rate with a photodiode. The stimulus will display a rectangle of
+    % specified color every even frame and a rectangle of black every odd frame.
+    
     properties
         position = [25, 25]     % Center position on the canvas [x, y] (pixels)
         size = [50, 50]         % Size [width, height] (pixels)

@@ -1,7 +1,6 @@
-% A filled rectangle stimulus.
-
 classdef Rectangle < stage.core.Stimulus
-
+    % A filled rectangle stimulus.
+    
     properties
         position = [0, 0]   % Center position on the canvas [x, y] (pixels)
         size = [100, 100]   % Size [width, height] (pixels)
@@ -37,9 +36,9 @@ classdef Rectangle < stage.core.Stimulus
             obj.vao.setAttribute(obj.vbo, 0, 4, GL.FLOAT, GL.FALSE, 6*4, 0);
             obj.vao.setAttribute(obj.vbo, 1, 2, GL.FLOAT, GL.FALSE, 6*4, 4*4);
         end
-
-        % Assigns a mask to the stimulus.
+        
         function setMask(obj, mask)
+            % Assigns a mask to the stimulus.
             obj.mask = mask;
         end
 

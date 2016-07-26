@@ -1,6 +1,5 @@
-% A renderer that draws primitives into a subset of color bits depending on the current pattern index.
-
 classdef PatternRenderer < stage.core.Renderer
+    % A renderer that draws primitives into a subset of color bits depending on the current pattern index.
     
     properties
         numPatterns

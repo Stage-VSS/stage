@@ -1,7 +1,6 @@
-% A renderer is responsible for drawing primitives on a canvas.
-
 classdef Renderer < handle
-
+    % A renderer is responsible for drawing primitives on a canvas.
+    
     properties (SetAccess = private)
         canvas
         projection  % Projection matrix stack
@@ -29,9 +28,9 @@ classdef Renderer < handle
             obj.defaultMask = stage.core.Mask(ones(2, 2, 'uint8') * 255);
             obj.defaultMask.init(canvas);
         end
-
-        % Renders primitives from the vertex array object data. Mask, texture, and filter may be set to empty.
+        
         function drawArray(obj, array, mode, first, count, color, mask, texture, filter)
+            % Renders primitives from the vertex array object data. Mask, texture, and filter may be set to empty.            
             if isempty(mask)
                 mask = obj.defaultMask;
             end

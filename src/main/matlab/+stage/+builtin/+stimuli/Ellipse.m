@@ -1,7 +1,6 @@
-% A filled ellipse stimulus. The ellipse is in reality a regular polygon with a large number of sides.
-
 classdef Ellipse < stage.core.Stimulus
-
+    % A filled ellipse stimulus. The ellipse is in reality a regular polygon with a large number of sides.
+    
     properties
         position = [0, 0]   % Center position on the canvas [x, y] (pixels)
         radiusX = 100       % Radius on the x axes (pixels)
@@ -21,9 +20,10 @@ classdef Ellipse < stage.core.Stimulus
     end
 
     methods
-
-        % Constructs an ellipse stimulus with an optionally specified number of sides.
+        
         function obj = Ellipse(numSides)
+            % Constructs an ellipse stimulus with an optionally specified number of sides.
+            
             if nargin < 1
                 numSides = 51;
             end

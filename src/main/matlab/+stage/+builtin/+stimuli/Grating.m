@@ -1,7 +1,6 @@
-% A vertical grating stimulus.
-
 classdef Grating < stage.core.Stimulus
-
+    % A vertical grating stimulus.
+    
     properties
         position = [0, 0]       % Center position on the canvas [x, y] (pixels)
         size = [100, 100]       % Size [width, height] (pixels)
@@ -26,10 +25,11 @@ classdef Grating < stage.core.Stimulus
     end
 
     methods
-
-        % Contructs a grating stimulus with an optionally specified luminance profile and texture resolution. The
-        % profile may be 'sine', 'square', or 'sawtooth'.
+        
         function obj = Grating(profile, resolution)
+            % Contructs a grating stimulus with an optionally specified luminance profile and texture resolution. The
+            % profile may be 'sine', 'square', or 'sawtooth'.
+            
             if nargin < 1
                 profile = 'sine';
             end
@@ -45,14 +45,14 @@ classdef Grating < stage.core.Stimulus
             obj.profile = profile;
             obj.resolution = resolution;
         end
-
-        % Assigns a mask to the stimulus.
+        
         function setMask(obj, mask)
+            % Assigns a mask to the stimulus.
             obj.mask = mask;
         end
-
-        % Assigns a filter to the stimulus.
+        
         function setFilter(obj, filter)
+            % Assigns a filter to the stimulus.
             obj.filter = filter;
         end
 

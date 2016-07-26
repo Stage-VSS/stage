@@ -105,9 +105,10 @@ classdef Canvas < handle
         function resetBlend(obj)
             obj.enableBlend(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
         end
-
-        % Gets image matrix of current framebuffer data.
+        
         function d = getPixelData(obj, x, y, width, height, permuteImage)
+            % Gets image matrix of current framebuffer data.
+            
             if nargin < 2
                 x = 0;
             end

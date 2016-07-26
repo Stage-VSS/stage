@@ -1,7 +1,6 @@
-% A timer for recording the duration between window flips (buffer swaps). This class is generally used by presentation 
-% players.
-
 classdef FlipTimer < handle
+    % A timer for recording the duration between window flips (buffer swaps). This class is generally used by 
+    % presentation players.
     
     properties (SetAccess = private)
         flipDurations

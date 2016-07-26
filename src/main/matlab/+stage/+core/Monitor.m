@@ -1,6 +1,5 @@
-% Represents a physical display attached to the computer.
-
 classdef Monitor < handle
+    % Represents a physical display attached to the computer.
     
     properties (SetAccess = private)
         refreshRate     % Refresh rate (Hz)
@@ -30,9 +29,10 @@ classdef Monitor < handle
     
     methods
         
-        % Constructs a monitor for the display with the given display number. The primary display is number 1. Further
-        % displays increment from there (2, 3, 4, etc).
         function obj = Monitor(number)
+            % Constructs a monitor for the display with the given display number. The primary display is number 1. 
+            % Further displays increment from there (2, 3, 4, etc).
+            
             if nargin < 1
                 number = 1;
             end
@@ -68,8 +68,8 @@ classdef Monitor < handle
             n = glfwGetMonitorName(obj.handle);
         end
         
-        % Sets a gamma ramp from the given gamma exponent.
         function setGamma(obj, gamma)
+            % Sets a gamma ramp from the given gamma exponent.
             glfwSetGamma(obj.handle, gamma);
         end
         
@@ -81,9 +81,10 @@ classdef Monitor < handle
             blue = ramp.blue;
         end
         
-        % Sets a gamma ramp from the given red, green, and blue lookup tables. The tables should have length of 256 and
-        % values that range from 0 to 65535.
         function setGammaRamp(obj, red, green, blue)
+            % Sets a gamma ramp from the given red, green, and blue lookup tables. The tables should have length of 256 
+            % and values that range from 0 to 65535.
+            
             % To row vector.
             red = red(:)';
             green = green(:)';

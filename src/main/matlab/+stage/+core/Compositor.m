@@ -1,7 +1,6 @@
-% A compositor is responsible for compositing a collection of stimuli into a single image.
-
 classdef Compositor < handle
-
+    % A compositor is responsible for compositing a collection of stimuli into a single image.
+    
     properties (SetAccess = private)
         canvas
     end
@@ -11,9 +10,9 @@ classdef Compositor < handle
         function init(obj, canvas)
             obj.canvas = canvas;
         end
-
-        % Composites a single frame from a collection of stimuli.
+        
         function drawFrame(obj, stimuli, controllers, state)
+            % Composites a single frame from a collection of stimuli.
             obj.evaluateControllers(controllers, state);
             obj.drawStimuli(stimuli);
         end
