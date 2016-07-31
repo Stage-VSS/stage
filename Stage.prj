@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="2746373419" file="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2\Stage.prj" location="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2" name="Stage" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="2746373419" file="C:\Users\Client Admin\Documents\src\Stage-VSS\stage\Stage.prj" location="C:\Users\Client Admin\Documents\src\Stage-VSS\stage" name="Stage" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>Stage</param.appname>
     <param.authnamewatermark>Stage-VSS</param.authnamewatermark>
     <param.email>symphony-das@googlegroups.com</param.email>
@@ -50,48 +50,48 @@ README.md</param.exclude.filters>
     </param.apps>
     <param.docs>${PROJECT_ROOT}\src\main\resources\docs</param.docs>
     <param.matlabpath.excludes>
-      <item>/apps/stage2-server/src</item>
-      <item>/apps/stage2-server/src/main</item>
-      <item>/apps/stage2-server/src/main/matlab</item>
-      <item>/apps/stage2-server/src/test</item>
-      <item>/apps/stage2-server/src/test/matlab</item>
-      <item>/apps/stage2-server/lib</item>
-      <item>/apps/stage2-server/lib/appbox</item>
-      <item>/apps/stage2-server/lib/appbox/lib</item>
-      <item>/apps/stage2-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1</item>
-      <item>/apps/stage2-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layout</item>
-      <item>/apps/stage2-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc</item>
-      <item>/apps/stage2-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/Examples</item>
-      <item>/apps/stage2-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/Images</item>
-      <item>/apps/stage2-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/helpsearch-v2</item>
-      <item>/apps/stage2-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/helpsearch-v3</item>
-      <item>/apps/stage2-server/lib/appbox/lib/UIExtrasComboBox</item>
-      <item>/apps/stage2-server/lib/appbox/lib/UIExtrasComboBox/java_src</item>
-      <item>/apps/stage2-server/lib/appbox/lib/UIExtrasComboBox/java_src/.idea</item>
-      <item>/apps/stage2-server/lib/appbox/lib/UIExtrasComboBox/java_src/.idea/artifacts</item>
-      <item>/apps/stage2-server/lib/appbox/lib/UIExtrasComboBox/java_src/.idea/copyright</item>
-      <item>/apps/stage2-server/lib/appbox/lib/UIExtrasComboBox/java_src/src</item>
-      <item>/apps/stage2-server/lib/appbox/lib/UIExtrasComboBox/java_src/src/UIExtrasComboBox</item>
-      <item>/apps/stage2-server/lib/appbox/lib/findjobj</item>
-      <item>/apps/stage2-server/lib/appbox/src</item>
-      <item>/apps/stage2-server/lib/appbox/src/main</item>
-      <item>/apps/stage2-server/lib/appbox/src/main/matlab</item>
+      <item>/apps/stage-server/src</item>
+      <item>/apps/stage-server/src/main</item>
+      <item>/apps/stage-server/src/main/matlab</item>
+      <item>/apps/stage-server/src/test</item>
+      <item>/apps/stage-server/src/test/matlab</item>
+      <item>/apps/stage-server/lib</item>
+      <item>/apps/stage-server/lib/appbox</item>
+      <item>/apps/stage-server/lib/appbox/lib</item>
+      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1</item>
+      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layout</item>
+      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc</item>
+      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/Examples</item>
+      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/Images</item>
+      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/helpsearch-v2</item>
+      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/helpsearch-v3</item>
+      <item>/apps/stage-server/lib/appbox/lib/UIExtrasComboBox</item>
+      <item>/apps/stage-server/lib/appbox/lib/UIExtrasComboBox/java_src</item>
+      <item>/apps/stage-server/lib/appbox/lib/UIExtrasComboBox/java_src/.idea</item>
+      <item>/apps/stage-server/lib/appbox/lib/UIExtrasComboBox/java_src/.idea/artifacts</item>
+      <item>/apps/stage-server/lib/appbox/lib/UIExtrasComboBox/java_src/.idea/copyright</item>
+      <item>/apps/stage-server/lib/appbox/lib/UIExtrasComboBox/java_src/src</item>
+      <item>/apps/stage-server/lib/appbox/lib/UIExtrasComboBox/java_src/src/UIExtrasComboBox</item>
+      <item>/apps/stage-server/lib/appbox/lib/findjobj</item>
+      <item>/apps/stage-server/lib/appbox/src</item>
+      <item>/apps/stage-server/lib/appbox/src/main</item>
+      <item>/apps/stage-server/lib/appbox/src/main/matlab</item>
       <item>/src/site</item>
       <item>/src/site/resources</item>
       <item>/src/site/resources/css</item>
-      <item>/src/site/wiki</item>
-      <item>/src/site/wiki/images</item>
+      <item>/src/site/book</item>
+      <item>/src/site/book/images</item>
       <item>/src/test</item>
       <item>/src/test/matlab</item>
       <item>/apps</item>
-      <item>/apps/stage2-server</item>
-      <item>/apps/stage2-server/target</item>
-      <item>/apps/stage2-server/src/main/resources</item>
-      <item>/apps/stage2-server/src/main/resources/icons</item>
-      <item>/src/site/wiki/images/app-basics</item>
-      <item>/src/site/wiki/images/create-a-presentation</item>
-      <item>/src/site/wiki/images/installation</item>
-      <item>/src/site/wiki/images/run-demos</item>
+      <item>/apps/stage-server</item>
+      <item>/apps/stage-server/target</item>
+      <item>/apps/stage-server/src/main/resources</item>
+      <item>/apps/stage-server/src/main/resources/icons</item>
+      <item>/src/site/book/images/app-basics</item>
+      <item>/src/site/book/images/create-a-presentation</item>
+      <item>/src/site/book/images/installation</item>
+      <item>/src/site/book/images/run-demos</item>
     </param.matlabpath.excludes>
     <unset>
       <param.products.name />
@@ -102,7 +102,7 @@ README.md</param.exclude.filters>
       <param.demosxml />
     </unset>
     <fileset.rootdir>
-      <file>C:\Users\Client Admin\Documents\src\Stage-VSS\stage2</file>
+      <file>C:\Users\Client Admin\Documents\src\Stage-VSS\stage</file>
     </fileset.rootdir>
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}\lib</file>
@@ -113,7 +113,7 @@ README.md</param.exclude.filters>
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="C:\Users\Client Admin\Documents\src\Stage-VSS\stage2" name="target" optional="false">C:\Users\Client Admin\Documents\src\Stage-VSS\stage2\target</file>
+      <file location="C:\Users\Client Admin\Documents\src\Stage-VSS\stage" name="target" optional="false">C:\Users\Client Admin\Documents\src\Stage-VSS\stage\target</file>
     </build-deliverables>
     <workflow />
     <matlab>

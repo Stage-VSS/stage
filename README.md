@@ -4,7 +4,7 @@ Stage is a MATLAB-based visual stimulus system for vision research. It provides 
 
 ## Clone
 
-`git clone https://github.com/Stage-VSS/stage2.git --recursive`
+`git clone https://github.com/Stage-VSS/stage.git --recursive`
 
 **Note:** You must use the `--recursive` option to recursively clone all submodules.
 
@@ -16,7 +16,7 @@ Matlab functions in the root directory are used to build the project. The script
 - `package`: package the project into a .mltbx file
 - `install`: install the packaged product into Matlab
 
-Similar to the [Maven Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html), each phase will execute all phases before it (i.e. running `install` will execute `test`, `package`, `install`). In addition there is a `site` script to generate the project's documentation from the [wiki](https://github.com/Stage-VSS/stage2/wiki).
+Similar to the [Maven Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html), each phase will execute all phases before it (i.e. running `install` will execute `test`, `package`, `install`). In addition there is a `site` script to generate the project's documentation from the [GitBook](https://github.com/Stage-VSS/stage-book).
 
 ## Directory Structure
 
