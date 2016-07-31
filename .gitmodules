@@ -19,3 +19,6 @@
 [submodule "src/site/wiki"]
 	path = src/site/wiki
 	url = https://github.com/Stage-VSS/stage2.wiki.git
+[submodule "apps/stage-server"]
+	path = apps/stage-server
+	url = https://github.com/Stage-VSS/stage-server.git
