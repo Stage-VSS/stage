@@ -20,5 +20,5 @@
 	path = apps/stage-server
 	url = https://github.com/Stage-VSS/stage-server.git
 [submodule "src/site/book"]
-	path = src/site/book
+	path = src/site/docs
 	url = https://github.com/Stage-VSS/stage-book.git
