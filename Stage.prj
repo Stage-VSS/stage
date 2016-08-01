@@ -79,8 +79,8 @@ README.md</param.exclude.filters>
       <item>/src/site</item>
       <item>/src/site/resources</item>
       <item>/src/site/resources/css</item>
-      <item>/src/site/book</item>
-      <item>/src/site/book/images</item>
+      <item>/src/site/docs</item>
+      <item>/src/site/docs/images</item>
       <item>/src/test</item>
       <item>/src/test/matlab</item>
       <item>/apps</item>
@@ -88,10 +88,10 @@ README.md</param.exclude.filters>
       <item>/apps/stage-server/target</item>
       <item>/apps/stage-server/src/main/resources</item>
       <item>/apps/stage-server/src/main/resources/icons</item>
-      <item>/src/site/book/images/app-basics</item>
-      <item>/src/site/book/images/create-a-presentation</item>
-      <item>/src/site/book/images/installation</item>
-      <item>/src/site/book/images/run-demos</item>
+      <item>/src/site/docs/images/app-basics</item>
+      <item>/src/site/docs/images/create-a-presentation</item>
+      <item>/src/site/docs/images/installation</item>
+      <item>/src/site/docs/images/run-demos</item>
     </param.matlabpath.excludes>
     <unset>
       <param.products.name />

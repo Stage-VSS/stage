@@ -16,7 +16,7 @@ Matlab functions in the root directory are used to build the project. The script
 - `package`: package the project into a .mltbx file
 - `install`: install the packaged product into Matlab
 
-Similar to the [Maven Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html), each phase will execute all phases before it (i.e. running `install` will execute `test`, `package`, `install`). In addition there is a `site` script to generate the project's documentation from the [GitBook](https://github.com/Stage-VSS/stage-book).
+Similar to the [Maven Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html), each phase will execute all phases before it (i.e. running `install` will execute `test`, `package`, `install`). In addition there is a `site` script to generate the project's documentation from the [docs](https://github.com/Stage-VSS/stage-docs) repo.
 
 ## Directory Structure
 

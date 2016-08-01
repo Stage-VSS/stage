@@ -1,16 +1,16 @@
 function site()
     rootPath = fileparts(mfilename('fullpath'));
     sitePath = fullfile(rootPath, 'src', 'site');
-    bookPath = fullfile(sitePath, 'book');
+    docsPath = fullfile(sitePath, 'docs');
     targetPath = fullfile(rootPath, 'target', 'site');
     [~, ~] = mkdir(targetPath);
 
-    markdownFiles = dir(fullfile(bookPath, '*.md'));
+    markdownFiles = dir(fullfile(docsPath, '*.md'));
     for i = 1:length(markdownFiles)
         [~, name] = fileparts(markdownFiles(i).name);
 
         includeFile = fullfile(sitePath, 'include.html');
-        inputFile = fullfile(bookPath, [name '.md']);
+        inputFile = fullfile(docsPath, [name '.md']);
         outputFile = fullfile(targetPath, [name '.html']);
 
         command = sprintf('pandoc -s --tab-stop=2 -H "%s" -c css/override.css -f markdown_github "%s" -o "%s"', includeFile, inputFile, outputFile);
@@ -18,7 +18,7 @@ function site()
         if status ~= 0
             error(out);
         end
-        
+
         % Front matter.
         match = find(inputFile, '^---(\r\n|\r|\n)(.*?)(\r\n|\r|\n)---(\r\n|\r|\n)');
         if isempty(match)
@@ -59,7 +59,7 @@ function site()
         replace(outputFile, 'href="[\w.\-]+.md"', '${$0(1:end-4)}.html\"');
     end
 
-    copyfile(fullfile(bookPath, 'images'), fullfile(targetPath, 'images'));
+    copyfile(fullfile(docsPath, 'images'), fullfile(targetPath, 'images'));
 
     copyfile(fullfile(sitePath, 'info.xml'), fullfile(targetPath));
     copyfile(fullfile(sitePath, 'helptoc.xml'), fullfile(targetPath));
@@ -89,7 +89,7 @@ function replace(file, expression, replacement, opts)
     fid = fopen(file);
     text = fread(fid, inf, '*char')';
     fclose(fid);
-    
+
     text = regexprep(text, expression, replacement, opts{:});
 
     fid = fopen(file, 'w');
