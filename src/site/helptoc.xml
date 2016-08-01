@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding="utf-8"?>
 <toc version="2.0">
 
-    <tocitem target="Home.html">Stage
+    <tocitem target="README.html">Stage
         <tocitem target="Getting-Started.html">Getting Started
             <tocitem target="Stage-Product-Description.html">Stage Product Description</tocitem>
             <tocitem target="System-Requirements.html">System Requirements</tocitem>
