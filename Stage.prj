@@ -92,6 +92,7 @@ README.md</param.exclude.filters>
       <item>/src/site/docs/images/create-a-presentation</item>
       <item>/src/site/docs/images/installation</item>
       <item>/src/site/docs/images/run-demos</item>
+      <item>/src/site/docs/styles</item>
     </param.matlabpath.excludes>
     <unset>
       <param.products.name />
