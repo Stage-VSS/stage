@@ -10,6 +10,7 @@ classdef Grating < stage.core.Stimulus
         contrast = 1            % Scale factor for color values (-1 to 1, negative values invert the grating)
         phase = 0               % Phase offset (degrees)
         spatialFreq = 1/100     % Spatial frequency (cycles/pixels)
+        pedestal = [0, 0, 0]    % Luminance pedestal (i.e. offset) as single intensity or [R, G, B] (0 to 1)
     end
 
     properties (Access = private)
@@ -134,8 +135,13 @@ classdef Grating < stage.core.Stimulus
             elseif length(c) == 3
                 c = [c, obj.opacity];
             end
+            
+            p = obj.pedestal;
+            if length(p) == 1
+                p = [p, p, p];
+            end
 
-            obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.mask, obj.texture, obj.filter);
+            obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.mask, obj.texture, obj.filter, p);
 
             modelView.pop();
         end

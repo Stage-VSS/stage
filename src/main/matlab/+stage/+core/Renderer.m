@@ -29,7 +29,7 @@ classdef Renderer < handle
             obj.defaultMask.init(canvas);
         end
         
-        function drawArray(obj, array, mode, first, count, color, mask, texture, filter)
+        function drawArray(obj, array, mode, first, count, color, mask, texture, filter, pedestal)
             % Renders primitives from the vertex array object data. Mask, texture, and filter may be set to empty.            
             if isempty(mask)
                 mask = obj.defaultMask;
@@ -37,7 +37,7 @@ classdef Renderer < handle
 
             obj.canvas.makeCurrent();
 
-            obj.setupProgram(color, mask, texture, filter);
+            obj.setupProgram(color, mask, texture, filter, pedestal);
 
             glBindVertexArray(array.handle);
             glDrawArrays(mode, first, count);
@@ -58,7 +58,7 @@ classdef Renderer < handle
 
     methods (Access = protected)
 
-        function setupProgram(obj, color, mask, texture, filter)
+        function setupProgram(obj, color, mask, texture, filter, pedestal)
             if isempty(texture)
                 program = obj.canvas.standardPrograms.primitiveProgram;
                 obj.canvas.setProgram(program);
@@ -74,6 +74,9 @@ classdef Renderer < handle
 
                 glActiveTexture(GL.TEXTURE1);
                 glBindTexture(mask.texture.target, mask.texture.handle);
+                
+                pedestalUniform = program.getUniformLocation('pedestal0');
+                program.setUniformfv(pedestalUniform, pedestal);
             else
                 program = obj.canvas.standardPrograms.filteredTexturedPrimitiveProgram;
                 obj.canvas.setProgram(program);
@@ -92,6 +95,9 @@ classdef Renderer < handle
 
                 texture0SizeUniform = program.getUniformLocation('texture0Size');
                 program.setUniformfv(texture0SizeUniform, texture.size);
+                
+                pedestalUniform = program.getUniformLocation('pedestal0');
+                program.setUniformfv(pedestalUniform, pedestal);
             end
 
             projectUniform = program.getUniformLocation('projectionMatrix');
