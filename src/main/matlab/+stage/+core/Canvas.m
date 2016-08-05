@@ -183,7 +183,7 @@ classdef Canvas < handle
             obj.setRenderer(obj.defaultRenderer);
         end
 
-        function drawArray(obj, array, mode, first, count, color, mask, texture, filter, pedestal)
+        function drawArray(obj, array, mode, first, count, color, mask, texture, filter)
             if nargin < 7
                 mask = [];
             end
@@ -195,15 +195,11 @@ classdef Canvas < handle
             if nargin < 9
                 filter = [];
             end
-            
-            if nargin < 10
-                pedestal = [0, 0, 0];
-            end
 
             obj.currentRenderer.projection.setMatrix(obj.projection.top());
             obj.currentRenderer.modelView.setMatrix(obj.modelView.top());
 
-            obj.currentRenderer.drawArray(array, mode, first, count, color, mask, texture, filter, pedestal);
+            obj.currentRenderer.drawArray(array, mode, first, count, color, mask, texture, filter);
         end
 
     end

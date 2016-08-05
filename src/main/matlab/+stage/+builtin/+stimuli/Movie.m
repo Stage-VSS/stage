@@ -7,7 +7,6 @@ classdef Movie < stage.core.Stimulus
         orientation = 0         % Orientation (degrees)
         color = [1, 1, 1]       % Color multiplier as single value or [R, G, B] (real number)
         opacity = 1             % Opacity (0 to 1)
-        pedestal = [0, 0, 0]    % Luminance pedestal (i.e. offset) as single intensity or [R, G, B] (0 to 1)
     end
 
     properties (Access = private)
@@ -149,13 +148,8 @@ classdef Movie < stage.core.Stimulus
             elseif length(c) == 3
                 c = [c, obj.opacity];
             end
-            
-            p = obj.pedestal;
-            if length(p) == 1
-                p = [p, p, p];
-            end
 
-            obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.mask, obj.texture, obj.filter, p);
+            obj.canvas.drawArray(obj.vao, GL.TRIANGLE_STRIP, 0, 4, c, obj.mask, obj.texture, obj.filter);
 
             modelView.pop();
         end
