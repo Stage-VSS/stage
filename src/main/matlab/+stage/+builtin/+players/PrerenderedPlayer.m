@@ -1,6 +1,6 @@
 classdef PrerenderedPlayer < stage.core.Player
     % A player that draws all frames to memory prior to playback.
-
+    
     properties (Access = private)
         renderedFrames
     end
@@ -25,7 +25,7 @@ classdef PrerenderedPlayer < stage.core.Player
             obj.renderedFrames = cell(1, nFrames);
 
             obj.compositor.init(canvas);
-
+            
             canvas.setClearColor(obj.presentation.backgroundColor);
 
             stimuli = obj.presentation.stimuli;
@@ -39,7 +39,7 @@ classdef PrerenderedPlayer < stage.core.Player
             time = frame / frameRate;
             while time < obj.presentation.duration
                 canvas.clear();
-
+                
                 state.canvas = canvas;
                 state.frame = frame;
                 state.frameRate = frameRate;
@@ -93,7 +93,7 @@ classdef PrerenderedPlayer < stage.core.Player
 
                 texture.setSubImage(obj.renderedFrames{frame}, 0, [0, 0], false);
 
-                renderer.drawArray(vao, GL.TRIANGLE_STRIP, 0, 4, [1, 1, 1, 1], [], texture, [], [0, 0, 0]);
+                renderer.drawArray(vao, GL.TRIANGLE_STRIP, 0, 4, [1, 1, 1, 1], [], texture, []);
 
                 canvas.window.flip();
                 flipTimer.tick();
