@@ -96,6 +96,8 @@ classdef StageServer < handle
                         obj.onEventGetCanvasSize(connection, event);
                     case 'setCanvasProjectionIdentity'
                         obj.onEventSetCanvasProjectionIdentity(connection, event);
+                    case 'setCanvasProjectionTranslate'
+                        obj.onEventSetCanvasProjectionTranslate(connection, event);                        
                     case 'setCanvasProjectionOrthographic'
                         obj.onEventSetCanvasProjectionOrthographic(connection, event);
                     case 'resetCanvasProjection'
@@ -137,6 +139,14 @@ classdef StageServer < handle
         
         function onEventSetCanvasProjectionIdentity(obj, connection, event) %#ok<INUSD>
             obj.canvas.projection.setIdentity();
+            connection.sendEvent(netbox.NetEvent('ok'));
+        end
+        
+        function onEventSetCanvasProjectionTranslate(obj, connection, event)
+            x = event.arguments{1};
+            y = event.arguments{2};
+            z = event.arguments{3};
+            obj.canvas.projection.translate(x,y,z)
             connection.sendEvent(netbox.NetEvent('ok'));
         end
         
