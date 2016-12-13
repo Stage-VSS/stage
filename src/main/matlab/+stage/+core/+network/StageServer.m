@@ -146,7 +146,8 @@ classdef StageServer < handle
             x = event.arguments{1};
             y = event.arguments{2};
             z = event.arguments{3};
-            obj.canvas.projection.translate(x,y,z)
+            
+            obj.canvas.projection.translate(x, y, z);
             connection.sendEvent(netbox.NetEvent('ok'));
         end
         
