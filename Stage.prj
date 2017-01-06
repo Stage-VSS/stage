@@ -7,7 +7,7 @@
     <param.summary>Visual Stimulus System</param.summary>
     <param.description>Stage is a MATLAB based visual stimulus system for vision research.</param.description>
     <param.screenshot>${PROJECT_ROOT}\src\main\resources\screenshot.png</param.screenshot>
-    <param.version>2.2.3.0</param.version>
+    <param.version>2.3.3.0</param.version>
     <param.output>${PROJECT_ROOT}\target</param.output>
     <param.products.name />
     <param.products.id />
@@ -58,13 +58,13 @@ README.md</param.exclude.filters>
       <item>/apps/stage-server/lib</item>
       <item>/apps/stage-server/lib/appbox</item>
       <item>/apps/stage-server/lib/appbox/lib</item>
-      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1</item>
-      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layout</item>
-      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc</item>
-      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/Examples</item>
-      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/Images</item>
-      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/helpsearch-v2</item>
-      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.1/layoutdoc/helpsearch-v3</item>
+      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.2</item>
+      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.2/layout</item>
+      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.2/layoutdoc</item>
+      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.2/layoutdoc/Examples</item>
+      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.2/layoutdoc/Images</item>
+      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.2/layoutdoc/helpsearch-v2</item>
+      <item>/apps/stage-server/lib/appbox/lib/GUI Layout Toolbox 2.2.2/layoutdoc/helpsearch-v3</item>
       <item>/apps/stage-server/lib/appbox/lib/UIExtrasComboBox</item>
       <item>/apps/stage-server/lib/appbox/lib/UIExtrasComboBox/java_src</item>
       <item>/apps/stage-server/lib/appbox/lib/UIExtrasComboBox/java_src/.idea</item>
