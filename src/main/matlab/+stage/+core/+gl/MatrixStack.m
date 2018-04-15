@@ -78,6 +78,24 @@ classdef MatrixStack < handle
             obj.stack(:,:,obj.depth) = obj.stack(:,:,obj.depth) * o;
         end
         
+        function perspective(obj, fovy, aspect, zNear, zFar)
+            if nargin < 4
+                zNear = 0.1;
+            end
+            if nargin < 5
+                zFar = 10000;
+            end
+            
+            rad = deg2rad(fovy);
+            f = cot(rad/2);
+            p = [f/aspect 0                          0                          0;
+                        0 f                          0                          0;
+                        0 0 -(zFar+zNear)/(zFar-zNear) -2*zFar*zNear/(zFar-zNear);
+                        0 0                         -1                          0];
+                    
+            obj.stack(:,:,obj.depth) = obj.stack(:,:,obj.depth) * p;
+        end
+        
         function setMatrix(obj, m)
             obj.stack(:,:,obj.depth) = m;
         end
