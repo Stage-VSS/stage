@@ -12,6 +12,7 @@ classdef Canvas < handle
     end
 
     properties (Access = private)
+        defaultProjection       % Projection used when none is explicitly set
         defaultRenderer         % Renderer used when none is explicitly set
         framebufferBound        % Is a framebuffer set? (true or false)
     end
@@ -25,8 +26,10 @@ classdef Canvas < handle
 
             obj.window = window;
 
-            obj.projection = stage.core.gl.MatrixStack();
-            obj.projection.orthographic(0, window.size(1), 0, window.size(2));
+            obj.defaultProjection = stage.core.gl.MatrixStack();
+            obj.defaultProjection.orthographic(0, window.size(1), 0, window.size(2));
+            obj.resetProjection();
+            
             obj.modelView = stage.core.gl.MatrixStack();
 
             obj.defaultRenderer = stage.core.Renderer();
@@ -81,9 +84,12 @@ classdef Canvas < handle
             glClear(GL.COLOR_BUFFER_BIT);
         end
         
+        function setProjection(obj, projection)
+            obj.projection = projection;
+        end
+        
         function resetProjection(obj)
-            obj.projection = stage.core.gl.MatrixStack();
-            obj.projection.orthographic(0, obj.window.size(1), 0, obj.window.size(2));
+            obj.setProjection(obj.defaultProjection);
         end
 
         function setProgram(obj, program)
